@@ -116,7 +116,10 @@ The software will raise an error if any of the following cannot be imported (scr
 * J. Varga's `query_CDS.py` querying script
 
 ### Dependencies
-Install the rest of the dependencies via the `requirements.txt` (as this is a semi-package)
+Install the rest of the dependencies via the `requirements.txt` (as this is a semi-package) with:
+```
+pip install -r requirements.txt
+```
 
 ### Optional
 * R. van Boekel's `calibrator_find.pro` IDL software for calibrator finding (optional) and `night_plan` creation
