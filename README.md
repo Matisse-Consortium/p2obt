@@ -13,7 +13,7 @@ _In a working state/Under maintenance/development_
 The Phase 2 OB Pipeline (p2obp) has been made to streamline/automate the whole process of MATISSE observation preparation
 
 * For more info see [Features](#features)
-* For upcoming features or bugs see the *issues* of this project
+* For upcoming features or bugs see the **issues** of this project
 * See [Installation](#installation) and [Getting Started](#getting-started)
 
 <!-- Table of Contents -->
@@ -28,7 +28,7 @@ The Phase 2 OB Pipeline (p2obp) has been made to streamline/automate the whole p
 <!-- Features -->
 ## Features
 ### Parsing
-Parses night plans created with `calibrator_find.pro` by R. van Boekel (optional) of the following format (comments in between the lines are ignored, the parser looks for the run, night and calibrator keyword to define the individual sections and subsections):
+Parses night plans created with `calibrator_find.pro` by R. van Boekel (optional) of the following format (comments in between the lines are ignored, the parser looks for the **run**, **night** and **calibrator** keyword to define the individual sections and subsections):
 ``````
 run 3, 109.2313.003 = 0109.C-0413(C), ATs large array
 
