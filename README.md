@@ -106,28 +106,6 @@ run 3, 109.2313.003 = 0109.C-0413(C), ATs large array:
     - - LN
     - - LN
     - - LN
-  'night 3, June 7 (assuming the large array):':
-    CAL:
-    - - HD147084
-    - - HD147084
-    - - HD159532
-    - - HD175309
-      - HD176678
-    - - HD187086
-    SCI:
-    - AS 205 N
-    - AS 205 S
-    - HD 144668
-    - AK Sco
-    - MWC 297
-    - TY CrA
-    TAG:
-    - - LN
-    - - LN
-    - - LN
-    - - LN
-      - LN
-    - - LN
 ```
 
 ### OB-creation
