@@ -28,8 +28,9 @@ The Phase 2 OB Pipeline (p2obp) has been made to streamline/automate the whole p
 <!-- Features -->
 ## Features
 ### Parsing
-Parses night plans created with `calibrator_find.pro` by R. van Boekel (optional) of the following format (comments in between the lines are ignored, the parser looks for the **run**, **night** and **calibrator** keyword to define the individual sections and subsections):
-``````
+Parses night plans created with `calibrator_find.pro` by R. van Boekel (optional).<br>
+The format is based on the following `night_plan`-excerpt (Comments in between the lines are ignored, the parser looks for the **run**, **night** and **calibrator** keyword to define the individual sections and subsections):
+```
 run 3, 109.2313.003 = 0109.C-0413(C), ATs large array
 
 Jun 6, formal night duration:  LST 11:40 - 22:21  =  10:41 h = 641 min
@@ -58,47 +59,76 @@ LST   source            coordinates                      L        N      K      
 calibrator_find,zoom=3,duration=30,delay='large',max_d_am=0.2,max_d_az=90,minF10=5,max_diam=3,do_cal=0,LN=1,'HD 100546',LST='12:40',cal='HD102839',/print
 calibrator_find,zoom=3,duration=30,delay='large',max_d_am=0.2,max_d_az=90,minF10=5,max_diam=3,do_cal=1,LN=0,'HD 98922',LST='13:40',cal='HD96918',/print
 calibrator_find,zoom=3,duration=30,delay='large',max_d_am=0.2,max_d_az=90,minF10=5,max_diam=3,do_cal=0,LN=0,'HD 98922',LST='14:10',cal='HD102461',/print
-``````
-
-Into a `night_plan.yaml`:
-``````
-run 4, 109.2313.004 = 0109.C-0413(C), ATs medium array:
-  'night 1, September 24:':
+```
+Into a dictionary, which can be saved into a `night_plan.yaml`. Example:
+```
+run 3, 109.2313.003 = 0109.C-0413(C), ATs large array:
+  'night 2, June 6:':
     CAL:
-    - - HD27482
+    - - HD138538
+    - - HD102839
+    - - HD96918
+      - HD102461
+    - - HD133774
+    - - HD150214
+    - - HD151011
+    - - HD169420
+    - - HD150214
+      - HD159532
+    - - HD159187
+    - - HD178524
+    - - HD174387
+    - - HD188114
     SCI:
-    - V892 Tau
-    TAG:
-    - - LN
-  'night 2, September 25:':
-    CAL:
-    - - HD27482
-    SCI:
-    - AB Aur
-    TAG:
-    - - LN
-run 6, 109.2313.006 = 0109.C-0413(C), UTs:
-  'night 1, September 16:':
-    CAL:
-    - - HD17361
-    - - HD17361
-    SCI:
-    - V892 Tau
-    - V892 Tau
-    TAG:
-    - - LN
-    - - LN
-  'night 2, September 17:':
-    CAL:
-    - - HD26526
-    - - HD26526
-    SCI:
-    - AB Aur
-    - AB Aur
+    - HD 104237
+    - HD 100546
+    - HD 98922
+    - HD 142666
+    - HD 142527
+    - AS 209
+    - HD 163296
+    - V921 Sco
+    - HD 179218
+    - HD 169142
+    - R CrA
     TAG:
     - - LN
     - - LN
-``````
+    - - L
+      - N
+    - - LN
+    - - LN
+    - - LN
+    - - LN
+    - - L
+      - N
+    - - LN
+    - - LN
+    - - LN
+    - - LN
+  'night 3, June 7 (assuming the large array):':
+    CAL:
+    - - HD147084
+    - - HD147084
+    - - HD159532
+    - - HD175309
+      - HD176678
+    - - HD187086
+    SCI:
+    - AS 205 N
+    - AS 205 S
+    - HD 144668
+    - AK Sco
+    - MWC 297
+    - TY CrA
+    TAG:
+    - - LN
+    - - LN
+    - - LN
+    - - LN
+      - LN
+    - - LN
+```
 
 ### OB-creation
 * Creates (.obx)-files from either manual input list or a `night_plan.yaml`

@@ -58,10 +58,10 @@ def contains_element(list_to_search: List, element_to_search: str) -> bool:
     element_in_list: bool
         'True' if element is found, 'False' otherwise
     """
-    return any([element_to_search == element for element in list_to_search])
+    return any([element_to_search in element for element in list_to_search])
 
 
-def get_file_section(lines: List, identifier: str) -> List:
+def _get_file_section(lines: List, identifier: str) -> List:
     """Gets the section of a file corresponding to the given identifier and
     returns a dict with the keys being the match to the identifier and the
     values being a subset of the lines list
@@ -87,13 +87,12 @@ def get_file_section(lines: List, identifier: str) -> List:
     if not indices:
         indices, labels = [0], ["full_" + identifier]
 
-    sections = [lines[index:] if len(indices) == 1 else \
+    sections = [lines[index:] if index == indices[~0] else \
                   lines[index:indices[i+1]] for i, index in enumerate(indices)]
-
     return {labels: sections for (labels, sections) in zip(labels, sections)}
 
 
-def get_targets_calibrators_tags(lines: List):
+def _get_targets_calibrators_tags(lines: List):
     """Gets the info for the SCI, CAL and TAGs from the individual lines
 
     Parameters
@@ -162,7 +161,7 @@ def get_targets_calibrators_tags(lines: List):
 def parse_night_plan(night_plan_path: Path,
                      run_identifier: Optional[str] = "run",
                      sub_identifier: Optional[str] = "night",
-                     save_to_file: bool = False) -> Dict[str, List]:
+                     save_path: Optional[Path] = "") -> Dict[str, List]:
     """Parses the night plan created with 'calibrator_find.pro' into the
     individual runs as key of a dictionary, specified by the 'run_identifier'.
     If no match is found then it parses the whole night to 'run_identifier's
@@ -193,29 +192,32 @@ def parse_night_plan(night_plan_path: Path,
         with open(night_plan_path, "r+") as f:
             lines = f.readlines()
     except FileNotFoundError:
-        warning.warn(f"File {night_plan_path} was not found/does not exist!")
-        return night_plan_dict
+        raise FileNotFoundError(f"File {night_plan_path} was not found/does not exist!")
 
-    runs = get_file_section(lines, run_identifier)
+    runs = _get_file_section(lines, run_identifier)
 
     for label, section in runs.items():
-        temp_subsection_dict = get_file_section(section, sub_identifier)
+        subsection_dict = _get_file_section(section, sub_identifier)
 
         nights = {}
-        for sub_label, sub_section in temp_subsection_dict.items():
+        for sub_label, sub_section in subsection_dict.items():
             if contains_element(sub_section, "cal_"):
-                nights[sub_label] = get_targets_calibrators_tags(sub_section)
+                nights[sub_label] = _get_targets_calibrators_tags(sub_section)
 
         night_plan_dict[label] = nights
 
-    if save_to_file:
-        with open(output_path, "w+") as yaml_file:
+    if save_path:
+        with open(os.path.join(save_path, "night_plan.yaml"), "w+") as yaml_file:
             yaml.safe_dump(night_plan_dict, yaml_file)
+        print("Created 'night_plan.yaml'")
 
     return night_plan_dict
 
 
 if __name__ == "__main__":
+    lst = ["cal_peter", "honey"]
+    print(contains_element(lst, "cal_"))
+
     data_path = "/Users/scheuck/Data/observations/P109/"
     specific_path = "september2022/p109_observing_plan_v0.1.txt"
     path = os.path.join(data_path, specific_path)

@@ -3,8 +3,8 @@ import getpass
 
 def get_password_and_username():
     """Gets the user's ESO-user password to access the p2ui"""
-    username = input("Input your ESO-username")
-    password_prompt = f'Input your ESO-password: '
+    username = input("Input your ESO-username: ")
+    password_prompt = f"Input your ESO-password: "
     if sys.platform == 'ios':
         import console
         password = console.password_alert(password_prompt)
