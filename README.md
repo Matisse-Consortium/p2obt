@@ -119,6 +119,8 @@ The software will raise an error if any of the following cannot be imported (scr
 * J. Varga's `MATISSE_create_OB_2.py` automated (.obx)-template creation script
 * J. Varga's `query_CDS.py` querying script
 
+> For the specific files write a message to any of the [Contributors](#contributors), as the files have been slighlty altered and are of a specific maybe more out of date version
+
 ### Dependencies
 Install the rest of the dependencies via the `requirements.txt` (as this is a semi-package) with:
 ```
