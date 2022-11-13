@@ -4,8 +4,8 @@ __pycache__/
 .DS_Store
 
 # Specific files to ignore
-lib/query_CDS.py
-lib/MATISSE_create_OB_2.py
+libs/query_CDS.py
+libs/MATISSE_create_OB_2.py
 
 # Folders to ignore
 other_scripts/
