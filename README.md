@@ -14,7 +14,7 @@ The Phase 2 OB Pipeline (p2obp) has been made to streamline/automate the whole p
 
 * For more info see [Features](#features)
 * For upcoming features or bugs see the **issues** of this project
-* See [Installation](#installation) and [Getting Started](#getting-started)
+* See [Installation](#installation) and [Usage](#usage)
 
 <!-- Table of Contents -->
 ## Table of Contents
