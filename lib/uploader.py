@@ -59,8 +59,7 @@ import loadobx
 
 README_TEMPLATE = ...
 
-
-def _get_corresponding_run(p2, period: str, proposal_tag: str, number: int) -> int:
+def get_corresponding_run(p2, period: str, proposal_tag: str, number: int) -> int:
     """Gets the run that corresponds to the period, proposal and the number and
     returns its runId
 
@@ -91,8 +90,7 @@ def _get_corresponding_run(p2, period: str, proposal_tag: str, number: int) -> i
             return run["containerId"]
     return 0
 
-
-def _create_folder(p2, name: str, container_id: int) -> int:
+def create_folder(p2, name: str, container_id: int) -> int:
     """Creates a folder in either the run or the specified directory
 
     Parameters
@@ -108,18 +106,17 @@ def _create_folder(p2, name: str, container_id: int) -> int:
     -------
     folder_id: int
     """
-    folder, _ = p2.createFolder(container_id, name)
+    folder, folderVersion = p2.createFolder(container_id, name)
     folder_id = folder["containerId"]
     print(f"folder: {name} created!")
     return folder_id
 
-
-def _get_subfolders(root_dir: Path) -> List:
+def get_subfolders(path: Path) -> List:
     """Fetches the subfolders of a directory
 
     Parameters
     ----------
-    root_dir: Path
+    path: Path
         The path of the folder of which the subfolders are to be fetched
 
     Returns
@@ -127,11 +124,9 @@ def _get_subfolders(root_dir: Path) -> List:
     List
         List of the folder-paths
     """
-    return [os.path.join(root_dir, directory) for directory in os.listdir(root_dir)\
-            if os.path.isdir(os.path.join(root_dir, directory))]
+    return [os.path.join(path, d) for d in os.listdir(path) if os.path.isdir(os.path.join(path, d))]
 
-
-def folder_exists(p2, container_id: int) -> bool:
+def check4folder(p2, container_id: int) -> bool:
     """Checks if the container with this id exists on P2
 
     Parameters
@@ -147,16 +142,13 @@ def folder_exists(p2, container_id: int) -> bool:
         return False
 
     try:
-        if p2.getContainer(container_id):
+        if p2.getContainer(o):
             return True
     except p2api.p2api.P2Error:
         return False
 
-
-# TODO: Implement this function -> Maybe rename
 def update_readme():
     ...
-
 
 def generate_charts_and_verify(p2, container_id: int):
     """Generates the finding charts and then verifies all OBs in the container
@@ -166,20 +158,19 @@ def generate_charts_and_verify(p2, container_id: int):
     """
     folders = p2.getItems(container_id)
 
-    for folder in folders[0]:
-        obx_files = p2.getItems(folder["containerId"])
+    for i in folders[0]:
+        obx_files = p2.getItems(i["containerId"])
 
-        for obx_file in obx_files[0]:
-            p2.generateFindingChart(obx_file["obId"])
-            print(f"Finding chart created for OB {obx_file['name']}!")
+        for j in obx_files[0]:
+            p2.generateFindingChart(j["obId"])
+            print(f"Finding chart created for OB {j['name']}!")
 
-            p2.verifyOB(obx_file["obId"])
-            print(f"OB {obx_file['name']} verified!")
+            p2.verifyOB(j["obId"])
+            print(f"OB {j['name']} verified!")
 
     p2.verifyContainer(container_id, True)
 
-
-def make_folder_and_place_obs(p2, files: List[Path], container_id: int) -> None:
+def make_folders4OBs(p2, files: List[Path], container_id: int) -> None:
     """Makes the respective folders for a list of (.obx)-files
 
     Parameters
@@ -191,13 +182,13 @@ def make_folder_and_place_obs(p2, files: List[Path], container_id: int) -> None:
     container_id: int
         The id of the container on the P2
     """
-    for file in files:
-        stem = "_".join(os.path.basename(file).split(".")[0].split("_")[:-1])
+    for i in files:
+        stem = "_".join(os.path.basename(i).split(".")[0].split("_")[:-1])
         if "SCI" in stem:
             sci_name = " ".join([j for j in stem.split("_")[1:]])
-            folder_id = _create_folder(p2, sci_name, container_id)
+            folder_id = create_folder(p2, sci_name, container_id)
 
-            loadobx.loadob(p2, file, folder_id)
+            loadobx.loadob(p2, i, folder_id)
 
             for j in files:
                 stem_search = os.path.basename(j).split(".")[0]
@@ -206,7 +197,6 @@ def make_folder_and_place_obs(p2, files: List[Path], container_id: int) -> None:
                     sci4cal_name = " ".join(stem_search.split("_")[2:-1])
                     if sci_name == sci4cal_name:
                         loadobx.loadob(p2, j, folder_id)
-
 
 def make_folders_and_upload(p2, top_dir: List, run_data: List):
     """This checks if run is specified or given by the folder names and then
@@ -227,9 +217,9 @@ def make_folders_and_upload(p2, top_dir: List, run_data: List):
     """
     # TODO: Check if the run-id can be 0? If yes, make different error
     if len(run_data) == 3:
-        run_id = _get_corresponding_run(p2, *run_data)
+        run_id = get_corresponding_run(p2, *run_data)
         if run_id == 0:
-            raise ValueError("No run found!")
+            raise ValueError()
 
     night_folder_id_dict, main_folder_id_dict = {}, {}
     for i in top_dir:
@@ -240,8 +230,8 @@ def make_folders_and_upload(p2, top_dir: List, run_data: List):
             if len(run_data) < 3:
                 run_number = int(''.join([i for i in os.path.basename(j)\
                                           if i.isdigit()]))
-                run_id = _get_corresponding_run(p2, *run_data, run_number)
-                warnings.warn(f"Run: {j} has not been found in p2ui! SKIPPED!")
+                run_id = get_corresponding_run(p2, *run_data, run_number)
+                 warnings.warn(f"Run: {j} has not been found in p2ui! SKIPPED!")
 
             print(f"Making folders and uploading OBs to run {run_number}"\
                   f" with container id: {run_id}")
@@ -253,21 +243,19 @@ def make_folders_and_upload(p2, top_dir: List, run_data: List):
                 night_name = os.path.basename(k)
 
                 if night_name not in night_folder_id_dict:
-                    night_folder_id_dict[night_name] = _create_folder(p2, night_name, run_id)
-                    main_folder_id_dict[night_name] = _create_folder(p2, "main_targets",
+                    night_folder_id_dict[night_name] = create_folder(p2, night_name, run_id)
+                    main_folder_id_dict[night_name] = create_folder(p2, "main_targets",
                                                night_folder_id_dict[night_name])
-                    backup_folder = _create_folder(p2, "backup_targets",
+                    backup_folder = create_folder(p2, "backup_targets",
                                                   night_folder_id_dict[night_name])
 
-                mode_folder_id = _create_folder(p2, os.path.basename(i),
+                mode_folder_id = create_folder(p2, os.path.basename(i),
                                                main_folder_id_dict[night_name])
 
                 obx_files = glob(os.path.join(k, "*.obx"))
                 obx_files.sort(key=lambda x: os.path.basename(x).split(".")[0][-2:])
 
-                make_folder_and_place_obs(p2, obx_files, mode_folder_id)
-
-                # TODO: Implement this functionality
+                make_folders4OBs(p2, obx_files, mode_folder_id)
                 # generate_charts_and_verify(p2, mode_folder_id)
                 # print(f"Container: {os.path.basename(i)} of {night_name} verified!")
 
@@ -306,10 +294,13 @@ def ob_uploader(root_path: Path, run_data: List,
 
     # TODO: Implement if there is also a standalone setting, that the same
     # nights are used for the standalone as well
+
     make_folders_and_upload(p2, top_dir, run_data)
     print("Uploading done!")
 
 
 if __name__ == "__main__":
-    _get_subfolders("")
+    path = "/Users/scheuck/data/observations/obs"
+    run_data = ["109", "2313"]
+    ob_uploader(path, "production", run_data, "MbS")
 

@@ -4,10 +4,10 @@ import os
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from libs.parser import parse_night_plan
-from libs.creator import ob_creation
-from libs.uploader import ob_uploader
-from libs.utils import get_password_and_username
+from lib.parser import parse_night_plan
+# from lib.creator import ob_creation
+# from lib.uploader import ob_uploader
+from lib.utils import get_password_and_username
 
 
 def ob_pipeline(output_dir: Optional[Path] = "",
@@ -32,8 +32,7 @@ def ob_pipeline(output_dir: Optional[Path] = "",
         os.makedirs(output_dir)
 
     # TODO: At some point exchange this with proper password getter
-    if upload:
-        username, password = get_password_and_username()
+    # username, password = get_password_and_username()
 
     if night_plan_path:
         print("Parsing the Night plan!")
@@ -46,13 +45,13 @@ def ob_pipeline(output_dir: Optional[Path] = "",
         print("Parsing complete!")
         print("-------------------------------------------------------------------")
 
-    print("Creating the OBs!")
-    print("-------------------------------------------------------------------")
-    ob_creation(output_dir, run_data=run_dict,
-                res_dict=resolution_dict, manual_lst=manual_lst,
-                mode="gr", upload_prep=upload)
-    print("OB creation compete!")
-    print("-------------------------------------------------------------------")
+    # print("Creating the OBs!")
+    # print("-------------------------------------------------------------------")
+    # ob_creation(output_dir, run_data=run_dict,
+                # res_dict=resolution_dict, manual_lst=manual_lst,
+                # mode="gr", upload_prep=upload)
+    # print("OB creation compete!")
+    # print("-------------------------------------------------------------------")
 
     if upload:
         print("Uploading the OBs!")
@@ -71,5 +70,5 @@ if __name__ == "__main__":
     # NOTE: The resolution dict
     res_dict = {}
 
-    ob_pipeline(output_dir=out_path, night_plan_path=path,
-                save_yaml_file=True, upload=True)
+    ob_pipeline(output_dir="", night_plan_path=path,
+                save_yaml_file=True, upload=False)
