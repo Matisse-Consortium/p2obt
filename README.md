@@ -27,6 +27,13 @@ The Phase 2 OB Pipeline (p2obp) has been made to streamline/automate the whole p
 
 <!-- Features -->
 ## Features
+All of the following scripts, which are executed by `p2obp.py` are also usable individually and have more extensive usage information in their file docstrings.<br>
+The full pipeline is made up of the following scripts:<br>
+
+* [Night Plan Parsing](#night-plan-parsing): `parser.py`
+* [OB-Creation](#ob-creation): `creator.py`
+* [P2ui Access](#p2ui-access): `uploader.py`
+
 ### Night-Plan Parsing
 Parses night plans created with `calibrator_find.pro` by R. van Boekel (optional).<br>
 The format is based on the following `night_plan`-excerpt (Comments in between the lines are ignored, the parser looks for the **run**, **night** and **calibrator** keyword to define the individual sections and subsections):
