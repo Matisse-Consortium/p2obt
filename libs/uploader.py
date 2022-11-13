@@ -231,7 +231,7 @@ def make_folders_and_upload(p2, top_dir: List, run_data: List):
                 run_number = int(''.join([i for i in os.path.basename(j)\
                                           if i.isdigit()]))
                 run_id = get_corresponding_run(p2, *run_data, run_number)
-                 warnings.warn(f"Run: {j} has not been found in p2ui! SKIPPED!")
+                warnings.warn(f"Run: {j} has not been found in p2ui! SKIPPED!")
 
             print(f"Making folders and uploading OBs to run {run_number}"\
                   f" with container id: {run_id}")
