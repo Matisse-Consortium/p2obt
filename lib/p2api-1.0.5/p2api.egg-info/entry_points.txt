@@ -1,0 +1,3 @@
+[console_scripts]
+p2api_generate_finding_charts = p2api.generate_finding_charts.generate_finding_charts:main
+
