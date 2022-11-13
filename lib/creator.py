@@ -74,6 +74,7 @@ Example of usage:
     # ... SCI HD 142527         15:56:41.888  -42:19:23.248   4.8      9.8   5.0   8.3
 """
 import os
+import sys
 import yaml
 import time
 import logging
@@ -84,6 +85,9 @@ from types import SimpleNamespace
 from typing import Dict, List, Optional
 
 try:
+    module = os.path.dirname(__file__)
+    sys.path.append(module)
+    # raise ValueError(file)
     import MATISSE_create_OB_2 as ob
 except ImportError:
     raise ImportError("'MATISSE_create_OB_2.py'-file must be manually included in the 'lib/'")
@@ -99,10 +103,11 @@ except ImportError:
 
 # TODO: Make sorting that automatically sorts the CALs and SCI in a correct way
 
-# Logging configuration
-if os.path.exists("automatedOBcreation.log"):
-    os.system("rm -rf autmatedOBcreation.log")
-logging.basicConfig(filename='automatedOBcreation.log', filemode='w',
+if os.path.exists("logs/creator.log"):
+    os.system("rm -rf logs/creator.log")
+else:
+    os.mkdir("logs")
+logging.basicConfig(filename='logs/creator.log', filemode='w',
                     format='%(asctime)s - %(message)s', level=logging.INFO)
 
 # Dicts for the template and resolution configuration
@@ -184,7 +189,7 @@ def get_array_config(run_name: Optional[str] = "") -> str:
                 return "small"
             elif "medium" in run_name:
                 return "medium"
-            elif "large" in run_name:
+            else:
                 return "large"
         else:
             user_inp = int(input("No configuration can be found, please input"\
@@ -196,8 +201,8 @@ def get_array_config(run_name: Optional[str] = "") -> str:
         return TEL_CONFIG[user_inp]
 
 
-def make_sci_obs(targets: List, array_config: str, mode: str,
-                 out_dir: str, res_dict: Dict,
+def make_sci_obs(targets: List, array_config: str,
+                 mode: str, output_dir: str, res_dict: Dict,
                  standard_resolution: List, upload_prep: Optional[bool] = False) -> None:
     """Gets the inputs from a list and calls the 'mat_gen_ob' for every list element
 
@@ -232,13 +237,13 @@ def make_sci_obs(targets: List, array_config: str, mode: str,
             else:
                 temp = SimpleNamespace(**template[standard_resolution])
 
-            ob.mat_gen_ob(target, array_config, 'SCI', outdir=out_dir,\
+            ob.mat_gen_ob(target, array_config, 'SCI', outdir=output_dir,\
                           spectral_setups=temp.RES, obs_tpls=temp.TEMP,\
                           acq_tpl=ACQ, DITs=temp.DIT)
 
             # NOTE: Renames the file created to account for order while globbing for upload
             if upload_prep:
-                files = glob(os.path.join(out_dir, "*.obx"))
+                files = glob(os.path.join(output_dir, "*.obx"))
                 latest_file = max(files, key=os.path.getctime)
                 latest_file_new_name = os.path.basename(latest_file).split(".")[0]\
                         + f"_{index}.obx"
@@ -258,7 +263,7 @@ def make_cal_obs(calibrators: List, targets: List, tags: List,
                  array_config: str, mode: str, output_dir: Path,
                  resolution_dict: Optional[Dict] = {},
                  standard_resolution: Optional[List] = [],
-                 upload_prep: Optional[bool] = False) None:
+                 upload_prep: Optional[bool] = False) -> None:
     """Checks if there are sublists in the calibration list and calls the 'mat_gen_ob' with the right inputs
     to generate the calibration objects.
     The input lists correspond to each other index-wise (e.g., cal_lst[1], sci_lst[1], tag_lst[1]; etc.)
@@ -363,36 +368,37 @@ def read_dict_into_OBs(mode: str,
                       " must be given a value!")
 
     for run_name, run_content in run_dict.items():
-        print(f"Making OBs for {run_name}...")
+        print(f"Making OBs for {run_name}")
         # TODO: Add spacing for logging
-        logging.info(f"Creating OBs for '{run_name}'...")
-        run_name = ''.join(run_name.split(",")[0].strip().split())
-        logging.info(f"Creating folder: '{run_name}'...")
+        logging.info(f"Creating OBs for '{run_name}'")
         array_config = get_array_config(run_name)
+        run_name = ''.join(run_name.split(",")[0].strip().split())
+        logging.info(f"Creating folder: '{run_name}'")
 
         for night_name, night_content in run_content.items():
-                night_name = get_night_name_and_date(night_name)
+            night_name = get_night_name_and_date(night_name)
 
             night_path = os.path.join(output_dir, run_name, night_name)
             if not os.path.exists(night_path):
                 os.makedirs(night_path)
 
-            print(f"Creating folder: '{night_name}', and filling it with OBs...")
-            logging.info(f"Creating folder: '{night_name}', and filling it with OBs...")
+            print(f"Creating folder: '{night_name}', and filling it with OBs")
+            logging.info(f"Creating folder: '{night_name}', and filling it with OBs")
 
             # NOTE: This avoids a timeout from the query-databases
             time.sleep(0.5)
 
             night = SimpleNamespace(**night_content)
             make_sci_obs(night.SCI, array_config, mode,
-                         night_path, res_dict, standard_res, upload_prep=upload_prep)
+                         night_path, res_dict, standard_res, upload_prep)
             make_cal_obs(night.CAL, night.SCI, night.TAG, array_config,
-                         mode, night_path, res_dict, standard_res)
+                         mode, night_path, res_dict, standard_res, upload_prep)
 
 
 def ob_creation(output_dir: Path,
                 night_plan_path: Optional[Path] = "",
                 manual_lst: Optional[List] = [],
+                run_data: Optional[Dict] = {},
                 res_dict: Optional[Dict] = {},
                 standard_res: Optional[List] = [],
                 mode: str = "st",
@@ -409,6 +415,7 @@ def ob_creation(output_dir: Path,
         The path to the 'night_plan.yaml'-file
     manual_lst: List, optional
         The manual input of [targets, calibrators, tags]
+    run_data: Dict, optional
     resolution_dict: Dict, optional
         A dict with entries corresponding the resolution
     standard_res: List, optional
@@ -440,8 +447,8 @@ def ob_creation(output_dir: Path,
                          output_dir, res_dict, standard_res)
 
         elif night_plan_path or run_data:
-            read_dict_into_OBs(night_plan_path, os.path.join(output_dir, mode),
-                               mode, run_data, res_dict, standard_res)
+            read_dict_into_OBs(mode, night_plan_path, os.path.join(output_dir, mode),
+                               run_data, res_dict, standard_res)
 
         else:
             raise IOError("Neither '.yaml'-file nor input list found or input"

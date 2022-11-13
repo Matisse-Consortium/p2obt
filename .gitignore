@@ -8,3 +8,4 @@ lib/MATISSE_create_OB_2.py
 
 # Folders to ignore
 other_scripts/
+logs/

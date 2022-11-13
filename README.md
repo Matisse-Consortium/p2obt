@@ -27,7 +27,7 @@ The Phase 2 OB Pipeline (p2obp) has been made to streamline/automate the whole p
 
 <!-- Features -->
 ## Features
-### Parsing
+### Night-Plan Parsing
 Parses night plans created with `calibrator_find.pro` by R. van Boekel (optional).<br>
 The format is based on the following `night_plan`-excerpt (Comments in between the lines are ignored, the parser looks for the **run**, **night** and **calibrator** keyword to define the individual sections and subsections):
 ```
@@ -56,9 +56,12 @@ LST   source            coordinates                      L        N      K      
 14:10 HD 98922          11 22 31.674  -53 22 11.46    16.6     31.4   4.28                               1.40     30  MR
 14:40 cal_N_HD102461    11 47 19.141  -57 41 47.39    80.4     13.2          5.44       K5III    2.97    1.46     30
 
+...
+
 calibrator_find,zoom=3,duration=30,delay='large',max_d_am=0.2,max_d_az=90,minF10=5,max_diam=3,do_cal=0,LN=1,'HD 100546',LST='12:40',cal='HD102839',/print
 calibrator_find,zoom=3,duration=30,delay='large',max_d_am=0.2,max_d_az=90,minF10=5,max_diam=3,do_cal=1,LN=0,'HD 98922',LST='13:40',cal='HD96918',/print
 calibrator_find,zoom=3,duration=30,delay='large',max_d_am=0.2,max_d_az=90,minF10=5,max_diam=3,do_cal=0,LN=0,'HD 98922',LST='14:10',cal='HD102461',/print
+...
 ```
 Into a dictionary, which can be saved into a `night_plan.yaml`. Example:
 ```
@@ -69,48 +72,34 @@ run 3, 109.2313.003 = 0109.C-0413(C), ATs large array:
     - - HD102839
     - - HD96918
       - HD102461
-    - - HD133774
-    - - HD150214
-    - - HD151011
-    - - HD169420
-    - - HD150214
-      - HD159532
-    - - HD159187
-    - - HD178524
-    - - HD174387
-    - - HD188114
+    ...
     SCI:
     - HD 104237
     - HD 100546
     - HD 98922
     - HD 142666
-    - HD 142527
-    - AS 209
-    - HD 163296
-    - V921 Sco
-    - HD 179218
-    - HD 169142
-    - R CrA
+    ...
     TAG:
     - - LN
     - - LN
     - - L
       - N
-    - - LN
-    - - LN
-    - - LN
-    - - LN
-    - - L
-      - N
-    - - LN
-    - - LN
-    - - LN
-    - - LN
+    ...
 ```
 
-### OB-creation
+### OB-Creation
 * Creates (.obx)-files from either manual input list or a `night_plan.yaml`
-* Sorts them into folders in the order given (either CAL-SCI or SCI-CAL or CAL-SCI-CAL)
+* Sorts them into folders in the order given (either CAL-SCI or SCI-CAL or CAL-SCI-CAL)<br>
+Example of automatically generated `creator.log`-file:
+```
+2022-11-13 04:26:59,703 - Creating OBs for 'run 3, 109.2313.003 = 0109.C-0413(C), ATs large array'
+2022-11-13 04:26:59,704 - Creating folder: 'run3'
+2022-11-13 04:26:59,704 - Creating folder: 'night2_June6', and filling it with OBs
+2022-11-13 04:27:00,864 - Created OB SCI-HD 104237
+2022-11-13 04:27:01,428 - Created OB SCI-HD 100546
+2022-11-13 04:27:02,030 - Created OB SCI-HD 98922
+...
+```
 
 ### P2ui Access
 * Uploads the folders, containing the OBs, to the p2ui environment
