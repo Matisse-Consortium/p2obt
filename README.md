@@ -6,7 +6,7 @@
 
 <!-- Project Status -->
 ## Project Status
-_In a working state/Under maintenance/development_
+_Under maintenance/In development_
 
 <!-- About The Project -->
 ## About the Project
@@ -109,8 +109,13 @@ Example of automatically generated `creator.log`-file:
 ```
 
 ### P2ui Access
-* Uploads the folders, containing the OBs, to the p2ui environment
-* Generates finding charts for the individual OBs and then verifies them
+* Uploads the folders, containing the OBs, to the p2ui environment in the following structure:
+<p float="left">
+  <img src="images/night_folders_p2ui.png" width="100" />
+  <img src="images/folder_structure_p2ui.png" width="100" />
+</p>
+
+* Generates finding charts for the individual OBs and then checks and verifies them
 
 <!-- Getting Started -->
 ## Installation
