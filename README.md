@@ -109,11 +109,11 @@ Example of automatically generated `creator.log`-file:
 ```
 
 ### P2ui Access
-* Uploads the folders, containing the OBs, to the p2ui environment in the following structure:
-For the individual nights
+* Uploads the folders, containing the OBs, to the p2ui environment in the following structure:<br>
+For the individual nights<br>
 ![alt-text-1](images/night_folders_p2ui.png "Night Folders")
 
-And in the night folders for either the MATISSE-standalone, the GRA4MAT or both (these make use of different templates)
+And in the night folders for either the MATISSE-standalone, the GRA4MAT or both (these make use of different templates)<br>
 ![alt-text-2](images/folder_structure_p2ui.png "Folder Structure")
 
 * Generates finding charts for the individual OBs and then checks and verifies them
