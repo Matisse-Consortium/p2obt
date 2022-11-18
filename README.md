@@ -110,10 +110,7 @@ Example of automatically generated `creator.log`-file:
 
 ### P2ui Access
 * Uploads the folders, containing the OBs, to the p2ui environment in the following structure:
-<p float="left">
-  <img src="images/night_folders_p2ui.png" width="100" />
-  <img src="images/folder_structure_p2ui.png" width="100" />
-</p>
+![alt-text-1](images/night_folders_p2ui.png "Night Folders") ![alt-text-2](images/folder_structure_p2ui.png "Folder Structure")
 
 * Generates finding charts for the individual OBs and then checks and verifies them
 
