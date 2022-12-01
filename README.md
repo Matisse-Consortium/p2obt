@@ -14,16 +14,7 @@ The Phase 2 OB Pipeline (p2obp) has been made to streamline/automate the whole p
 
 * For more info see [Features](#features)
 * For upcoming features or bugs see the **issues** of this project
-* See [Installation](#installation) and [Usage](#usage)
-
-<!-- Table of Contents -->
-## Table of Contents
-* [Features](#features)
-* [Installation](#installation)
-* [Usage](#usage)
-* [Ressources](#ressources)
-* [License](#license)
-* [Credit](#credit)
+* To get started see [Installation](#installation) and [Usage](#usage)
 
 <!-- Features -->
 ## Features
@@ -145,7 +136,7 @@ pip install -r requirements.txt
 
 <!-- License -->
 # License
-Distributed under the MIT License. See LICENSE.txt for more information.
+Distributed under the MIT License. See LICENSE for more information.
 
 <!-- Credit -->
 # Credit
