@@ -1,34 +1,26 @@
-#!/usr/bin/env python3
-
-""" Parse OB Plan
+"""Night Plan Parser
 
 This script parses the night plans made with Roy van Boekel's "calibrator_find"
 IDL script into a (.yaml)-file that contains the CALs sorted to their
-corresponding SCI-targets in a dictionary that first specifies the run, then
-the night and then the SCIs, CALs and TAGs (If calibrator is LN/N or L-band).
+corresponding SCI-targets in a dictionary  of the following structure
 
-This tool accepts (.txt)-files.
+It first specifies the run, then the individual night with the corresponding the SCIs,
+CALs and TAGs (The Tags show if the calibrator is N-, L-band or both)
 
-The script requires that `yaml` be installed within the Python environment this
-script is run in.
+The night plan has to be a (.txt)-file
 
 This file can also be imported as a module and contains the following functions:
-    * readout_txt - reads a (.txt)-file into its individual lines returning them
-    * save_dictionary - Saves a dictionary as a (.yaml)-file
-    * check_lst4elem - Checks a list for an element and returns a bool
-    * get_file_section - Gets a section of the (.txt)/lines
-    * get_sci_cal_tag_lst - Gets the individual lists of the SCI, CAL and TAG
-    * parse_night_plan - The main function of the script. Parses the night plan
+    * _get_file_section - Gets a section of the (.txt)/lines
+    * _get_sci_cal_tag_lst - Creates a lists containing nested lists with th eSCI, CAL and
+                             TAG information
+    * parse_night_plan - Parses the night plan -> The main function of this script
 
 Example of usage:
-    >>> from parseOBplan import parse_night_plan
-    >>> path = "/Users/scheuck/Documents/PhD/matisse_stuff/observation/P109/"\
-    >>>         "april2022/p109_MATISSE_YSO_runs_observing_plan_v0.1.txt"
-    >>> run_dict = parse_night_plan(path, save2file=True)
+    >>> from parser import parse_night_plan
+    >>> run_dict = parse_night_plan(path_to_file, save_path="")
     >>> print(run_dict)
     ... {'run 5, 109.2313.005 = 0109.C-0413(E)': {'nights 2-4: {'SCI': ['MY Lup', ...], 'CAL': [['HD142198'], ...], 'TAG': [['LN'], ...]}}}
 """
-
 # TODO: Make parser accept more than one calibrator block for one night, by
 # checking if there are integers for numbers higher than last calibrator and
 # then adding these
@@ -37,28 +29,11 @@ Example of usage:
 # accept -> Make similar to loadbobx, readblock and so...
 import os
 import yaml
-import warnings
 
 from pathlib import Path
 from typing import Dict, List, Optional
 
-
-def contains_element(list_to_search: List, element_to_search: str) -> bool:
-    """Checks if an element is in the list searched and returns 'True' or 'False'
-
-    Parameters
-    ----------
-    list_to_search: List
-        The list to be searched in
-    element_to_search: str
-        The element being searched for
-
-    Returns
-    -------
-    element_in_list: bool
-        'True' if element is found, 'False' otherwise
-    """
-    return any([element_to_search in element for element in list_to_search])
+from utils import contains_element
 
 
 def _get_file_section(lines: List, identifier: str) -> List:
@@ -106,7 +81,8 @@ def _get_targets_calibrators_tags(lines: List):
         A dictionary that contains the SCI, CAL and TAG lists
     """
     line_start = [index for index, line in enumerate(lines) if line[0].isdigit()][0]
-    line_end = [index for index, line in enumerate(lines) if "calibrator_find" in line][0]
+    line_end = [index for index, line in enumerate(lines)\
+                if line.startswith("calibrator_find")][0]
     lines = ['' if line == '\n' else line for line in lines[line_start:line_end]]
 
     sci_lst, cal_lst, tag_lst  = [], [[]], [[]]
@@ -215,16 +191,9 @@ def parse_night_plan(night_plan_path: Path,
 
 
 if __name__ == "__main__":
-    lst = ["cal_peter", "honey"]
-    print(contains_element(lst, "cal_"))
-
     data_path = "/Users/scheuck/Data/observations/P109/"
     specific_path = "september2022/p109_observing_plan_v0.1.txt"
     path = os.path.join(data_path, specific_path)
-    run_dict = parse_night_plan(path, save_to_file=True)
-
-    # NOTE: Check to verify
-    for label, section in run_dict.items():
-        if "run 6" in label:
-            print(label, section)
+    run_dict = parse_night_plan(path, save_path="")
+    print(run_dict)
 

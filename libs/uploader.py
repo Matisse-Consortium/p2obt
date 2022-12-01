@@ -17,11 +17,11 @@ scripts.
 
 This file can also be imported as a module and contains the following functions:
     * get_corresponding_run - Gets a run corresponding to an input List
-    * create_folder - Creates a folder on P2 and returns its ID
+    * create_remote_folder - Creates a folder on P2 and returns its ID
     * get_subfolders - Gets all the folders from a directory
-    * check4folder - Checks if a folder with that ID already exists
+    * remote_folder_exists - Checks if a folder with that ID already exists on P2
     * generate_finding_chart_verify - Not yet implemented
-    * make_folders4OBs - Makes the individual folders for the OBs and uses the
+    * make_folders_and_upload - Makes the individual folders for the OBs and uses the
     'loadobx' script to import the already made (.obx)-files to P2
     * ob_uploader - The main loop of the script, makes the folders and uploads
     the OBs in a folder to the P2
@@ -39,7 +39,7 @@ Example of usage:
 
     # The main loop
 
-    >>> ob_uploader(path, "production", run_data, "MbS", "QekutafAmeNGNVZ")
+    >>> ob_uploader(path, "production", ESO_USERNAME, ESO_PASSWORD)
 """
 import os
 import p2api
@@ -57,9 +57,36 @@ import loadobx
 # -> FIXME: Need fix of folder creation first
 # BUG: Folder sorting sometimes doesn't work? -> Check if that persists?
 
+
 README_TEMPLATE = ...
 
-def get_corresponding_run(p2, period: str, proposal_tag: str, number: int) -> int:
+
+def remote_folder_exists(p2: p2api, container_id: int) -> bool:
+    """Checks if the container with this id exists on P2
+
+    Parameters
+    ----------
+    p2: p2api
+        The p2ui python api
+    container_id: int
+        The id of the container on the P2
+
+    Returns
+    -------
+    bool
+        True or False if container exists on P2 or not
+    """
+    try:
+        if p2.getContainer(container_id):
+            return True
+    except p2api.p2api.P2Error:
+        pass
+
+    return False
+
+
+def get_corresponding_run(p2: p2api, period: str,
+                          proposal_tag: str, number: int) -> int | None:
     """Gets the run that corresponds to the period, proposal and the number and
     returns its runId
 
@@ -77,8 +104,9 @@ def get_corresponding_run(p2, period: str, proposal_tag: str, number: int) -> in
 
     Returns
     -------
-    run_id: int
-        The run's Id that can be used to access and modify it with the p2api
+    run_id: int | None
+        The run's Id that can be used to access and modify it with the p2api. If not found
+        then None
     """
     runs = p2.getRuns()
     for run in runs[0]:
@@ -88,9 +116,10 @@ def get_corresponding_run(p2, period: str, proposal_tag: str, number: int) -> in
         if (run_period == period) and (run_proposal == proposal_tag) \
            and (run_number == number):
             return run["containerId"]
-    return 0
+    return None
 
-def create_folder(p2, name: str, container_id: int) -> int:
+
+def create_remote_folder(p2: p2api, name: str, container_id: int) -> int:
     """Creates a folder in either the run or the specified directory
 
     Parameters
@@ -106,12 +135,12 @@ def create_folder(p2, name: str, container_id: int) -> int:
     -------
     folder_id: int
     """
-    folder, folderVersion = p2.createFolder(container_id, name)
-    folder_id = folder["containerId"]
+    folder, _ = p2.createFolder(container_id, name)
     print(f"folder: {name} created!")
-    return folder_id
+    return folder["containerId"]
 
-def get_subfolders(path: Path) -> List:
+
+def get_subfolders(path: Path) -> List[str]:
     """Fetches the subfolders of a directory
 
     Parameters
@@ -121,56 +150,41 @@ def get_subfolders(path: Path) -> List:
 
     Returns
     -------
-    List
-        List of the folder-paths
+    List[str]
+        List of the folders' paths
     """
-    return [os.path.join(path, d) for d in os.listdir(path) if os.path.isdir(os.path.join(path, d))]
+    return [os.path.join(path, directory) for directory in os.listdir(path)\
+            if os.path.isdir(os.path.join(path, directory))]
 
-def check4folder(p2, container_id: int) -> bool:
-    """Checks if the container with this id exists on P2
-
-    Parameters
-    ----------
-        The id of the container on the P2
-
-    Returns
-    -------
-    bool
-        True or False if container exists on P2 or not
-    """
-    if container_id is None:
-        return False
-
-    try:
-        if p2.getContainer(o):
-            return True
-    except p2api.p2api.P2Error:
-        return False
 
 def update_readme():
     ...
 
-def generate_charts_and_verify(p2, container_id: int):
+
+def generate_charts_and_verify(p2: p2api, container_id: int) -> None:
     """Generates the finding charts and then verifies all OBs in the container
 
     p2: p2api
+        The p2ui python api
     container_id: int
+        The id of the container on the P2
     """
     folders = p2.getItems(container_id)
 
-    for i in folders[0]:
-        obx_files = p2.getItems(i["containerId"])
+    for folder in folders[0]:
+        obx_files = p2.getItems(folder["containerId"])
 
-        for j in obx_files[0]:
-            p2.generateFindingChart(j["obId"])
-            print(f"Finding chart created for OB {j['name']}!")
+        for obx_file in obx_files[0]:
+            p2.generateFindingChart(obx_file["obId"])
+            print(f"Finding chart created for OB {obx_file['name']}!")
 
-            p2.verifyOB(j["obId"])
-            print(f"OB {j['name']} verified!")
+            p2.verifyOB(obx_file["obId"])
+            print(f"OB {obx_file['name']} verified!")
 
     p2.verifyContainer(container_id, True)
 
-def make_folders4OBs(p2, files: List[Path], container_id: int) -> None:
+
+def make_folders_for_obs(p2: p2api, obx_files: List[Path], container_id: int) -> None:
     """Makes the respective folders for a list of (.obx)-files
 
     Parameters
@@ -182,23 +196,25 @@ def make_folders4OBs(p2, files: List[Path], container_id: int) -> None:
     container_id: int
         The id of the container on the P2
     """
-    for i in files:
+    # TODO: This can be simplified by a lot
+    for i in obx_files:
         stem = "_".join(os.path.basename(i).split(".")[0].split("_")[:-1])
         if "SCI" in stem:
             sci_name = " ".join([j for j in stem.split("_")[1:]])
-            folder_id = create_folder(p2, sci_name, container_id)
+            folder_id = create_remote_folder(p2, sci_name, container_id)
 
             loadobx.loadob(p2, i, folder_id)
 
-            for j in files:
+            for j in obx_files:
                 stem_search = os.path.basename(j).split(".")[0]
 
                 if "CAL" in stem_search:
-                    sci4cal_name = " ".join(stem_search.split("_")[2:-1])
-                    if sci_name == sci4cal_name:
+                    sci_for_cal_name = " ".join(stem_search.split("_")[2:-1])
+                    if sci_name == sci_for_cal_name:
                         loadobx.loadob(p2, j, folder_id)
 
-def make_folders_and_upload(p2, top_dir: List, run_data: List):
+
+def make_folders_and_upload(p2: p2api, top_dir: List, run_data: List):
     """This checks if run is specified or given by the folder names and then
     makes the same folders on the P2 and additional folders (e.g., for the
     'main_targets' and 'backup_targets' as well as for all the SCI-OBs. It then
@@ -207,6 +223,7 @@ def make_folders_and_upload(p2, top_dir: List, run_data: List):
     Parameters
     ----------
     p2: p2api
+        The P2 python api
     top_dir: List
         List containing either 'GRA4MAT_ft_vis'-, 'standalone'-folder or both
     run_data: List
@@ -239,31 +256,33 @@ def make_folders_and_upload(p2, top_dir: List, run_data: List):
             nights = glob(os.path.join(j, "*"))
             nights.sort(key=lambda x: os.path.basename(x)[:6])
 
-            for k in nights:
-                night_name = os.path.basename(k)
+            for night in nights:
+                night_name = os.path.basename(night)
 
                 if night_name not in night_folder_id_dict:
-                    night_folder_id_dict[night_name] = create_folder(p2, night_name, run_id)
-                    main_folder_id_dict[night_name] = create_folder(p2, "main_targets",
+                    night_folder_id_dict[night_name] = create_remote_folder(p2, night_name, run_id)
+                    main_folder_id_dict[night_name] = create_remote_folder(p2, "main_targets",
                                                night_folder_id_dict[night_name])
-                    backup_folder = create_folder(p2, "backup_targets",
+                    backup_folder = create_remote_folder(p2, "backup_targets",
                                                   night_folder_id_dict[night_name])
 
-                mode_folder_id = create_folder(p2, os.path.basename(i),
+                mode_folder_id = create_remote_folder(p2, os.path.basename(i),
                                                main_folder_id_dict[night_name])
 
-                obx_files = glob(os.path.join(k, "*.obx"))
+                obx_files = glob(os.path.join(night, "*.obx"))
                 obx_files.sort(key=lambda x: os.path.basename(x).split(".")[0][-2:])
 
-                make_folders4OBs(p2, obx_files, mode_folder_id)
+                make_folders_for_obs(p2, obx_files, mode_folder_id)
+
+                # TODO: Check function
                 # generate_charts_and_verify(p2, mode_folder_id)
                 # print(f"Container: {os.path.basename(i)} of {night_name} verified!")
 
 
-def ob_uploader(root_path: Path, run_data: List,
+def ob_uploader(root_dir: Path, run_data: List,
                 server: Optional[str] = "production",
                 username: Optional[str] = ""):
-    """Creates folders on the p2ui and subsequently uploades the OBs to the P2
+    """Creates folders on the P2 and subsequently uploades the OBs
 
     Parameters
     ----------
@@ -279,14 +298,12 @@ def ob_uploader(root_path: Path, run_data: List,
         The enviroment to which the (.obx)-file is uploaded, 'demo' for testing,
         'production' for paranal and 'production_lasilla' for la silla
     username: str, optional
-        The username for the p2ui
-    password: str, optional
-        The password for the p2ui
+        The username for the P2
     """
     # TODO: Make manual entry for run data possible (full_night), maybe ask for
     # prompt for run number and night name
     p2 = loadobx.login(username, password, server)
-    top_dir = glob(os.path.join(root_path, "*"))
+    top_dir = glob(os.path.join(root_dir, "*"))
 
     if not top_dir:
         raise IOError("Either input path or folder structure is wrong. No files"
