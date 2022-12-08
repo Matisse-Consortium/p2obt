@@ -7,19 +7,20 @@ corresponding SCI-targets in a dictionary  of the following structure
 It first specifies the run, then the individual night with the corresponding the SCIs,
 CALs and TAGs (The Tags show if the calibrator is N-, L-band or both)
 
-The night plan has to be a (.txt)-file
+The night plan has to be a (.txt)-file or of a similar filetype/file
 
 This file can also be imported as a module and contains the following functions:
     * _get_file_section - Gets a section of the (.txt)/lines
-    * _get_sci_cal_tag_lst - Creates a lists containing nested lists with th eSCI, CAL and
-                             TAG information
+    * _get_targets_calibrators_tags - Creates a lists containing nested lists with the
+                                      SCI, CAL and TAG information
     * parse_night_plan - Parses the night plan -> The main function of this script
 
 Example of usage:
     >>> from parser import parse_night_plan
     >>> run_dict = parse_night_plan(path_to_file, save_path="")
     >>> print(run_dict)
-    ... {'run 5, 109.2313.005 = 0109.C-0413(E)': {'nights 2-4: {'SCI': ['MY Lup', ...], 'CAL': [['HD142198'], ...], 'TAG': [['LN'], ...]}}}
+    ... {'run 5, 109.2313.005 = 0109.C-0413(E)': {'nights 2-4: {'SCI': ['MY Lup', ...],
+    ...  'CAL': [['HD142198'], ...], 'TAG': [['LN'], ...]}}}
 """
 # TODO: Make parser accept more than one calibrator block for one night, by
 # checking if there are integers for numbers higher than last calibrator and
@@ -36,7 +37,7 @@ from typing import Dict, List, Optional
 from utils import contains_element
 
 
-def _get_file_section(lines: List, identifier: str) -> List:
+def _get_file_section(lines: List, identifier: str) -> Dict:
     """Gets the section of a file corresponding to the given identifier and
     returns a dict with the keys being the match to the identifier and the
     values being a subset of the lines list
@@ -55,7 +56,7 @@ def _get_file_section(lines: List, identifier: str) -> List:
     """
     indices, labels = [], []
     for index, line in enumerate(lines):
-        if (identifier in line.lower()) and (line.split()[0].lower() == identifier):
+        if line.lower().startswith(identifier):
             indices.append(index)
             labels.append(line.replace('\n', ''))
 
@@ -191,9 +192,4 @@ def parse_night_plan(night_plan_path: Path,
 
 
 if __name__ == "__main__":
-    data_path = "/Users/scheuck/Data/observations/P109/"
-    specific_path = "september2022/p109_observing_plan_v0.1.txt"
-    path = os.path.join(data_path, specific_path)
-    run_dict = parse_night_plan(path, save_path="")
-    print(run_dict)
-
+    ...

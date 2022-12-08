@@ -198,7 +198,7 @@ def make_folders_for_obs(p2: p2api, obx_files: List[Path], container_id: int) ->
     """
     # TODO: This can be simplified by a lot
     for i in obx_files:
-        stem = "_".join(os.path.basename(i).split(".")[0].split("_")[:-1])
+        stem = "_".join(os.path.basename(i).split(".")[0].split("_"))
         if "SCI" in stem:
             sci_name = " ".join([j for j in stem.split("_")[1:]])
             folder_id = create_remote_folder(p2, sci_name, container_id)

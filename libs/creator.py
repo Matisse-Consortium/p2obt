@@ -287,8 +287,8 @@ def make_cal_obs(calibrators: List, targets: List, tags: List,
         The default spectral resolutions for l- and n-band. set to LOW for the UTs
         and to MED for the ATs as a default
     """
-    array_config = "UTs" if array_config == "UTs" else "ATs"
-    template = TEMPLATE_RES_DICT[mode][array_config]
+    array_key = "UTs" if array_config == "UTs" else "ATs"
+    template = TEMPLATE_RES_DICT[mode][array_key]
     ACQ = template["ACQ"]
 
     if not standard_resolution:
@@ -457,17 +457,15 @@ def ob_creation(output_dir: Path,
 
 if __name__ == "__main__":
     path2file = "night_plan.yaml"
-    outdir = "/Users/scheuck/Documents/code/matisse_stuff/observation/phase2/obs/"
+    outdir = "/Users/scheuck/Data/observations/obs/"
 
-    sci_lst = ["HD 13445"]
-    cal_lst = []
-    tag_lst = []
+    sci_lst = ["CQ Tau"]
+    cal_lst = ["HD29051"]
+    tag_lst = ["LN"]
     manual_lst = [sci_lst, cal_lst, tag_lst]
 
-    res_dict = {"HD 13445": "MED"}
+    res_dict = {}
 
-    # ob_creation(outdir, path2file=path2file,
-                # res_dict=res_dict, mode="gr", standard_res="MED")
     ob_creation(outdir, manual_lst=manual_lst,
-                res_dict=res_dict, mode="gr", standard_res="MED")
+                res_dict=res_dict, mode="both", standard_res="LOW")
 
