@@ -81,6 +81,7 @@ import logging
 
 from glob import glob
 from pathlib import Path
+from warnings import warn
 from types import SimpleNamespace
 from typing import Dict, List, Optional
 
@@ -435,6 +436,10 @@ def ob_creation(output_dir: Path,
     for mode in modes:
         if manual_lst:
             sci_lst, cal_lst, tag_lst = manual_lst
+            if not tag_lst:
+                tag_lst = ["LN"]*len(cal_lst)
+                warn("The 'tag_lst' has been set to 'LN' for all targets!")
+
             output_dir = os.path.join(output_dir, "manualOBs")
 
             if not os.path.exists(output_dir):
@@ -459,13 +464,13 @@ if __name__ == "__main__":
     path2file = "night_plan.yaml"
     outdir = "/Users/scheuck/Data/observations/obs/"
 
-    sci_lst = ["CQ Tau"]
-    cal_lst = ["HD29051"]
-    tag_lst = ["LN"]
+    sci_lst = ["DR Tau"]
+    cal_lst = ["HD 33554"]
+    tag_lst = []
     manual_lst = [sci_lst, cal_lst, tag_lst]
 
     res_dict = {}
 
     ob_creation(outdir, manual_lst=manual_lst,
-                res_dict=res_dict, mode="both", standard_res="LOW")
+                res_dict=res_dict, mode="st", standard_res="LOW")
 
