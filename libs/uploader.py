@@ -140,20 +140,33 @@ def create_remote_folder(p2: p2api, name: str, container_id: int) -> int:
 
 
 # TODO: This function is not used right now  make it into iterative over subfolders
-def get_subfolders(path: Path) -> List[str]:
-    """Fetches the subfolders of a directory
+def get_subfolders_containing_files(search_directory: Path,
+                                    file_type: Optional[str] = ".obx") -> List[Path]:
+    """Iterates over all folders in a certain directory and returns a list of the folders
+    containing a certain filetype
 
     Parameters
     ----------
-    path: Path
+    search_path: Path
         The path of the folder of which the subfolders are to be fetched
+    file_type: str, optional
+        The filetype that is being searched for
 
     Returns
     -------
-    List[str]
+    List[Path]
         List of the folders' paths
     """
-    return [path / directory for directory in path.iterdir() if (path / directory).isdir()]
+    folders = []
+
+    for sub_directory in search_directory.iterdir():
+        if sub_directory.is_dir():
+            for file in sub_directory.iterdir():
+                if (file.suffix == file_type) and (sub_directory not in folders):
+                    folders.append(sub_directory)
+                    continue
+
+    return [folder.relative_to(search_directory) for folder in folders]
 
 
 def update_readme():
@@ -319,7 +332,8 @@ def ob_uploader(root_dir: Path, run_data: List,
 
 
 if __name__ == "__main__":
-    path = "/Users/scheuck/data/observations/obs"
+    path = Path("/Users/scheuck/data/observations/obs/manualOBs")
     run_data = ["109", "2313"]
-    ob_uploader(path, "production", run_data, "MbS")
+    # ob_uploader(path, "production", run_data, "MbS")
+    print(get_subfolders_containing_files(path))
 
