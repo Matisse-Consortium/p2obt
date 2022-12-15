@@ -327,7 +327,7 @@ def createob(p2, containerId, filename, obdata):
 
 def addtemplate(p2, templatename, templatedata, obId, obxdir):
     '''Add a template to OB or CB obId.'''
-    print(f'Creating template {templatename}')
+    print(f'\tCreating template {templatename}')
     template, version = p2.createTemplate(obId, templatename)
     templateId = template['templateId']
 
@@ -419,7 +419,7 @@ def loadob(p2, obxfile, containerId=None):
         __, version = p2.getEphemerisFile(obId, '/dev/null')
         p2.saveEphemerisFile(obId, filename, version)
 
-    print('Done.')
+    return obId
 
 
 def main():

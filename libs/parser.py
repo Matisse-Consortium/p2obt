@@ -22,6 +22,7 @@ Example of usage:
     ... {'run 5, 109.2313.005 = 0109.C-0413(E)': {'nights 2-4: {'SCI': ['MY Lup', ...],
     ...  'CAL': [['HD142198'], ...], 'TAG': [['LN'], ...]}}}
 """
+# TODO: Add order with "a" for "after" and "b" for "before"
 # TODO: Make parser accept more than one calibrator block for one night, by
 # checking if there are integers for numbers higher than last calibrator and
 # then adding these
@@ -165,11 +166,12 @@ def parse_night_plan(night_plan_path: Path,
         containing the sub lists 'sci_lst', 'cal_lst' and 'tag_lst'
     """
     night_plan_dict = {}
-    try:
-        with open(night_plan_path, "r+") as f:
-            lines = f.readlines()
-    except FileNotFoundError:
-        raise FileNotFoundError(f"File {night_plan_path} was not found/does not exist!")
+    night_plan_path = Path(night_plan_path)
+    if night_plan_path.exists():
+        with open(Path(night_plan_path), "r+") as night_plan:
+            lines = night_plan.readlines()
+    else:
+        raise FileNotFoundError(f"File {Path(night_plan_path)} was not found/does not exist!")
 
     runs = _get_file_section(lines, run_identifier)
 
@@ -184,12 +186,16 @@ def parse_night_plan(night_plan_path: Path,
         night_plan_dict[label] = nights
 
     if save_path:
-        with open(os.path.join(save_path, "night_plan.yaml"), "w+") as yaml_file:
-            yaml.safe_dump(night_plan_dict, yaml_file)
-        print("Created 'night_plan.yaml'")
-
+        yaml_file_path = Path(save_path) / "night_plan.yaml"
+        with open(yaml_file_path, "w+") as night_plan_yaml:
+            yaml.safe_dump(night_plan_dict, night_plan_yaml)
+        print(f"Created {yaml_file_path}")
     return night_plan_dict
 
 
+# TODO: Parser is broken right now, fix!
 if __name__ == "__main__":
-    ...
+    data_dir = Path().home() / "Data" / "observations" / "P110"
+    file_path = "AT_run4_p110_MATISSE_YSO_observing_plan_backup.txt"
+    parse_night_plan(data_dir / file_path, save_path=data_dir)
+

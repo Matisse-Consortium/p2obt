@@ -78,37 +78,34 @@ import time
 import logging
 
 from pathlib import Path
-from warnings import warn
 from types import SimpleNamespace
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 try:
-    module = os.path.dirname(__file__)
+    module = Path(__file__).name
     sys.path.append(module)
-    # raise ValueError(file)
     import MATISSE_create_OB_2 as ob
 except ImportError:
-    raise ImportError("'MATISSE_create_OB_2.py'-file must be manually included in the 'lib/'")
+    raise ImportError("'MATISSE_create_OB_2.py'-file must be manually"\
+                      " included in the 'libs/'-folder")
 
 # TODO: Make this work for N-band as well
 # FIXME: Check back with Jozsef and or how to act if H_mag error occurs, or
 # other script related errors
 
-# FIXME: Two folders are created if SCI OB exists twice, remove that by making
-# a set or something in automated OB creation
-
-# TODO: Make sorting that automatically sorts the CALs and SCI in a correct way
 
 LOG_PATH = Path(__file__).parent / "logs/creator.log"
 
 if LOG_PATH.exists():
-    LOG_PATH.unlink()
+    os.remove(LOG_PATH)
 else:
-    LOG_PATH.mkdir(parents=True, exist_ok=True)
+    LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    LOG_PATH.touch()
+
 logging.basicConfig(filename=LOG_PATH, filemode='w',
                     format='%(asctime)s - %(message)s', level=logging.INFO)
 
-# Dicts for the template and resolution configuration
+# NOTE: Dictionaries for the template- and resolution-configurations
 # NOTE: For the UTs/ATs in standalone there is only one resolution as of yet -> Maybe
 # change in the future. The higher ones, to avoid errors are the same
 UT_DICT_STANDALONE = {"ACQ": ob.acq_tpl,
@@ -120,7 +117,7 @@ UT_DICT_STANDALONE = {"ACQ": ob.acq_tpl,
                               "RES": ["L-LR_N-LR"]}}
 
 AT_DICT_GRA4MAT = {"ACQ": ob.acq_ft_tpl,
-                   "LOW": {"TEMP": [ob.obs_ft_tpl], "DIT": [1.3], "RES":
+                   "LOW": {"TEMP": [ob.obs_ft_tpl], "DIT": [0.111], "RES":
                            ["L-LR_N-LR"]},
                    "MED": {"TEMP": [ob.obs_ft_tpl],
                            "DIT": [1.3], "RES": ["L-MR_N-LR"]},
@@ -140,10 +137,45 @@ UT_DICT_GRA4MAT = {"ACQ": ob.acq_ft_tpl,
                   }
 
 TEMPLATE_RES_DICT = {"standalone": {"UTs": UT_DICT_STANDALONE, "ATs": UT_DICT_STANDALONE},
-                     "GRA4MAT_ft_vis": {"UTs": UT_DICT_GRA4MAT, "ATs": AT_DICT_GRA4MAT}}
+                     "GRA4MAT": {"UTs": UT_DICT_GRA4MAT, "ATs": AT_DICT_GRA4MAT}}
 
 AT_CONFIG = ["small", "medium", "large"]
 TEL_CONFIG = ["UTs", *AT_CONFIG]
+
+
+OPERATIONAL_MODES = {"both": ["standalone", "GRA4MAT"],
+                     "st": "standalone", "gr": "GRA4MAT"}
+
+
+def copy_list_and_replace_all_values(input_list: List, value: Any):
+    """Replaces all values in list with the given value. Takes into account nested lists
+
+    Parameters
+    ----------
+    input_list: List
+        An input list of any form. May contain once nested lists
+    value: Any
+        Any value that will make up the new list
+
+    Returns
+    -------
+    output_list: List
+        The input_list with all its values replaced by the given value
+    """
+    output_list = input_list.copy()
+    for index, element in enumerate(input_list):
+        if isinstance(element, list):
+            for sub_index, _ in enumerate(element):
+                output_list[index][sub_index] = value
+        else:
+            output_list[index] = value
+    return output_list
+
+
+def add_order_tag_to_newest_file(outdir: Path, order_tag: str):
+    """Fetches the last created file and adds and order tag to it"""
+    latest_file = max(outdir.glob("*.obx"), key=os.path.getctime)
+    latest_file.rename(latest_file.with_stem(latest_file.stem + f"-{order_tag}"))
 
 
 def get_night_name_and_date(night_name: str) -> str:
@@ -209,8 +241,8 @@ def get_array_config(run_name: Optional[str] = None) -> str:
 
 
 def make_sci_obs(targets: List, array_config: str,
-                 mode: str, output_dir: str, res_dict: Dict,
-                 standard_resolution: List, upload_prep: Optional[bool] = False) -> None:
+                 mode: str, output_dir: str,
+                 res_dict: Dict, standard_resolution: List) -> None:
     """Gets the inputs from a list and calls the 'mat_gen_ob' for every list element
 
     Parameters
@@ -226,9 +258,6 @@ def make_sci_obs(targets: List, array_config: str,
     standard_resolution: List
         The default spectral resolutions for L- and N-band. Set to low for both
         as a default
-    upload_prep: bool, optional
-        If toggled will rename the (.obx)-files so that they are uploaded in the right
-        order
     """
     array_key = "UTs" if array_config == "UTs" else "ATs"
     template = TEMPLATE_RES_DICT[mode][array_key]
@@ -237,40 +266,36 @@ def make_sci_obs(targets: List, array_config: str,
     if not standard_resolution:
         standard_resolution = "LOW" if array_config == "UTs" else "MED"
 
-    for index, target in enumerate(targets):
+    for index, target in enumerate(targets, start=1):
         try:
             if res_dict and (target in res_dict):
                 temp = SimpleNamespace(**template[res_dict[target]])
             else:
                 temp = SimpleNamespace(**template[standard_resolution])
 
-            ob.mat_gen_ob(target, array_config, 'SCI', outdir=str(output_dir),\
-                          spectral_setups=temp.RES, obs_tpls=temp.TEMP,\
-                          acq_tpl=ACQ, DITs=temp.DIT)
+            ob.mat_gen_ob(target, array_config, 'SCI',
+                          outdir=str(output_dir), spectral_setups=temp.RES,
+                          obs_tpls=temp.TEMP, acq_tpl=ACQ, DITs=temp.DIT)
+            add_order_tag_to_newest_file(output_dir, index)
 
-            # NOTE: Renames the file created to account for order while globbing for upload
-            if upload_prep:
-                files = output_dir.glob("*.obx")
-                latest_file = max(files, key=os.path.getctime)
-                latest_file_new = latest_file.parent / latest_file.stem / f"_{index}.obx"
-                os.rename(latest_file, latest_file_new)
-                logging.info(f"Created OB SCI-{latest_file_new}")
-            else:
-                logging.info(f"Created OB SCI-{target}")
+            logging.info(f"Created OB: SCI-{target}")
 
         except Exception:
-            logging.error("Skipped - OB", exc_info=True)
-            print("ERROR: Skipped OB - Check (.log)-file!")
+            logging.error(f"Skipped OB: SCI-{target}", exc_info=True)
+            print(f"ERROR: Skipped OB: SCI-{target} -- Check 'creator.log'-file")
 
 
 def make_cal_obs(calibrators: List, targets: List, tags: List,
-                 array_config: str, mode: str, output_dir: Path,
-                 resolution_dict: Optional[Dict] = {},
-                 standard_resolution: Optional[List] = [],
-                 upload_prep: Optional[bool] = False) -> None:
-    """Checks if there are sublists in the calibration list and calls the 'mat_gen_ob' with the right inputs
-    to generate the calibration objects.
-    The input lists correspond to each other index-wise (e.g., cal_lst[1], sci_lst[1], tag_lst[1]; etc.)
+                 orders: List, array_config: str, mode_selection: str,
+                 output_dir: Path, resolution_dict: Optional[Dict] = {},
+                 standard_resolution: Optional[List] = []) -> None:
+    """Checks if there are sublists in the calibration list and calls the 'mat_gen_ob'
+    with the right inputs to generate the calibration objects.
+
+    The input lists correspond to each other index-wise (e.g., cal_lst[1], sci_lst[1],
+                                                         tag_lst[1]; etc.)
+    The calibrators list also accepts nested lists for multiple calibrators for a science
+    target
 
     Parameters
     ----------
@@ -279,11 +304,17 @@ def make_cal_obs(calibrators: List, targets: List, tags: List,
     targets: List
         Contains the science objects
     tags: List
-        Contains the tags (either 'L', 'N', or both) and corresponds to the science objects
+        Contains the tags (either 'L', 'N', or both) and corresponds to the science
+        objects
+    order: List
+        Contains the order if the calibrator is before "b" or after "a" the science
+        target
     array_config: str
         The array configuration ('small', 'medium', 'large') or 'UTs'
-    mode: str
-        The mode of operation of MATISSE
+    mode_selection: str
+        The mode MATISSE is operated in and for which the OBs are created.
+        Either 'st' for standalone, 'gr' for GRA4MAT_ft_vis or 'both',
+        if OBs for both are to be created
     output_dir: Path
         The output directory, where the '.obx'-files will be created in
     resolution_dict: Dict, optional
@@ -292,55 +323,51 @@ def make_cal_obs(calibrators: List, targets: List, tags: List,
         and to MED for the ATs as a default
     """
     array_key = "UTs" if array_config == "UTs" else "ATs"
-    template = TEMPLATE_RES_DICT[mode][array_key]
+    template = TEMPLATE_RES_DICT[mode_selection][array_key]
     ACQ = template["ACQ"]
 
     if not standard_resolution:
         standard_resolution = "LOW" if array_config == "UTs" else "MED"
 
-    # NOTE: Iterates through the calibration list
-    for list_index, calibrator in enumerate(calibrators):
+    # TODO: Fix if resolution dict is input then target gets put into the wrong mode
+    for calibrator, target, tag, order in zip(calibrators, targets, tags, orders):
         try:
-            if resolution_dict and (targets[list_index] in resolution_dict):
-                calibrator_template = SimpleNamespace(**template[resolution_dict[targets[list_index]]])
+            if resolution_dict and (target in resolution_dict):
+                calibrator_template =\
+                        SimpleNamespace(**template[resolution_dict[target]])
             else:
                 calibrator_template = SimpleNamespace(**template[standard_resolution])
 
-            # NOTE: Checks if list item is itself a list
-            # TODO: Remove the str(output_dir) at some point when Jozsef's code is
-            # rewritten
+            # TODO: Remove the str(output_dir) at some point after Jozsef's code rewrite
             if isinstance(calibrator, list):
-                for nested_list_index, single_calibrator in enumerate(calibrator):
-                    ob.mat_gen_ob(single_calibrator, array_config, 'CAL',
-                                  outdir=str(output_dir),
+                for cal, sub_tag, ord in enumerate(calibrator, tag, order):
+                    ob.mat_gen_ob(cal, array_config, 'CAL', outdir=str(output_dir),
                                   spectral_setups=calibrator_template.RES,
                                   obs_tpls=calibrator_template.TEMP,
-                                  acq_tpl=ACQ, sci_name=targets[list_index],
-                                  tag=tags[list_index][nested_list_index],
+                                  acq_tpl=ACQ, sci_name=target, tag=sub_tag,
                                   DITs=calibrator_template.DIT)
+                    add_order_tag_to_newest_file(output_dir, ord)
+                    logging.info(f"Created OB CAL-{calibrator}")
             else:
                 ob.mat_gen_ob(calibrator, array_config, 'CAL', outdir=str(output_dir),
                               spectral_setups=calibrator_template.RES,
                               obs_tpls=calibrator_template.TEMP,
-                              acq_tpl=ACQ, sci_name=targets[list_index],
-                              tag=tags[list_index], DITs=calibrator_template.DIT)
-
-            # TODO: Maybe also add list index here for upload and sorting, list index of
-            # target plus 0 or 1 for before or after?
-            logging.info(f"Created OB CAL-#{list_index}")
+                              acq_tpl=ACQ, sci_name=target, tag=tag,
+                              DITs=calibrator_template.DIT)
+                add_order_tag_to_newest_file(output_dir, order)
+                logging.info(f"Created OB CAL-{calibrator}")
 
         except Exception:
-            logging.error("Skipped - OB", exc_info=True)
-            print("ERROR: Skipped OB - Check (.log)-file")
+            logging.error(f"Skipped OB: CAL-{calibrator}", exc_info=True)
+            print(f"ERROR: Skipped OB: CAL-{calibrator} -- Check 'creator.log'-file")
 
 
-def read_dict_into_OBs(mode: str,
+def read_dict_into_OBs(mode_selection: str,
                        night_plan_path: Optional[Path] = None,
                        output_dir: Optional[Path] = None,
                        run_data: Optional[Dict] = {},
                        res_dict: Optional[Dict] = {},
-                       standard_res: Optional[List] = [],
-                       upload_prep: Optional[bool] = False) -> None:
+                       standard_res: Optional[List] = []) -> None:
     """This reads either the (.yaml)-file into a format suitable for the Jozsef
     Varga's OB creation code or reads out the run dict if 'run_data' is given,
     and subsequently makes the OBs.
@@ -354,16 +381,15 @@ def read_dict_into_OBs(mode: str,
         The night plan (.yaml)-file
     outpath: Path
         The output path
-    mode: str
-        The mode of operation of MATISSE
+    mode_selection: str
+        The mode MATISSE is operated in and for which the OBs are created.
+        Either 'st' for standalone, 'gr' for GRA4MAT_ft_vis or 'both',
+        if OBs for both are to be created
     res_dict: Dict, optional
         A dict with entries corresponding to non low-resolution
     standard_res: List, optional
         The default spectral resolutions for L- and N-band. By default it is set
         to medium for L- and low for N-band
-    upload_prep: bool, optional
-        If toggled will rename the (.obx)-files so that they are uploaded in the right
-        order
     """
     if run_data:
         run_dict = run_data
@@ -392,73 +418,73 @@ def read_dict_into_OBs(mode: str,
             print(f"Creating folder: '{night_name}', and filling it with OBs")
             logging.info(f"Creating folder: '{night_name}', and filling it with OBs")
 
-            # NOTE: This avoids a timeout from the query-databases
+            # NOTE: This avoids a timeout from the query-databases (such as Vizier)
             time.sleep(0.5)
 
             night = SimpleNamespace(**night_content)
-            make_sci_obs(night.SCI, array_config, mode,
-                         night_path, res_dict, standard_res, upload_prep)
-            make_cal_obs(night.CAL, night.SCI, night.TAG, array_config,
-                         mode, night_path, res_dict, standard_res, upload_prep)
+            make_sci_obs(night.SCI, array_config,
+                         mode_selection, night_path, res_dict, standard_res)
+            make_cal_obs(night.CAL, night.SCI, night.TAG, night.ORDER, array_config,
+                         mode_selection, night_path, res_dict, standard_res)
 
 
 def ob_creation(output_dir: Path,
+                sub_folder: Optional[Path] = None,
                 night_plan_path: Optional[Path] = "",
                 manual_lst: Optional[List] = [],
                 run_data: Optional[Dict] = {},
                 res_dict: Optional[Dict] = {},
                 standard_res: Optional[List] = [],
-                mode: str = "st",
-                upload_prep: Optional[bool] = False) -> None:
+                mode_selection: str = "st") -> None:
     """Gets either information from a 'nigh_plan.yaml'-file or a dictionary contain the
     run's data. Then it checks a dictionary for the resolution input for specific science
     targets and generates the OBS. Uses a standard resolution if none is provided.
 
     Parameters
     ----------
-    array_config: str
-        The array configuration
+    output_dir: Path
+    sub_folder: Path, optional
+        A sub-folder in which the scripts are made into (if manually given)
     night_plan_path: Path, optional
         The path to the 'night_plan.yaml'-file
     manual_lst: List, optional
-        The manual input of [targets, calibrators, tags]
+        The manual input of [targets, calibrators, tags, order]
+        ------ Add explanation here -----
     run_data: Dict, optional
     resolution_dict: Dict, optional
         A dict with entries corresponding the resolution
     standard_res: List, optional
         The default spectral resolutions for L- and N-band. By default it is set
         to medium for L- and low for N-band
-    mode: str
+    mode_selection: str
         The mode MATISSE is operated in and for which the OBs are created.
         Either 'st' for standalone, 'gr' for GRA4MAT_ft_vis or 'both',
         if OBs for both are to be created
-    upload_prep: bool, optional
-        If toggled will rename the (.obx)-files so that they are uploaded in the right
-        order
     """
-    modes = ["standalone", "GRA4MAT_ft_vis"] if mode == "both" else \
-            (["standalone"] if mode == "st" else ["GRA4MAT_ft_vis"])
     output_dir = Path(output_dir, "manualOBs") if manual_lst else Path(output_dir)
-    array_config = None
+    if manual_lst and (sub_folder is not None):
+        output_dir /= sub_folder
+    array_config = get_array_config()
 
-    for mode in modes:
+    for mode in OPERATIONAL_MODES[mode_selection]:
+        print("-----------------------------")
+        print(f"Making OBs for {mode}")
+        print("-----------------------------")
         if manual_lst:
-            sci_lst, cal_lst, tag_lst = manual_lst
+            sci_lst, cal_lst, tag_lst, order_lst = manual_lst
             if not tag_lst:
-                tag_lst = ["LN"]*len(cal_lst)
-                warn("The 'tag_lst' has been set to 'LN' for all targets!")
+                tag_lst = copy_list_and_replace_all_values(cal_lst, "LN")
+            if not order_lst:
+                order_lst = copy_list_and_replace_all_values(cal_lst, "a")
 
             mode_out_dir = output_dir / mode
 
             if not mode_out_dir.exists():
                 mode_out_dir.mkdir(parents=True, exist_ok=True)
 
-            if array_config is None:
-                array_config = get_array_config()
-
-            make_sci_obs(sci_lst, array_config, mode, mode_out_dir, res_dict,
-                         standard_res, upload_prep=upload_prep)
-            make_cal_obs(cal_lst, sci_lst, tag_lst, array_config, mode,\
+            make_sci_obs(sci_lst, array_config, mode,
+                         mode_out_dir, res_dict, standard_res)
+            make_cal_obs(cal_lst, sci_lst, tag_lst, order_lst, array_config, mode,\
                          mode_out_dir, res_dict, standard_res)
 
         elif night_plan_path or run_data:
@@ -472,19 +498,27 @@ def ob_creation(output_dir: Path,
 
 if __name__ == "__main__":
     path2file = "night_plan.yaml"
-    outdir = "/Users/scheuck/Data/observations/obs/"
+    outdir = Path("/Users/scheuck/Data/observations/obs/")
 
-    sci_lst = ["HD 13445", "beta Pic", "V646 Pup", "HD 72106B", "HD 95881", "HR 4049", "TW Hya"]
-    cal_lst = ["HD9362", "HD33042", "HD50235", "HD76110", "HD102839", "HD82150", "HD90957"]
+    sci_lst = ["HD 13445", "V646 Pup", "HD 72106B", "HD 95881", "HR 4049", "TW Hya",
+               "HD104237"]
+    cal_lst = ["HD9362", "HD50235", "HD76110", "HD102839", "HD82150", "HD90957",
+               "HD111915"]
     tag_lst = []
-    manual_lst = [sci_lst, cal_lst, tag_lst]
+
+    # TODO: Make explanation/docs of the order_lst
+    order_lst = []
+    manual_lst = [sci_lst, cal_lst, tag_lst, order_lst]
 
     res_dict = {"HD 95881": "MED", "HR 4049": "HIGH"}
 
-    # TODO: Add mode that 45 mins med and 30 mins med works?
+    # TODO: Add mode that 45 mins med and 30 mins med works? with the new double templates
+    # /OBs
     # TODO: Make better error messages (in case of specific failure -> then log)
+
     # TOOD: Add night astronomer comments to template of Jozsefs -> Rewrite his script?
     # TODO: Find way to switch of photometry of template -> Jozsef's script rewrite?
-    ob_creation(outdir, manual_lst=manual_lst,
-                res_dict=res_dict, mode="both", standard_res="LOW")
+
+    ob_creation(outdir, sub_folder="backup_targets", manual_lst=manual_lst,
+                res_dict=res_dict, mode_selection="both", standard_res="LOW")
 
