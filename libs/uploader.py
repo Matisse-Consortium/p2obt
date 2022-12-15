@@ -46,7 +46,7 @@ import p2api
 import warnings
 
 from pathlib import Path
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 import loadobx
 
@@ -139,36 +139,6 @@ def create_remote_folder(p2: p2api, name: str, container_id: int) -> int:
     return folder["containerId"]
 
 
-# TODO: This function is not used right now  make it into iterative over subfolders
-def get_subfolders_containing_files(search_directory: Path,
-                                    file_type: Optional[str] = ".obx") -> List[Path]:
-    """Iterates over all folders in a certain directory and returns a list of the folders
-    containing a certain filetype
-
-    Parameters
-    ----------
-    search_path: Path
-        The path of the folder of which the subfolders are to be fetched
-    file_type: str, optional
-        The filetype that is being searched for
-
-    Returns
-    -------
-    List[Path]
-        List of the folders' paths
-    """
-    folders = []
-
-    for sub_directory in search_directory.iterdir():
-        if sub_directory.is_dir():
-            for file in sub_directory.iterdir():
-                if (file.suffix == file_type) and (sub_directory not in folders):
-                    folders.append(sub_directory)
-                    continue
-
-    return [folder.relative_to(search_directory) for folder in folders]
-
-
 def update_readme():
     ...
 
@@ -196,34 +166,86 @@ def generate_charts_and_verify(p2: p2api, container_id: int) -> None:
     p2.verifyContainer(container_id, True)
 
 
-def make_folders_for_obs(p2: p2api, obx_files: List[Path], container_id: int) -> None:
-    """Makes the respective folders for a list of (.obx)-files
+# TODO: This function is not used right now  make it into iterative over subfolders
+def get_subfolders_containing_files(search_directory: Path,
+                                    file_type: Optional[str] = ".obx") -> List[Path]:
+    """Recursively searches through the whole subtree of the search directory and returns
+    the folders containt the specified filetype as a list of paths
 
     Parameters
     ----------
-    p2: p2api
-        The P2 python api
-    files: List[Path]
-        The (.obx)-files from the lowest folder in the directory
-    container_id: int
-        The id of the container on the P2
+    search_path: Path
+        The path of the folder of which the subfolders are to be fetched
+    file_type: str, optional
+        The filetype that is being searched for
+
+    Returns
+    -------
+    List[Path]
+        List of the folders' paths
     """
-    # TODO: This can be simplified by a lot
-    for i in obx_files:
-        stem = "_".join(os.path.basename(i).split(".")[0].split("_"))
+    directories_with_obx_files = []
+
+    for child in search_directory.rglob(f"*{file_type}"):
+        parent_directory = child.parent
+
+        if parent_directory not in directories_with_obx_files:
+            directories_with_obx_files.append(parent_directory)
+
+    return [directory.relative_to(search_directory)\
+            for directory in directories_with_obx_files]
+
+
+def sort_science_and_calibrator(science_to_calibrator_dict: Dict) -> Dict:
+    """This checks if the science targets or calibrators are made in a sortable way and if
+    not just returns the dict, otherwise it sorts them by their appended digit
+
+    Parameters
+    -----------
+    science_to_calibrator_dict: Dict
+        A dictionary containing the "name" of the science target as key and as value a
+        list of Paths with all its associated (.obx)-file paths
+
+    Returns
+    -------
+    science_to_calibrator_dict: Dict
+    """
+    for science_target, obx_files in science_to_calibrator_dict.items():
+        if any([obx_file.stem.endswith("_[0-9]") for obx_file in obx_files]):
+            science_to_calibrator_dict[science_target] =\
+                    sorted(obx_files, key=lambda x: x.stem.split("_")[-1])
+    return science_to_calibrator_dict
+
+
+def pair_science_to_calibrators(obx_folder: Path) -> None:
+    """Pairs up the science targets and calibrators, makes folders for them on p2 and
+    uploads them
+
+    Parameters
+    ----------
+    obx_folder: Path
+        A folder containing (.obx)-files
+    """
+    science_to_calibrator_dict = {}
+    obx_files = obx_folder.glob("*.obx")
+    obx_files = sorted(obx_files, key=lambda x: x.stem.split("_")[0])[::-1]
+
+    for obx_file in obx_files:
+        stem = obx_file.stem
         if "SCI" in stem:
-            sci_name = " ".join([j for j in stem.split("_")[1:]])
-            folder_id = create_remote_folder(p2, sci_name, container_id)
+            science_target_name = "_".join([part for part in stem.split("_")[1:]])
+            science_to_calibrator_dict[science_target_name] = [obx_file]
+        else:
+            science_target_of_calibrator = "_".join(stem.split("_")[2:-1])
+            science_to_calibrator_dict[science_target_of_calibrator].append(obx_file)
 
-            loadobx.loadob(p2, i, folder_id)
+    return sort_science_and_calibrator(science_to_calibrator_dict)
 
-            for j in obx_files:
-                stem_search = os.path.basename(j).split(".")[0]
-
-                if "CAL" in stem_search:
-                    sci_for_cal_name = " ".join(stem_search.split("_")[2:-1])
-                    if sci_name == sci_for_cal_name:
-                        loadobx.loadob(p2, j, folder_id)
+        # if "CAL" in stem_search:
+            # folder_id = create_remote_folder(p2, sci_name, container_id)
+            # if sci_name == sci_for_cal_name:
+                # loadobx.loadob(p2, j, folder_id)
+            # loadobx.loadob(p2, obx_file, folder_id)
 
 
 def make_folders_and_upload(p2: p2api, upload_directories: List[Path], run_data: List):
@@ -287,7 +309,7 @@ def make_folders_and_upload(p2: p2api, upload_directories: List[Path], run_data:
                 obx_files = night_directory.glob("*.obx")
                 obx_files.sort(key=lambda x: x.name.split(".")[0][-2:])
 
-                make_folders_for_obs(p2, obx_files, mode_folder_id)
+                make_folders_for_obx(p2, obx_files, mode_folder_id)
 
                 # TODO: Check function
                 # generate_charts_and_verify(p2, mode_folder_id)
@@ -335,5 +357,7 @@ if __name__ == "__main__":
     path = Path("/Users/scheuck/data/observations/obs/manualOBs")
     run_data = ["109", "2313"]
     # ob_uploader(path, "production", run_data, "MbS")
-    print(get_subfolders_containing_files(path))
+    folder = get_subfolders_containing_files(path)[0]
+    print(pair_science_to_calibrators(path / folder).popitem())
+
 
