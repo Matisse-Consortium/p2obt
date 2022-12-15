@@ -45,7 +45,6 @@ import os
 import p2api
 import warnings
 
-from glob import glob
 from pathlib import Path
 from typing import List, Optional
 
@@ -140,6 +139,7 @@ def create_remote_folder(p2: p2api, name: str, container_id: int) -> int:
     return folder["containerId"]
 
 
+# TODO: This function is not used right now  make it into iterative over subfolders
 def get_subfolders(path: Path) -> List[str]:
     """Fetches the subfolders of a directory
 
@@ -153,8 +153,7 @@ def get_subfolders(path: Path) -> List[str]:
     List[str]
         List of the folders' paths
     """
-    return [os.path.join(path, directory) for directory in os.listdir(path)\
-            if os.path.isdir(os.path.join(path, directory))]
+    return [path / directory for directory in path.iterdir() if (path / directory).isdir()]
 
 
 def update_readme():
@@ -214,7 +213,7 @@ def make_folders_for_obs(p2: p2api, obx_files: List[Path], container_id: int) ->
                         loadobx.loadob(p2, j, folder_id)
 
 
-def make_folders_and_upload(p2: p2api, top_dir: List, run_data: List):
+def make_folders_and_upload(p2: p2api, upload_directories: List[Path], run_data: List):
     """This checks if run is specified or given by the folder names and then
     makes the same folders on the P2 and additional folders (e.g., for the
     'main_targets' and 'backup_targets' as well as for all the SCI-OBs. It then
@@ -224,8 +223,8 @@ def make_folders_and_upload(p2: p2api, top_dir: List, run_data: List):
     ----------
     p2: p2api
         The P2 python api
-    top_dir: List
-        List containing either 'GRA4MAT_ft_vis'-, 'standalone'-folder or both
+    upload_directories: List[Path]
+        List containing folders for upload
     run_data: List
         The data that is used to get the runId. The input needs to be in the
         form of a list [run_period: str, run_proposal: str, run_number: int].
@@ -236,41 +235,44 @@ def make_folders_and_upload(p2: p2api, top_dir: List, run_data: List):
     if len(run_data) == 3:
         run_id = get_corresponding_run(p2, *run_data)
         if run_id == 0:
-            raise ValueError()
+            raise ValueError("Run could not be found!")
 
+    # TODO: Make this more modular -> Recursive search for folders until it hits a
+    # (.fits)-file
     night_folder_id_dict, main_folder_id_dict = {}, {}
-    for i in top_dir:
-        runs = glob(os.path.join(i, "*"))
-        runs.sort(key=lambda x: x[-3:])
+    for directory in upload_directories:
+        run_directories = directory.glob("*")
+        run_directories.sort(key=lambda x: x[-3:])
 
-        for j in runs:
+        for run_directory in run_directories:
             if len(run_data) < 3:
-                run_number = int(''.join([i for i in os.path.basename(j)\
+                run_number = int(''.join([i for i in run_directory.name\
                                           if i.isdigit()]))
                 run_id = get_corresponding_run(p2, *run_data, run_number)
-                warnings.warn(f"Run: {j} has not been found in p2ui! SKIPPED!")
+                warnings.warn(f"Run: {run_directory} has not been found in p2ui! SKIPPED!")
 
             print(f"Making folders and uploading OBs to run {run_number}"\
                   f" with container id: {run_id}")
 
-            nights = glob(os.path.join(j, "*"))
-            nights.sort(key=lambda x: os.path.basename(x)[:6])
+            night_directories = run_directory.glob("*")
+            night_directories.sort(key=lambda x: x.name[:6])
 
-            for night in nights:
-                night_name = os.path.basename(night)
+            for night_directory in night_directories:
+                night_name = night_directory.name
 
                 if night_name not in night_folder_id_dict:
                     night_folder_id_dict[night_name] = create_remote_folder(p2, night_name, run_id)
                     main_folder_id_dict[night_name] = create_remote_folder(p2, "main_targets",
                                                night_folder_id_dict[night_name])
-                    backup_folder = create_remote_folder(p2, "backup_targets",
-                                                  night_folder_id_dict[night_name])
+                    # TODO: Implement this
+                    # backup_folder = create_remote_folder(p2, "backup_targets",
+                                                  # night_folder_id_dict[night_name])
 
-                mode_folder_id = create_remote_folder(p2, os.path.basename(i),
-                                               main_folder_id_dict[night_name])
+                mode_folder_id = create_remote_folder(p2, directory.name,
+                                                      main_folder_id_dict[night_name])
 
-                obx_files = glob(os.path.join(night, "*.obx"))
-                obx_files.sort(key=lambda x: os.path.basename(x).split(".")[0][-2:])
+                obx_files = night_directory.glob("*.obx")
+                obx_files.sort(key=lambda x: x.name.split(".")[0][-2:])
 
                 make_folders_for_obs(p2, obx_files, mode_folder_id)
 
@@ -281,7 +283,7 @@ def make_folders_and_upload(p2: p2api, top_dir: List, run_data: List):
 
 def ob_uploader(root_dir: Path, run_data: List,
                 server: Optional[str] = "production",
-                username: Optional[str] = ""):
+                username: Optional[str] = None):
     """Creates folders on the P2 and subsequently uploades the OBs
 
     Parameters
@@ -303,16 +305,16 @@ def ob_uploader(root_dir: Path, run_data: List,
     # TODO: Make manual entry for run data possible (full_night), maybe ask for
     # prompt for run number and night name
     p2 = loadobx.login(username, password, server)
-    top_dir = glob(os.path.join(root_dir, "*"))
+    sub_directories = Path(root_dir).glob("*")
 
-    if not top_dir:
-        raise IOError("Either input path or folder structure is wrong. No files"
-                      " could be found!")
+    if not sub_directories:
+        raise FileNotFoundError("Either input path or folder structure is wrong. No files"
+                                " could be found!")
 
     # TODO: Implement if there is also a standalone setting, that the same
     # nights are used for the standalone as well
 
-    make_folders_and_upload(p2, top_dir, run_data)
+    make_folders_and_upload(p2, sub_directories, run_data)
     print("Uploading done!")
 
 
