@@ -128,20 +128,19 @@ def upload_obx_to_container(p2_connection: p2api, target: str,
     obx_files: List[Path]
     container_id: int
     """
+    print("--------------------------")
     obx_container_id = create_remote_container(p2_connection, target, container_id)
 
     for obx_file in obx_files:
-        print("--------------------------")
         try:
             ob_id = loadobx.loadob(p2_connection, obx_file, obx_container_id)
-            print(f"\tCreating finding charts {obx_file}")
-            p2_connection.generateFindingChart(ob_id)
-            print(f"\tVerifying finding charts {obx_file}")
-            p2_connection.verifyOB(ob_id)
+            # print(f"\tCreating finding charts {obx_file}")
+            # p2_connection.generateFindingChart(ob_id)
+            # print(f"\tVerifying finding charts {obx_file}")
+            # p2_connection.verifyOB(ob_id)
         except Exception:
             logging.error(f"Skipped OB-Upload: {obx_file}", exc_info=True)
             print(f"ERROR: Skipped OB-Upload: {obx_file.stem} -- Check 'uploader.log'-file")
-        print("--------------------------")
 
 
 def create_remote_container(p2_connection: p2api, name: str, container_id: int) -> int:
