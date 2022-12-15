@@ -220,7 +220,7 @@ def sort_science_and_calibrator(science_to_calibrator_dict: Dict) -> Dict:
         if any([obx_file.stem.endswith(("-a", "-b")) for obx_file in obx_files]):
             science_to_calibrator_dict[science_target] = \
                     sorted(obx_files, key=lambda x: (x.name.find("b") >= 0,
-                                                     x.name.find("a") >= 0))[::-1]
+                                                     x.name.find("a") >= 0))
     return science_to_calibrator_dict
 
 
@@ -244,7 +244,8 @@ def pair_science_to_calibrators(upload_directory: Path, obx_folder: Path) -> Dic
     for obx_file in obx_files:
         stem = obx_file.stem
         if "SCI" in stem:
-            science_target_name = "_".join([part for part in stem.split("_")[1:]])
+            science_target_name = "_".join([part for part\
+                                            in stem.split("-")[0].split("_")[1:]])
             science_to_calibrator_dict[science_target_name] = [obx_file]
         else:
             science_target_of_calibrator = "_".join(stem.split("_")[2:-1])
@@ -345,7 +346,6 @@ def ob_uploader(upload_directory: Path,
                 create_folder_structure_and_upload(p2_connection, upload_directory,
                                                    obx_folder, run_id,
                                                    container_ids, containers)
-    print(container_ids, containers)
 
     # TODO: Check if function works properly
     # generate_charts_and_verify(p2, mode_folder_id)
@@ -357,10 +357,5 @@ def ob_uploader(upload_directory: Path,
 if __name__ == "__main__":
     path = Path("/Users/scheuck/data/observations/obs/manualOBs")
     run_prog_id = "110.2474.003"
-    ob_uploader(path, run_prog_id, username="MbS")
-    # folder = get_subfolders_containing_files(path)[0]
-    # print(folder)
-    # container_ids, containers = {}, set()
-    # cid, c = create_folder_structure_and_upload("", path, folder, "", container_ids, containers)
-    # print(cid, c)
+    # ob_uploader(path, run_prog_id, username="MbS")
 
