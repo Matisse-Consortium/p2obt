@@ -268,18 +268,30 @@ def create_folder_structure_and_upload(p2_connection: p2api,
     container_ids: Dict
     containers: set
     """
+    container_id = 0
+    # TODO: Sort folders in some way iteratively
+
     for parent in obx_folder.parents[::-1][1:]:
         if parent in containers:
             continue
 
-        containers.add(parent)
-        if (parent.parent != Path(".")) and (parent.parent in containers):
-            container_id = create_remote_container(p2_connection,
-                                                   parent.name, container_id)
-            container_id[parent.parent.name][parent.name] = {"id": container_id}
+        if parent.parent != Path("."):
+            if container_id == 0:
+                container_id = container_ids[parent.parent]
+
+            container_id = create_remote_container(p2_connection, parent.name,
+                                                   container_id)
+            container_ids[parent] = container_id
         else:
             container_id = create_remote_container(p2_connection, parent.name, run_id)
-            container_ids[parent.name] = {"id": container_id}
+            container_ids[parent] = container_id
+
+        containers.add(parent)
+
+    if container_id == 0:
+        container_id = container_ids[obx_folder.parent]
+
+    container_id = create_remote_container(p2_connection, obx_folder.stem, container_id)
 
     for target, obx_files in pair_science_to_calibrators(upload_directory, obx_folder).items():
         upload_obx_to_container(p2_connection, target, obx_files, container_id)
@@ -305,7 +317,8 @@ def ob_uploader(upload_directory: Path,
         The program id of the run. Used to fetch the run to be uploaded to
     container_id: int, optional
         If this is provided then only the subtrees of the upload_directory will be
-        given container. This overrides the run_data input
+        given container. This overrides the run_data input. This will upload to the
+        specified container directly
     server: str
         The enviroment to which the (.obx)-file is uploaded, 'demo' for testing,
         'production' for paranal and 'production_lasilla' for la silla
@@ -313,21 +326,24 @@ def ob_uploader(upload_directory: Path,
         The username for the P2
     """
     # TODO: Make automatic upload possible again
-    # p2_connection = loadobx.login(username, None, server)
+    p2_connection = loadobx.login(username, None, server)
 
     if container_id:
         run_id = container_id
     elif run_prog_id:
-        run_id = get_remote_run(p2_connection, run_id)
+        run_id = get_remote_run(p2_connection, run_prog_id)
     else:
         raise IOError("Either run-program-id or container-id must be given!")
 
     obx_folders = get_subfolders_containing_files(upload_directory)
+    print(obx_folders)
 
     container_ids, containers = {}, set()
+
     for obx_folder in obx_folders:
         container_ids, containers =\
-                create_folder_structure_and_upload("", obx_folder, run_prog_id,
+                create_folder_structure_and_upload(p2_connection, upload_directory,
+                                                   obx_folder, run_id,
                                                    container_ids, containers)
     print(container_ids, containers)
 
@@ -341,6 +357,10 @@ def ob_uploader(upload_directory: Path,
 if __name__ == "__main__":
     path = Path("/Users/scheuck/data/observations/obs/manualOBs")
     run_prog_id = "110.2474.003"
-    # ob_uploader(path, run_id, username="MbS")
-
+    ob_uploader(path, run_prog_id, username="MbS")
+    # folder = get_subfolders_containing_files(path)[0]
+    # print(folder)
+    # container_ids, containers = {}, set()
+    # cid, c = create_folder_structure_and_upload("", path, folder, "", container_ids, containers)
+    # print(cid, c)
 
