@@ -173,7 +173,7 @@ def copy_list_and_replace_all_values(input_list: List, value: Any):
 def add_order_tag_to_newest_file(outdir: Path, order_tag: str):
     """Fetches the last created file and adds and order tag to it"""
     latest_file = max(outdir.glob("*.obx"), key=os.path.getctime)
-    os.rename(latest_file, latest_file.parent / (latest_file.stem + f"_{order_tag}.obx"))
+    os.rename(latest_file, latest_file.parent / (latest_file.stem + f"-{order_tag}.obx"))
 
 
 def get_night_name_and_date(night_name: str) -> str:
@@ -491,8 +491,8 @@ if __name__ == "__main__":
     path2file = "night_plan.yaml"
     outdir = "/Users/scheuck/Data/observations/obs/"
 
-    sci_lst = ["HD 13445", "beta Pic", "V646 Pup", "HD 72106B", "HD 95881", "HR 4049", "TW Hya"]
-    cal_lst = ["HD9362", "HD33042", "HD50235", "HD76110", "HD102839", "HD82150", "HD90957"]
+    sci_lst = ["HD 13445", "V646 Pup", "HD 72106B", "HD 95881", "HR 4049", "TW Hya"]
+    cal_lst = ["HD9362", "HD50235", "HD76110", "HD102839", "HD82150", "HD90957"]
     tag_lst = []
     # TODO: Make explanation of the sort_lst
     order_lst = []

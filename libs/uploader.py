@@ -211,9 +211,10 @@ def sort_science_and_calibrator(science_to_calibrator_dict: Dict) -> Dict:
     science_to_calibrator_dict: Dict
     """
     for science_target, obx_files in science_to_calibrator_dict.items():
-        if any([obx_file.stem.endswith("_[0-9]") for obx_file in obx_files]):
-            science_to_calibrator_dict[science_target] =\
-                    sorted(obx_files, key=lambda x: x.stem.split("_")[-1])
+        if any([obx_file.stem.endswith(("-a", "-b")) for obx_file in obx_files]):
+            science_to_calibrator_dict[science_target] = \
+                    sorted(obx_files, key=lambda x: (x.name.find("a") >= 0,
+                                                     x.name.find("b") >= 0))[::-1]
     return science_to_calibrator_dict
 
 
