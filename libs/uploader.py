@@ -41,7 +41,7 @@ Example of usage:
 
     >>> ob_uploader(path, "production", ESO_USERNAME, ESO_PASSWORD)
 """
-import shutil
+import os
 import logging
 
 from pathlib import Path
@@ -60,7 +60,7 @@ import loadobx
 LOG_PATH = Path(__file__).parent / "logs/uploader.log"
 
 if LOG_PATH.exists():
-    shutil.rmtree(LOG_PATH)
+    os.remove(LOG_PATH)
 else:
     LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
     LOG_PATH.touch()
@@ -131,12 +131,17 @@ def upload_obx_to_container(p2_connection: p2api, target: str,
     obx_container_id = create_remote_container(p2_connection, target, container_id)
 
     for obx_file in obx_files:
+        print("--------------------------")
         try:
-            loadobx.loadob(p2_connection, obx_file, obx_container_id)
+            ob_id = loadobx.loadob(p2_connection, obx_file, obx_container_id)
+            print(f"\tCreating finding charts {obx_file}")
+            p2_connection.generateFindingChart(ob_id)
+            print(f"\tVerifying finding charts {obx_file}")
+            p2_connection.verifyOB(ob_id)
         except Exception:
             logging.error(f"Skipped OB-Upload: {obx_file}", exc_info=True)
-            print(f"ERROR: Skipped OB-Upload: {obx_file} -- Check 'uploader.log'-file")
-
+            print(f"ERROR: Skipped OB-Upload: {obx_file.stem} -- Check 'uploader.log'-file")
+        print("--------------------------")
 
 
 def create_remote_container(p2_connection: p2api, name: str, container_id: int) -> int:
@@ -157,35 +162,12 @@ def create_remote_container(p2_connection: p2api, name: str, container_id: int) 
         The created container's id
     """
     folder, _ = p2_connection.createFolder(container_id, name)
-    print(f"folder: {name} created!")
+    print(f"Folder: {name} created!")
     return folder["containerId"]
 
 
 def update_readme():
     ...
-
-
-def generate_charts_and_verify(p2_connection: p2api, container_id: int) -> None:
-    """Generates the finding charts and then verifies all OBs in the container
-
-    p2_connection: p2api
-        The p2ui python api
-    container_id: int
-        The id of the container on the P2
-    """
-    folders = p2_connection.getItems(container_id)
-
-    for folder in folders[0]:
-        obx_files = p2_connection.getItems(folder["containerId"])
-
-        for obx_file in obx_files[0]:
-            p2_connection.generateFindingChart(obx_file["obId"])
-            print(f"Finding chart created for OB {obx_file['name']}!")
-
-            p2_connection.verifyOB(obx_file["obId"])
-            print(f"OB {obx_file['name']} verified!")
-
-    p2_connection.verifyContainer(container_id, True)
 
 
 # TODO: This function is not used right now  make it into iterative over subfolders
@@ -353,7 +335,6 @@ def ob_uploader(upload_directory: Path,
         raise IOError("Either run-program-id or container-id must be given!")
 
     obx_folders = get_subfolders_containing_files(upload_directory)
-    print(obx_folders)
 
     container_ids, containers = {}, set()
 
@@ -362,10 +343,6 @@ def ob_uploader(upload_directory: Path,
                 create_folder_structure_and_upload(p2_connection, upload_directory,
                                                    obx_folder, run_id,
                                                    container_ids, containers)
-
-    # TODO: Check if function works properly
-    # generate_charts_and_verify(p2, mode_folder_id)
-    # print(f"Container: {os.path.basename(i)} of {night_name} verified!")
 
 
 # TODO: Make container id also upload files to an empty folder directly

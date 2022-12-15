@@ -72,7 +72,6 @@ Example of usage:
     # ... SCI HD 142527         15:56:41.888  -42:19:23.248   4.8      9.8   5.0   8.3
 """
 import os
-import shutil
 import sys
 import yaml
 import time
@@ -98,7 +97,7 @@ except ImportError:
 LOG_PATH = Path(__file__).parent / "logs/creator.log"
 
 if LOG_PATH.exists():
-    shutil.rmtree(LOG_PATH)
+    os.remove(LOG_PATH)
 else:
     LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
     LOG_PATH.touch()
