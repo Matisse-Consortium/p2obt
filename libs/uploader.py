@@ -224,11 +224,12 @@ def sort_science_and_calibrator(science_to_calibrator_dict: Dict) -> Dict:
     return science_to_calibrator_dict
 
 
-def pair_science_to_calibrators(obx_folder: Path) -> Dict:
+def pair_science_to_calibrators(upload_directory: Path, obx_folder: Path) -> Dict:
     """Pairs up the science targets and calibrators (.obx)-files into a dict
 
     Parameters
     ----------
+    upload_directory: Path
     obx_folder: Path
         A folder containing (.obx)-files
 
@@ -237,8 +238,8 @@ def pair_science_to_calibrators(obx_folder: Path) -> Dict:
     sorted_science_and_calibrator_dict: Dict
     """
     science_to_calibrator_dict = {}
-    obx_files = obx_folder.glob("*.obx")
-    obx_files = sorted(obx_files, key=lambda x: x.stem.split("_")[0])[::-1]
+    obx_files = (upload_directory / obx_folder).glob("*.obx")
+    obx_files = sorted(obx_files, key=lambda x: x.stem.split("-")[1])
 
     for obx_file in obx_files:
         stem = obx_file.stem
@@ -252,13 +253,16 @@ def pair_science_to_calibrators(obx_folder: Path) -> Dict:
     return sort_science_and_calibrator(science_to_calibrator_dict)
 
 
-def create_folder_structure_and_upload(p2_connection: p2api, obx_folder: Path,
-                                       run_id: int, container_ids: Dict, containers: set):
+def create_folder_structure_and_upload(p2_connection: p2api,
+                                       upload_directory: Path,
+                                       obx_folder: Path, run_id: int,
+                                       container_ids: Dict, containers: set):
     """
 
     Parameters
     ----------
     p2_connection: p2api
+    upload_directory: Path
     obx_folder: Path
     run_id: int
     container_ids: Dict
@@ -277,7 +281,7 @@ def create_folder_structure_and_upload(p2_connection: p2api, obx_folder: Path,
             container_id = create_remote_container(p2_connection, parent.name, run_id)
             container_ids[parent.name] = {"id": container_id}
 
-    for target, obx_files in pair_science_to_calibrators(obx_folder).items():
+    for target, obx_files in pair_science_to_calibrators(upload_directory, obx_folder).items():
         upload_obx_to_container(p2_connection, target, obx_files, container_id)
 
     return container_ids, containers
@@ -285,7 +289,7 @@ def create_folder_structure_and_upload(p2_connection: p2api, obx_folder: Path,
 
 def ob_uploader(upload_directory: Path,
                 run_prog_id: Optional[str] = None,
-                container_ids: Optional[int] = None,
+                container_id: Optional[int] = None,
                 server: Optional[str] = "production",
                 username: Optional[str] = None) -> None:
     """This checks if run is specified or given by the folder names and then
@@ -311,11 +315,12 @@ def ob_uploader(upload_directory: Path,
     # TODO: Make automatic upload possible again
     # p2_connection = loadobx.login(username, None, server)
 
-    if container_ids:
-        ...
-
+    if container_id:
+        run_id = container_id
     elif run_prog_id:
         run_id = get_remote_run(p2_connection, run_id)
+    else:
+        raise IOError("Either run-program-id or container-id must be given!")
 
     obx_folders = get_subfolders_containing_files(upload_directory)
 
@@ -326,15 +331,16 @@ def ob_uploader(upload_directory: Path,
                                                    container_ids, containers)
     print(container_ids, containers)
 
-
     # TODO: Check if function works properly
     # generate_charts_and_verify(p2, mode_folder_id)
     # print(f"Container: {os.path.basename(i)} of {night_name} verified!")
 
 
+# TODO: Make container id also upload files to an empty folder directly
+
 if __name__ == "__main__":
     path = Path("/Users/scheuck/data/observations/obs/manualOBs")
     run_prog_id = "110.2474.003"
-    ob_uploader(path, run_id, username="MbS")
+    # ob_uploader(path, run_id, username="MbS")
 
 

@@ -173,7 +173,7 @@ def copy_list_and_replace_all_values(input_list: List, value: Any):
 def add_order_tag_to_newest_file(outdir: Path, order_tag: str):
     """Fetches the last created file and adds and order tag to it"""
     latest_file = max(outdir.glob("*.obx"), key=os.path.getctime)
-    os.rename(latest_file, latest_file.parent / (latest_file.stem + f"-{order_tag}.obx"))
+    latest_file.rename(latest_file.with_stem(latest_file.stem + f"-{order_tag}"))
 
 
 def get_night_name_and_date(night_name: str) -> str:
@@ -264,7 +264,7 @@ def make_sci_obs(targets: List, array_config: str,
     if not standard_resolution:
         standard_resolution = "LOW" if array_config == "UTs" else "MED"
 
-    for target in targets:
+    for index, target in enumerate(targets, start=1):
         try:
             if res_dict and (target in res_dict):
                 temp = SimpleNamespace(**template[res_dict[target]])
@@ -274,6 +274,7 @@ def make_sci_obs(targets: List, array_config: str,
             ob.mat_gen_ob(target, array_config, 'SCI',
                           outdir=str(output_dir), spectral_setups=temp.RES,
                           obs_tpls=temp.TEMP, acq_tpl=ACQ, DITs=temp.DIT)
+            add_order_tag_to_newest_file(output_dir, index)
 
             logging.info(f"Created OB: SCI-{target}")
 
@@ -459,6 +460,7 @@ def ob_creation(output_dir: Path,
     array_config = get_array_config()
 
     for mode in OPERATIONAL_MODES[mode_selection]:
+        print("-----------------------------")
         print(f"Making OBs for {mode}")
         print("-----------------------------")
         if manual_lst:
