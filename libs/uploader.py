@@ -41,14 +41,13 @@ Example of usage:
 
     >>> ob_uploader(path, "production", ESO_USERNAME, ESO_PASSWORD)
 """
-import os
-from re import I
-import p2api
-import warnings
+import shutil
+import logging
 
 from pathlib import Path
 from typing import Dict, List, Optional
 
+import p2api
 import loadobx
 
 # TODO: Make readme template and add additional per night, then upload it
@@ -57,6 +56,17 @@ import loadobx
 # -> FIXME: Need fix of folder creation first
 # BUG: Folder sorting sometimes doesn't work? -> Check if that persists?
 
+
+LOG_PATH = Path(__file__).parent / "logs/uploader.log"
+
+if LOG_PATH.exists():
+    shutil.rmtree(LOG_PATH)
+else:
+    LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    LOG_PATH.touch()
+
+logging.basicConfig(filename=LOG_PATH, filemode='w',
+                    format='%(asctime)s - %(message)s', level=logging.INFO)
 
 README_TEMPLATE = ...
 
@@ -118,9 +128,15 @@ def upload_obx_to_container(p2_connection: p2api, target: str,
     obx_files: List[Path]
     container_id: int
     """
+    obx_container_id = create_remote_container(p2_connection, target, container_id)
+
     for obx_file in obx_files:
-        obx_container_id = create_remote_container(p2_connection, target, container_id)
-        loadobx.loadob(p2_connection, obx_file, obx_container_id)
+        try:
+            loadobx.loadob(p2_connection, obx_file, obx_container_id)
+        except Exception:
+            logging.error(f"Skipped OB-Upload: {obx_file}", exc_info=True)
+            print(f"ERROR: Skipped OB-Upload: {obx_file} -- Check 'uploader.log'-file")
+
 
 
 def create_remote_container(p2_connection: p2api, name: str, container_id: int) -> int:
@@ -357,5 +373,5 @@ def ob_uploader(upload_directory: Path,
 if __name__ == "__main__":
     path = Path("/Users/scheuck/data/observations/obs/manualOBs")
     run_prog_id = "110.2474.003"
-    # ob_uploader(path, run_prog_id, username="MbS")
+    ob_uploader(path, run_prog_id, username="MbS")
 
