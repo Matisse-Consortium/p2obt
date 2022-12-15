@@ -6,12 +6,6 @@ the subfolders 'main_targets' and 'backup_targets'. Additionally, under the
 'main_targets'-folder it creates a folder for every SCI-OB, and imports the
 SCI-OB as well as the corresponding CALs into the folder.
 
-DISCLAIMER: Guaranteed for working only in conjunction with the 'parseOBplan'
-and the 'automaticOBcreation' scripts, as they format the folders correctly.
-
-The structure that the folder of the given path need to be in is the following:
-    >>> path/<GRA4MAT_ft_vis or standalone>/<run>/<night>/*.obx
-
 This is automatically the case if the folders are made with the above mentioned
 scripts.
 
@@ -68,29 +62,10 @@ else:
 logging.basicConfig(filename=LOG_PATH, filemode='w',
                     format='%(asctime)s - %(message)s', level=logging.INFO)
 
-README_TEMPLATE = ...
-
-
-def remote_container_exists(p2_connection: p2api, container_id: int) -> bool:
-    """Checks if the container with this id exists on P2
-
-    Parameters
-    ----------
-    p2_connection: p2api
-        The p2ui python api
-    container_id: int
-        The id of the container (either run or folder) on the P2
-
-    Returns
-    -------
-    container_exists: bool
-        'True' if container exists, otherwise 'False'
-    """
-    try:
-        if p2_connection.getContainer(container_id):
-            return True
-    except p2api.p2api.P2Error:
-        return False
+# TODO: Hard code this and check for upload
+README_TEMPLATE = {"Date": "", "Main observer": "",
+                   "e-mail": "", "Phone number": "",
+                   "Skype": "", "Zoom":}
 
 
 def get_remote_run(p2_connection: p2api, run_id: str) -> int | None:
@@ -116,31 +91,26 @@ def get_remote_run(p2_connection: p2api, run_id: str) -> int | None:
     return None
 
 
-def upload_obx_to_container(p2_connection: p2api, target: str,
-                            obx_files: List[Path], container_id: int) -> None:
-    """Uploads (.obx)-files contained in a list to a given container
+def remote_container_exists(p2_connection: p2api, container_id: int) -> bool:
+    """Checks if the container with this id exists on P2
 
     Parameters
     ----------
     p2_connection: p2api
         The p2ui python api
-    target: str
-    obx_files: List[Path]
     container_id: int
-    """
-    print("--------------------------")
-    obx_container_id = create_remote_container(p2_connection, target, container_id)
+        The id of the container (either run or folder) on the P2
 
-    for obx_file in obx_files:
-        try:
-            ob_id = loadobx.loadob(p2_connection, obx_file, obx_container_id)
-            # print(f"\tCreating finding charts {obx_file}")
-            # p2_connection.generateFindingChart(ob_id)
-            # print(f"\tVerifying finding charts {obx_file}")
-            # p2_connection.verifyOB(ob_id)
-        except Exception:
-            logging.error(f"Skipped OB-Upload: {obx_file}", exc_info=True)
-            print(f"ERROR: Skipped OB-Upload: {obx_file.stem} -- Check 'uploader.log'-file")
+    Returns
+    -------
+    container_exists: bool
+        'True' if container exists, otherwise 'False'
+    """
+    try:
+        if p2_connection.getContainer(container_id):
+            return True
+    except p2api.p2api.P2Error:
+        return False
 
 
 def create_remote_container(p2_connection: p2api, name: str, container_id: int) -> int:
@@ -251,6 +221,33 @@ def pair_science_to_calibrators(upload_directory: Path, obx_folder: Path) -> Dic
     return sort_science_and_calibrator(science_to_calibrator_dict)
 
 
+def upload_obx_to_container(p2_connection: p2api, target: str,
+                            obx_files: List[Path], container_id: int) -> None:
+    """Uploads (.obx)-files contained in a list to a given container
+
+    Parameters
+    ----------
+    p2_connection: p2api
+        The p2ui python api
+    target: str
+    obx_files: List[Path]
+    container_id: int
+    """
+    print("--------------------------")
+    obx_container_id = create_remote_container(p2_connection, target, container_id)
+
+    for obx_file in obx_files:
+        try:
+            ob_id = loadobx.loadob(p2_connection, obx_file, obx_container_id)
+            # print(f"\tCreating finding charts {obx_file}")
+            # p2_connection.generateFindingChart(ob_id)
+            # print(f"\tVerifying finding charts {obx_file}")
+            # p2_connection.verifyOB(ob_id)
+        except Exception:
+            logging.error(f"Skipped OB-Upload: {obx_file}", exc_info=True)
+            print(f"ERROR: Skipped OB-Upload: {obx_file.stem} -- Check 'uploader.log'-file")
+
+
 def create_folder_structure_and_upload(p2_connection: p2api,
                                        upload_directory: Path,
                                        obx_folder: Path, run_id: int,
@@ -266,6 +263,7 @@ def create_folder_structure_and_upload(p2_connection: p2api,
     container_ids: Dict
     containers: set
     """
+    # FIXME: Make container_id upload work
     container_id = 0
     # TODO: Sort folders in some way iteratively
 
@@ -287,7 +285,12 @@ def create_folder_structure_and_upload(p2_connection: p2api,
         containers.add(parent)
 
     if container_id == 0:
-        container_id = container_ids[obx_folder.parent]
+        # FIXME: This is a botched fix for a weird bug that it only takes folders that
+        # originated from same file??
+        if container_ids:
+            container_id = container_ids[obx_folder.parent]
+        else:
+            container_id = run_id
 
     container_id = create_remote_container(p2_connection, obx_folder.stem, container_id)
 
@@ -345,9 +348,12 @@ def ob_uploader(upload_directory: Path,
 
 
 # TODO: Make container id also upload files to an empty folder directly
+# TODO: Sort GRA4MAT to the top
+# TODO: Make night sorting also
 
 if __name__ == "__main__":
     path = Path("/Users/scheuck/data/observations/obs/manualOBs")
-    run_prog_id = "110.2474.003"
+    path /= "backup_targets"
+    run_prog_id = "110.2474.004"
     ob_uploader(path, run_prog_id, username="MbS")
 

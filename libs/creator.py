@@ -117,7 +117,7 @@ UT_DICT_STANDALONE = {"ACQ": ob.acq_tpl,
                               "RES": ["L-LR_N-LR"]}}
 
 AT_DICT_GRA4MAT = {"ACQ": ob.acq_ft_tpl,
-                   "LOW": {"TEMP": [ob.obs_ft_tpl], "DIT": [1.3], "RES":
+                   "LOW": {"TEMP": [ob.obs_ft_tpl], "DIT": [0.111], "RES":
                            ["L-LR_N-LR"]},
                    "MED": {"TEMP": [ob.obs_ft_tpl],
                            "DIT": [1.3], "RES": ["L-MR_N-LR"]},
@@ -329,6 +329,7 @@ def make_cal_obs(calibrators: List, targets: List, tags: List,
     if not standard_resolution:
         standard_resolution = "LOW" if array_config == "UTs" else "MED"
 
+    # TODO: Fix if resolution dict is input then target gets put into the wrong mode
     for calibrator, target, tag, order in zip(calibrators, targets, tags, orders):
         try:
             if resolution_dict and (target in resolution_dict):
@@ -428,6 +429,7 @@ def read_dict_into_OBs(mode_selection: str,
 
 
 def ob_creation(output_dir: Path,
+                sub_folder: Optional[Path] = None,
                 night_plan_path: Optional[Path] = "",
                 manual_lst: Optional[List] = [],
                 run_data: Optional[Dict] = {},
@@ -440,8 +442,9 @@ def ob_creation(output_dir: Path,
 
     Parameters
     ----------
-    array_config: str
-        The array configuration
+    output_dir: Path
+    sub_folder: Path, optional
+        A sub-folder in which the scripts are made into (if manually given)
     night_plan_path: Path, optional
         The path to the 'night_plan.yaml'-file
     manual_lst: List, optional
@@ -459,6 +462,8 @@ def ob_creation(output_dir: Path,
         if OBs for both are to be created
     """
     output_dir = Path(output_dir, "manualOBs") if manual_lst else Path(output_dir)
+    if manual_lst and (sub_folder is not None):
+        output_dir /= sub_folder
     array_config = get_array_config()
 
     for mode in OPERATIONAL_MODES[mode_selection]:
@@ -493,21 +498,27 @@ def ob_creation(output_dir: Path,
 
 if __name__ == "__main__":
     path2file = "night_plan.yaml"
-    outdir = "/Users/scheuck/Data/observations/obs/"
+    outdir = Path("/Users/scheuck/Data/observations/obs/")
 
-    sci_lst = ["HD 13445", "V646 Pup", "HD 72106B", "HD 95881", "HR 4049", "TW Hya"]
-    cal_lst = ["HD9362", "HD50235", "HD76110", "HD102839", "HD82150", "HD90957"]
+    sci_lst = ["HD 13445", "V646 Pup", "HD 72106B", "HD 95881", "HR 4049", "TW Hya",
+               "HD104237"]
+    cal_lst = ["HD9362", "HD50235", "HD76110", "HD102839", "HD82150", "HD90957",
+               "HD111915"]
     tag_lst = []
-    # TODO: Make explanation of the sort_lst
+
+    # TODO: Make explanation/docs of the order_lst
     order_lst = []
     manual_lst = [sci_lst, cal_lst, tag_lst, order_lst]
 
     res_dict = {"HD 95881": "MED", "HR 4049": "HIGH"}
 
-    # TODO: Add mode that 45 mins med and 30 mins med works?
+    # TODO: Add mode that 45 mins med and 30 mins med works? with the new double templates
+    # /OBs
     # TODO: Make better error messages (in case of specific failure -> then log)
+
     # TOOD: Add night astronomer comments to template of Jozsefs -> Rewrite his script?
     # TODO: Find way to switch of photometry of template -> Jozsef's script rewrite?
-    ob_creation(outdir, manual_lst=manual_lst,
+
+    ob_creation(outdir, sub_folder="backup_targets", manual_lst=manual_lst,
                 res_dict=res_dict, mode_selection="both", standard_res="LOW")
 
