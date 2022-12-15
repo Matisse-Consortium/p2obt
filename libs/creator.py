@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """Automated OB Creation
 
 This script creates the OBs from either a manual input list a manual input
@@ -79,7 +77,6 @@ import yaml
 import time
 import logging
 
-from glob import glob
 from pathlib import Path
 from warnings import warn
 from types import SimpleNamespace
@@ -97,44 +94,53 @@ except ImportError:
 # FIXME: Check back with Jozsef and or how to act if H_mag error occurs, or
 # other script related errors
 
-# TODO: Implement standard resolution
-
 # FIXME: Two folders are created if SCI OB exists twice, remove that by making
 # a set or something in automated OB creation
 
 # TODO: Make sorting that automatically sorts the CALs and SCI in a correct way
 
-if os.path.exists("logs/creator.log"):
-    os.system("rm -rf logs/creator.log")
+LOG_PATH = Path(__file__).parent / "logs/creator.log"
+
+if LOG_PATH.exists():
+    LOG_PATH.unlink()
 else:
-    os.mkdir("logs")
-logging.basicConfig(filename='logs/creator.log', filemode='w',
+    LOG_PATH.mkdir(parents=True, exist_ok=True)
+logging.basicConfig(filename=LOG_PATH, filemode='w',
                     format='%(asctime)s - %(message)s', level=logging.INFO)
 
 # Dicts for the template and resolution configuration
+# NOTE: For the UTs/ATs in standalone there is only one resolution as of yet -> Maybe
+# change in the future. The higher ones, to avoid errors are the same
 UT_DICT_STANDALONE = {"ACQ": ob.acq_tpl,
                       "LOW": {"TEMP": [ob.obs_tpl], "DIT": [0.111],
+                              "RES": ["L-LR_N-LR"]},
+                      "MED": {"TEMP": [ob.obs_tpl], "DIT": [0.111],
+                              "RES": ["L-LR_N-LR"]},
+                      "HIGH": {"TEMP": [ob.obs_tpl], "DIT": [0.111],
                               "RES": ["L-LR_N-LR"]}}
 
 AT_DICT_GRA4MAT = {"ACQ": ob.acq_ft_tpl,
-                   "LOW": {"TEMP": [ob.obs_ft_tpl], "DIT": [1.], "RES":
+                   "LOW": {"TEMP": [ob.obs_ft_tpl], "DIT": [1.3], "RES":
                            ["L-LR_N-LR"]},
                    "MED": {"TEMP": [ob.obs_ft_tpl],
                            "DIT": [1.3], "RES": ["L-MR_N-LR"]},
                    "HIGH": {"TEMP": [ob.obs_ft_tpl],
                            "DIT": [3.], "RES": ["L-HR_N-LR"]}}
 
+# NOTE: Maybe include the higher resolutions again
 UT_DICT_GRA4MAT = {"ACQ": ob.acq_ft_tpl,
-                   "LOW": {"TEMP": [ob.obs_ft_vis_tpl], "DIT": [0.111], "RES":
+                   "LOW": {"TEMP": [ob.obs_ft_tpl], "DIT": [0.111], "RES":
                            ["L-LR_N-LR"]},
-                   "MED": {"TEMP": [ob.obs_ft_coh_tpl, ob.obs_ft_vis_tpl],
-                           "DIT": [1.3, 0.111], "RES": ["L-MR_N-LR"]},
-                   "HIGH": {"TEMP": [ob.obs_ft_coh_tpl, ob.obs_ft_vis_tpl],
-                           "DIT": [3., 0.111], "RES": ["L-HR_N-LR"]}}
+                   # "LOW_VIS": {"TEMP": [ob.obs_ft_vis_tpl], "DIT": [0.111], "RES":
+                               # ["L-LR_N-LR"]},
+                   # "MED": {"TEMP": [ob.obs_ft_coh_tpl, ob.obs_ft_vis_tpl],
+                           # "DIT": [1.3, 0.111], "RES": ["L-MR_N-LR"]},
+                   # "HIGH": {"TEMP": [ob.obs_ft_coh_tpl, ob.obs_ft_vis_tpl],
+                           # "DIT": [3., 0.111], "RES": ["L-HR_N-LR"]}
+                  }
 
-TEMPLATE_RES_DICT = {"standalone": {"UTs": UT_DICT_STANDALONE},
-                     "GRA4MAT_ft_vis": {"UTs": UT_DICT_GRA4MAT,
-                                        "ATs": AT_DICT_GRA4MAT}}
+TEMPLATE_RES_DICT = {"standalone": {"UTs": UT_DICT_STANDALONE, "ATs": UT_DICT_STANDALONE},
+                     "GRA4MAT_ft_vis": {"UTs": UT_DICT_GRA4MAT, "ATs": AT_DICT_GRA4MAT}}
 
 AT_CONFIG = ["small", "medium", "large"]
 TEL_CONFIG = ["UTs", *AT_CONFIG]
@@ -168,7 +174,7 @@ def get_night_name_and_date(night_name: str) -> str:
             if date != '' else ''.join(night.split())
 
 
-def get_array_config(run_name: Optional[str] = "") -> str:
+def get_array_config(run_name: Optional[str] = None) -> str:
     """Fetches the array configuration from the name of the run. And if no run
     name is specified or no match can be found prompts the user for the
     configuration
@@ -238,20 +244,17 @@ def make_sci_obs(targets: List, array_config: str,
             else:
                 temp = SimpleNamespace(**template[standard_resolution])
 
-            ob.mat_gen_ob(target, array_config, 'SCI', outdir=output_dir,\
+            ob.mat_gen_ob(target, array_config, 'SCI', outdir=str(output_dir),\
                           spectral_setups=temp.RES, obs_tpls=temp.TEMP,\
                           acq_tpl=ACQ, DITs=temp.DIT)
 
             # NOTE: Renames the file created to account for order while globbing for upload
             if upload_prep:
-                files = glob(os.path.join(output_dir, "*.obx"))
+                files = output_dir.glob("*.obx")
                 latest_file = max(files, key=os.path.getctime)
-                latest_file_new_name = os.path.basename(latest_file).split(".")[0]\
-                        + f"_{index}.obx"
-                latest_file_new_name = os.path.join(os.path.dirname(latest_file),
-                                                    latest_file_new_name)
-                os.rename(latest_file, latest_file_new_name)
-                logging.info(f"Created OB SCI-{latest_file_new_name}")
+                latest_file_new = latest_file.parent / latest_file.stem / f"_{index}.obx"
+                os.rename(latest_file, latest_file_new)
+                logging.info(f"Created OB SCI-{latest_file_new}")
             else:
                 logging.info(f"Created OB SCI-{target}")
 
@@ -304,16 +307,19 @@ def make_cal_obs(calibrators: List, targets: List, tags: List,
                 calibrator_template = SimpleNamespace(**template[standard_resolution])
 
             # NOTE: Checks if list item is itself a list
+            # TODO: Remove the str(output_dir) at some point when Jozsef's code is
+            # rewritten
             if isinstance(calibrator, list):
                 for nested_list_index, single_calibrator in enumerate(calibrator):
-                    ob.mat_gen_ob(single_calibrator, array_config, 'CAL', outdir=output_dir,
+                    ob.mat_gen_ob(single_calibrator, array_config, 'CAL',
+                                  outdir=str(output_dir),
                                   spectral_setups=calibrator_template.RES,
                                   obs_tpls=calibrator_template.TEMP,
                                   acq_tpl=ACQ, sci_name=targets[list_index],
                                   tag=tags[list_index][nested_list_index],
                                   DITs=calibrator_template.DIT)
             else:
-                ob.mat_gen_ob(calibrator, array_config, 'CAL', outdir=output_dir,
+                ob.mat_gen_ob(calibrator, array_config, 'CAL', outdir=str(output_dir),
                               spectral_setups=calibrator_template.RES,
                               obs_tpls=calibrator_template.TEMP,
                               acq_tpl=ACQ, sci_name=targets[list_index],
@@ -329,8 +335,8 @@ def make_cal_obs(calibrators: List, targets: List, tags: List,
 
 
 def read_dict_into_OBs(mode: str,
-                       night_plan_path: Optional[Path] = "",
-                       output_dir: Optional[Path] = "",
+                       night_plan_path: Optional[Path] = None,
+                       output_dir: Optional[Path] = None,
                        run_data: Optional[Dict] = {},
                        res_dict: Optional[Dict] = {},
                        standard_res: Optional[List] = [],
@@ -361,9 +367,9 @@ def read_dict_into_OBs(mode: str,
     """
     if run_data:
         run_dict = run_data
-    elif night_plan_path:
-        with open(night_plan_path, "r") as fy:
-            run_dict = yaml.safe_load(fy)
+    elif night_plan_path is not None:
+        with open(night_plan_path, "r") as night_plan_yaml:
+            run_dict = yaml.safe_load(night_plan_yaml)
     else:
         raise IOError("Either the 'run_data'- or the 'night_plan_path'-parameters"\
                       " must be given a value!")
@@ -379,9 +385,9 @@ def read_dict_into_OBs(mode: str,
         for night_name, night_content in run_content.items():
             night_name = get_night_name_and_date(night_name)
 
-            night_path = os.path.join(output_dir, run_name, night_name)
-            if not os.path.exists(night_path):
-                os.makedirs(night_path)
+            night_path = output_dir / run_name / night_name
+            if not night_path.exists():
+                night_path.mkdir(parents=True, exist_ok=True)
 
             print(f"Creating folder: '{night_name}', and filling it with OBs")
             logging.info(f"Creating folder: '{night_name}', and filling it with OBs")
@@ -432,6 +438,8 @@ def ob_creation(output_dir: Path,
     """
     modes = ["standalone", "GRA4MAT_ft_vis"] if mode == "both" else \
             (["standalone"] if mode == "st" else ["GRA4MAT_ft_vis"])
+    output_dir = Path(output_dir, "manualOBs") if manual_lst else Path(output_dir)
+    array_config = None
 
     for mode in modes:
         if manual_lst:
@@ -440,19 +448,21 @@ def ob_creation(output_dir: Path,
                 tag_lst = ["LN"]*len(cal_lst)
                 warn("The 'tag_lst' has been set to 'LN' for all targets!")
 
-            output_dir = os.path.join(output_dir, "manualOBs")
+            mode_out_dir = output_dir / mode
 
-            if not os.path.exists(output_dir):
-                os.makedirs(output_dir)
+            if not mode_out_dir.exists():
+                mode_out_dir.mkdir(parents=True, exist_ok=True)
 
-            array_config = get_array_config()
-            make_sci_obs(sci_lst, array_config, mode, output_dir, res_dict,
+            if array_config is None:
+                array_config = get_array_config()
+
+            make_sci_obs(sci_lst, array_config, mode, mode_out_dir, res_dict,
                          standard_res, upload_prep=upload_prep)
             make_cal_obs(cal_lst, sci_lst, tag_lst, array_config, mode,\
-                         output_dir, res_dict, standard_res)
+                         mode_out_dir, res_dict, standard_res)
 
         elif night_plan_path or run_data:
-            read_dict_into_OBs(mode, night_plan_path, os.path.join(output_dir, mode),
+            read_dict_into_OBs(mode, night_plan_path, Path(output_dir, mode),
                                run_data, res_dict, standard_res)
 
         else:
@@ -464,13 +474,17 @@ if __name__ == "__main__":
     path2file = "night_plan.yaml"
     outdir = "/Users/scheuck/Data/observations/obs/"
 
-    sci_lst = ["DR Tau"]
-    cal_lst = ["HD 33554"]
+    sci_lst = ["HD 13445", "beta Pic", "V646 Pup", "HD 72106B", "HD 95881", "HR 4049", "TW Hya"]
+    cal_lst = ["HD9362", "HD33042", "HD50235", "HD76110", "HD102839", "HD82150", "HD90957"]
     tag_lst = []
     manual_lst = [sci_lst, cal_lst, tag_lst]
 
-    res_dict = {}
+    res_dict = {"HD 95881": "MED", "HR 4049": "HIGH"}
 
+    # TODO: Add mode that 45 mins med and 30 mins med works?
+    # TODO: Make better error messages (in case of specific failure -> then log)
+    # TOOD: Add night astronomer comments to template of Jozsefs -> Rewrite his script?
+    # TODO: Find way to switch of photometry of template -> Jozsef's script rewrite?
     ob_creation(outdir, manual_lst=manual_lst,
-                res_dict=res_dict, mode="st", standard_res="LOW")
+                res_dict=res_dict, mode="both", standard_res="LOW")
 
