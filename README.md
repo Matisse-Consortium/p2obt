@@ -2,7 +2,7 @@
 
 <!-- Project Shields -->
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-![Lifecycle: broken](https://img.shields.io/badge/lifecycle-broken-red.svg)
+![Lifecycle: development](https://img.shields.io/badge/lifecycle-development-blue.svg)
 
 <!-- Project Status -->
 ## Project Status

@@ -65,7 +65,7 @@ logging.basicConfig(filename=LOG_PATH, filemode='w',
 # TODO: Hard code this and check for upload
 README_TEMPLATE = {"Date": "", "Main observer": "",
                    "e-mail": "", "Phone number": "",
-                   "Skype": "", "Zoom":}
+                   "Skype": "", "Zoom": ""}
 
 
 def get_remote_run(p2_connection: p2api, run_id: str) -> int | None:
@@ -131,7 +131,7 @@ def create_remote_container(p2_connection: p2api, name: str, container_id: int) 
         The created container's id
     """
     folder, _ = p2_connection.createFolder(container_id, name)
-    print(f"Folder: {name} created!")
+    print(f"Creating container {name}")
     return folder["containerId"]
 
 
@@ -353,7 +353,6 @@ def ob_uploader(upload_directory: Path,
 
 if __name__ == "__main__":
     path = Path("/Users/scheuck/data/observations/obs/manualOBs")
-    path /= "backup_targets"
     run_prog_id = "110.2474.004"
     ob_uploader(path, run_prog_id, username="MbS")
 

@@ -309,7 +309,7 @@ def createob(p2, containerId, filename, obdata):
     '''Create a new OB or CB from obdata in the container.'''
     obname = obdata.get('name', filename)
     itemType = 'OB' if obdata.get('type', 'O') == 'O' else 'CB'
-    print(f'Creating {itemType} {obname}')
+    print(f'\tCreating {itemType} {obname}')
     ob, version = p2.createItem(itemType, containerId, obname)
 
     # fill in the OB
@@ -327,7 +327,7 @@ def createob(p2, containerId, filename, obdata):
 
 def addtemplate(p2, templatename, templatedata, obId, obxdir):
     '''Add a template to OB or CB obId.'''
-    print(f'\tCreating template {templatename}')
+    print(f'\t\tCreating template {templatename}')
     template, version = p2.createTemplate(obId, templatename)
     templateId = template['templateId']
 

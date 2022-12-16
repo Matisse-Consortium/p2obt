@@ -73,6 +73,7 @@ Example of usage:
 """
 import os
 import sys
+import shutil
 import yaml
 import time
 import logging
@@ -435,7 +436,7 @@ def ob_creation(output_dir: Path,
                 run_data: Optional[Dict] = {},
                 res_dict: Optional[Dict] = {},
                 standard_res: Optional[List] = [],
-                mode_selection: str = "st") -> None:
+                mode_selection: str = "st", clean_previous: bool = False) -> None:
     """Gets either information from a 'nigh_plan.yaml'-file or a dictionary contain the
     run's data. Then it checks a dictionary for the resolution input for specific science
     targets and generates the OBS. Uses a standard resolution if none is provided.
@@ -449,6 +450,7 @@ def ob_creation(output_dir: Path,
         The path to the 'night_plan.yaml'-file
     manual_lst: List, optional
         The manual input of [targets, calibrators, tags, order]
+        If this is given the path of execution will be 'output_dir / "manualOBs"'
         ------ Add explanation here -----
     run_data: Dict, optional
     resolution_dict: Dict, optional
@@ -460,10 +462,23 @@ def ob_creation(output_dir: Path,
         The mode MATISSE is operated in and for which the OBs are created.
         Either 'st' for standalone, 'gr' for GRA4MAT_ft_vis or 'both',
         if OBs for both are to be created
+    clean_previous: bool
+        If toggled will remove the path given/in which the OBs are to be created
+        DISCLAIMER: Danger this will remove all subfolders and data contined in it
     """
     output_dir = Path(output_dir, "manualOBs") if manual_lst else Path(output_dir)
+
     if manual_lst and (sub_folder is not None):
         output_dir /= sub_folder
+    if clean_previous:
+        confirmation = input(f"You are trying to remove\n'{output_dir}'\n"
+                             "THIS CANNOT BE REVERSED! Are you sure? (yN): ")
+        if confirmation.lower() == "y":
+            shutil.rmtree(output_dir)
+            print("Files were cleaned up")
+        else:
+            print("Files not cleaned up!")
+
     array_config = get_array_config()
 
     for mode in OPERATIONAL_MODES[mode_selection]:
@@ -500,17 +515,15 @@ if __name__ == "__main__":
     path2file = "night_plan.yaml"
     outdir = Path("/Users/scheuck/Data/observations/obs/")
 
-    sci_lst = ["HD 13445", "V646 Pup", "HD 72106B", "HD 95881", "HR 4049", "TW Hya",
-               "HD104237"]
-    cal_lst = ["HD9362", "HD50235", "HD76110", "HD102839", "HD82150", "HD90957",
-               "HD111915"]
+    sci_lst = ["MWC 120", "DR Tau", "HD 50138", "HD 100453"]
+    cal_lst = ["HD39364", "HD33554", "HD47667", "HD102461"]
     tag_lst = []
 
     # TODO: Make explanation/docs of the order_lst
     order_lst = []
     manual_lst = [sci_lst, cal_lst, tag_lst, order_lst]
 
-    res_dict = {"HD 95881": "MED", "HR 4049": "HIGH"}
+    res_dict = {}
 
     # TODO: Add mode that 45 mins med and 30 mins med works? with the new double templates
     # /OBs
@@ -519,6 +532,7 @@ if __name__ == "__main__":
     # TOOD: Add night astronomer comments to template of Jozsefs -> Rewrite his script?
     # TODO: Find way to switch of photometry of template -> Jozsef's script rewrite?
 
-    ob_creation(outdir, sub_folder="backup_targets", manual_lst=manual_lst,
-                res_dict=res_dict, mode_selection="both", standard_res="LOW")
+    ob_creation(outdir, sub_folder=None, manual_lst=manual_lst,
+                res_dict=res_dict, mode_selection="both",
+                standard_res="LOW", clean_previous=True)
 

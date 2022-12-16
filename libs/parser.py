@@ -29,7 +29,6 @@ Example of usage:
 
 # TODO: Think about making the parsing work differently, check what readlines
 # accept -> Make similar to loadbobx, readblock and so...
-import os
 import yaml
 
 from pathlib import Path
