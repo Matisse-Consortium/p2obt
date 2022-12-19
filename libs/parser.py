@@ -29,12 +29,70 @@ Example of usage:
 
 # TODO: Think about making the parsing work differently, check what readlines
 # accept -> Make similar to loadbobx, readblock and so...
+from re import split
 import yaml
 
 from pathlib import Path
+from collections import namedtuple
 from typing import Dict, List, Optional
 
 from utils import contains_element
+
+# TODO: Implement automatic check for every week to see if target list has been updated
+
+def parse_line(line: str) -> str:
+    """Parses a line from the `calibrat_find`-tool and returns the objects name
+
+    Parameters
+    ----------
+    line: str
+
+    Returns
+    -------
+    target_name: str
+    """
+    parts = line.split()
+    for index, part in enumerate(parts):
+        if index <= len(parts)-4:
+            if part.isdigit() and parts[index+1].isdigit()\
+               and "." in parts[index+2] and not index == len(line)-4:
+                target_name_cutoff = index
+                break
+    return " ".join(parts[1:target_name_cutoff])
+
+
+def parse_groups(lines):
+    """Parses any combination of a calibrator-science target block into a dictionary
+    containing all the blocks information"""
+    data = {}
+    current_group, current_target = None, None
+    Target = namedtuple("Target", ["name", "order", "tag"])
+
+    for line in lines:
+        # TODO: Make splitting work properly for the science targets, include examples for
+        # MY Lup, Wa Oph 3, etc. different lengths
+        if line.startswith('#') or not line[0].isdigit():
+            continue
+
+        parts = line.strip().split()
+
+        if not parts:
+            if current_group is not None:
+                data[current_target] = current_group
+            current_group, current_target = None, None
+            continue
+
+        obj_name = parts[1]
+        tag = obj_name.split('_')[-1] if obj_name.startswith("cal_") else None
+        order = "b" if current_target is None else "a"
+        current_group = [] if current_group is None else None
+        print(current_group)
+
+        if obj_name.startswith('cal_'):
+            current_group.append(Target(obj_name, order, tag))
+        else:
+            current_target = obj_name
+    return data
 
 
 def _get_file_section(lines: List, identifier: str) -> Dict:
@@ -194,7 +252,10 @@ def parse_night_plan(night_plan_path: Path,
 
 # TODO: Parser is broken right now, fix!
 if __name__ == "__main__":
-    data_dir = Path().home() / "Data" / "observations" / "P110"
-    file_path = "AT_run4_p110_MATISSE_YSO_observing_plan_backup.txt"
-    parse_night_plan(data_dir / file_path, save_path=data_dir)
-
+    # data_dir = Path().home() / "Data" / "observations" / "P110"
+    # file_path = "AT_run4_p110_MATISSE_YSO_observing_plan_backup.txt"
+    # data_dir = Path(__file__).parent.parent / "assets" / "group_section.txt"
+    # with open(data_dir, "r+") as f:
+        # lines = f.readlines()
+    # print(parse_groups(lines))
+    # parse_night_plan(data_dir / file_path, save_path=data_dir)
