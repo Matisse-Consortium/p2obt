@@ -1,6 +1,7 @@
-# General files to ignore
+# General folders/files to ignore
 __pycache__/
 .pytest_cache/
+logs/
 .DS_Store
 
 # Specific files to ignore
@@ -9,4 +10,4 @@ libs/MATISSE_create_OB_2.py
 
 # Folders to ignore
 other_scripts/
-logs/
+tests/
