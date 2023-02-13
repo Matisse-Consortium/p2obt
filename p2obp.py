@@ -1,6 +1,4 @@
 """The completely automated OB creation from parsing to upload"""
-import os
-
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -27,9 +25,9 @@ def ob_pipeline(output_dir: Optional[Path] = "",
     save_yaml_file: bool, optional
     upload: bool, optional
     """
-    output_dir = output_dir if output_dir else os.getcwd()
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+    output_dir = output_dir if output_dir else Path().cwd()
+    if not output_dir.exists():
+        output_dir.mkdir(parents=True, exist_ok=True)
 
     # TODO: At some point exchange this with proper password getter
     if upload:
@@ -61,9 +59,9 @@ def ob_pipeline(output_dir: Optional[Path] = "",
 
 
 if __name__ == "__main__":
-    data_path = "/Users/scheuck/Data/observations/"
-    out_path = "/Users/scheuck/Data/observations/obs"
-    path = os.path.join(data_path, "P109/june2022", "p109_observing_plan_v0.9_run3.txt")
+    data_path = Path("/Users/scheuck/Data/observations/")
+    out_path = Path("/Users/scheuck/Data/observations/obs")
+    path = data_path / "P109/june2022" / "p109_observing_plan_v0.9_run3.txt"
 
     # The period and the proposal tag of the run
     run_data = ["109", "2313"]

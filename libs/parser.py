@@ -38,8 +38,8 @@ from typing import Dict, List, Optional
 
 from utils import contains_element
 
-# TODO: Implement automatic check for every week to see if target list has been updated
-
+# TODO: Implement automatic check for every week to see if target list has been updated.
+# Online?
 def parse_line(parts: str) -> str:
     """Parses a line from the `calibrat_find`-tool and returns the objects name
 
@@ -64,15 +64,15 @@ def parse_groups(lines):
     """Parses any combination of a calibrator-science target block into a dictionary
     containing all the blocks information"""
     data = {}
-    current_group, current_target = [], None
-    Target = namedtuple("Target", ["name", "order", "tag"])
+    calibrator_labels = ["name", "order", "tag"]
+    current_group, current_science_target = [], None
 
     for line in lines:
         parts = line.strip().split()
 
         if not parts:
-            data[current_target] = current_group
-            current_group, current_target = [], None
+            data[current_science_target] = current_group
+            current_group, current_science_target = [], None
             continue
         if line.startswith("#") or not line[0].isdigit():
             continue
@@ -81,10 +81,15 @@ def parse_groups(lines):
 
         if obj_name.startswith("cal_"):
             tag = obj_name.split("_")[1]
-            order = "b" if current_target is None else "a"
-            current_group.append(Target(obj_name.split("_")[2], order, tag))
+            order = "b" if current_science_target is None else "a"
+            calibrator = dict(zip(calibrator_labels,
+                                  [obj_name.split("_")[2], order, tag]))
+            if not current_science_target in data:
+                current_group.append(calibrator)
+            else:
+                data[current_science_target].append(calibrator)
         else:
-            current_target = obj_name
+            current_science_target = obj_name
     return data
 
 
@@ -243,11 +248,11 @@ def parse_night_plan(night_plan_path: Path,
     return night_plan_dict
 
 
-# TODO: Parser is broken right now, fix!
+# FIXME: Parser is broken right now, fix!
 if __name__ == "__main__":
     # data_dir = Path().home() / "Data" / "observations" / "P110"
     # file_path = "AT_run4_p110_MATISSE_YSO_observing_plan_backup.txt"
-    data_dir = Path(__file__).parent.parent / "assets" / "group_section.txt"
+    data_dir = Path(__file__).parent.parent / "tests/data" / "group_section.txt"
     with open(data_dir, "r+") as f:
         lines = f.readlines()
     print(parse_groups(lines))
