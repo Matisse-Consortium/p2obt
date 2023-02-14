@@ -140,6 +140,7 @@ def update_readme():
 
 
 # TODO: This function is not used right now  make it into iterative over subfolders
+# TODO: Make the upload ask for the run-id if it cannot be determined
 def get_subfolders_containing_files(search_directory: Path,
                                     file_type: Optional[str] = ".obx") -> List[Path]:
     """Recursively searches through the whole subtree of the search directory and returns

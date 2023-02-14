@@ -83,19 +83,14 @@ from typing import Any, Dict, List, Tuple, Optional
 import numpy as np
 import yaml
 
-try:
-    module = Path(__file__).name
-    sys.path.append(module)
-    import MATISSE_create_OB_2 as ob
-except ImportError:
-    raise ImportError("'MATISSE_create_OB_2.py'-file must be manually"\
-                      " included in the 'libs/'-folder")
+import MATISSE_create_OB_2 as ob
 
 # NOTE: Make this work for N-band as well -> Right now not needed for the observations
 # FIXME: Check back with Jozsef and or how to act if H_mag error occurs, or
 # other script related errors
 
 
+# TODO: Make logs being created in p2obp folder in documents or so on the long run
 LOG_PATH = Path(__file__).parent / "logs/creator.log"
 
 if LOG_PATH.exists():
@@ -107,6 +102,8 @@ else:
 logging.basicConfig(filename=LOG_PATH, filemode='w',
                     format='%(asctime)s - %(message)s', level=logging.INFO)
 
+# TODO: Overhaul all the functions defaults and annotiations, add better documentation as
+# well
 # NOTE: Dictionaries for the template- and resolution-configurations
 # NOTE: For the UTs/ATs in standalone there is only one resolution as of yet -> Maybe
 # change in the future. The higher ones, to avoid errors are the same
@@ -242,6 +239,27 @@ def get_array_config(run_name: Optional[str] = None) -> str:
         return TEL_CONFIG[user_inp]
 
 
+def write_run_prog_id(run_id: str, output_dir: Path) -> None:
+    """"""
+    prog_id = None
+    for element in run_id.split():
+        try:
+            if len(element.split(".")) == 3:
+                prog_id = element
+        except:
+            continue
+    # TODO: Maybe add a while loop here for wrong input. Do the same above?
+    if prog_id is None:
+        print("Run's id could not be automatically detected!")
+        prog_id = input("Please enter the run's id in the following form"
+                        " (<period>.<program>.<run> (e.g., 110.2474.004)): ")
+
+    # TODO: Maybe extend this as a (.toml)-file or so
+    with open(output_dir / "run_id.txt", "w+") as run_id_file:
+        run_id_file.write(prog_id)
+    print("Run's id has been written to 'run_id.txt'")
+
+
 def make_sci_obs(targets: List, array_config: str,
                  mode: str, output_dir: str,
                  res_dict: Dict, standard_resolution: List) -> None:
@@ -263,7 +281,7 @@ def make_sci_obs(targets: List, array_config: str,
     """
     array_key = "UTs" if array_config == "UTs" else "ATs"
     template = TEMPLATE_RES_DICT[mode][array_key]
-    ACQ = template["ACQ"]
+    acquisition = template["ACQ"]
 
     if standard_resolution is None:
         standard_resolution = "LOW" if array_config == "UTs" else "MED"
@@ -277,7 +295,7 @@ def make_sci_obs(targets: List, array_config: str,
 
             ob.mat_gen_ob(target, array_config, 'SCI',
                           outdir=str(output_dir), spectral_setups=temp.RES,
-                          obs_tpls=temp.TEMP, acq_tpl=ACQ, DITs=temp.DIT)
+                          obs_tpls=temp.TEMP, acq_tpl=acquisition, DITs=temp.DIT)
             add_order_tag_to_newest_file(output_dir, index)
 
             logging.info(f"Created OB: SCI-{target}")
@@ -326,7 +344,7 @@ def make_cal_obs(calibrators: List, targets: List, tags: List,
     """
     array_key = "UTs" if array_config == "UTs" else "ATs"
     template = TEMPLATE_RES_DICT[mode_selection][array_key]
-    ACQ = template["ACQ"]
+    acquisition = template["ACQ"]
 
     if not standard_resolution:
         standard_resolution = "LOW" if array_config == "UTs" else "MED"
@@ -342,19 +360,19 @@ def make_cal_obs(calibrators: List, targets: List, tags: List,
 
             # TODO: Remove the str(output_dir) at some point after Jozsef's code rewrite
             if isinstance(calibrator, list):
-                for cal, sub_tag, ord in enumerate(calibrator, tag, order):
+                for cal, ord, sub_tag in zip(calibrator, order, tag):
                     ob.mat_gen_ob(cal, array_config, 'CAL', outdir=str(output_dir),
                                   spectral_setups=calibrator_template.RES,
                                   obs_tpls=calibrator_template.TEMP,
-                                  acq_tpl=ACQ, sci_name=target, tag=sub_tag,
+                                  acq_tpl=acquisition, sci_name=target, tag=sub_tag,
                                   DITs=calibrator_template.DIT)
                     add_order_tag_to_newest_file(output_dir, ord)
-                    logging.info(f"Created OB CAL-{calibrator}")
+                    logging.info(f"Created OB CAL-{cal}")
             else:
                 ob.mat_gen_ob(calibrator, array_config, 'CAL', outdir=str(output_dir),
                               spectral_setups=calibrator_template.RES,
                               obs_tpls=calibrator_template.TEMP,
-                              acq_tpl=ACQ, sci_name=target, tag=tag,
+                              acq_tpl=acquisition, sci_name=target, tag=tag,
                               DITs=calibrator_template.DIT)
                 add_order_tag_to_newest_file(output_dir, order)
                 logging.info(f"Created OB CAL-{calibrator}")
@@ -445,15 +463,21 @@ def create_OBs_from_dict(mode_selection: str,
                       " must be given a value!")
 
     for run_id, run in run_dict.items():
-        print(f"Making OBs for {run_id}")
-        logging.info(f"Creating OBs for '{run_id}'")
+        print(f"Making OBs for {run_id}...")
+        logging.info(f"Creating OBs for '{run_id}'...")
+
+        run_name = ''.join(run_id.split(",")[0].strip().split())
+        run_dir = output_dir / run_name
+        if not run_dir.exists():
+            run_dir.mkdir(parents=True, exist_ok=True)
+        logging.info(f"Creating folder '{run_name}...'")
+
         array_config = get_array_config(run_id)
-        run_dir = ''.join(run_id.split(",")[0].strip().split())
-        logging.info(f"Creating folder: '{run_dir}'")
+        write_run_prog_id(run_id, run_dir)
 
         for night_id, night in run.items():
             night_name = get_night_name_and_date(night_id)
-            night_dir = output_dir / run_dir / night_name
+            night_dir = run_dir / night_name
             if not night_dir.exists():
                 night_dir.mkdir(parents=True, exist_ok=True)
 
@@ -463,7 +487,7 @@ def create_OBs_from_dict(mode_selection: str,
             # NOTE: This avoids a timeout from the query-databases (such as Vizier)
             time.sleep(0.5)
             create_OBs_from_lists(*read_dict_to_lists(night), mode_selection,
-                                  output_dir, array_config, res_dict, standard_res)
+                                  night_dir, array_config, res_dict, standard_res)
 
 
 def ob_creation(output_dir: Path,
@@ -472,7 +496,7 @@ def ob_creation(output_dir: Path,
                 night_plan_path: Optional[Path] = None,
                 manual_lst: Optional[List] = [],
                 res_dict: Optional[Dict] = {},
-                standard_res: Optional[List] = [],
+                standard_res: Optional[List] = None,
                 mode_selection: str = "st",
                 clean_previous: bool = False) -> None:
     """Gets either information from a 'nigh_plan.yaml'-file or a dictionary contain the

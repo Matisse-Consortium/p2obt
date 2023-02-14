@@ -63,9 +63,6 @@ if __name__ == "__main__":
     out_path = Path("/Users/scheuck/Data/observations/obs")
     path = data_path / "P109/june2022" / "p109_observing_plan_v0.9_run3.txt"
 
-    # The period and the proposal tag of the run
-    run_data = ["109", "2313"]
-
     # NOTE: The resolution dict
     res_dict = {}
 
