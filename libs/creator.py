@@ -146,7 +146,7 @@ TEL_CONFIG = ["UTs", *AT_CONFIG]
 
 
 OPERATIONAL_MODES = {"both": ["standalone", "GRA4MAT"],
-                     "st": "standalone", "gr": "GRA4MAT"}
+                     "st": ["standalone"], "gr": ["GRA4MAT"]}
 
 
 def copy_list_and_replace_all_values(input_list: List, value: Any):
@@ -384,7 +384,8 @@ def read_dict_to_lists(night: Dict) -> Tuple[List[Any]]:
 
 def create_OBs_from_lists(sci_lst, cal_lst, order_lst, tag_lst,
                           mode_selection: str, output_dir: Path,
-                          res_dict: Dict, standard_res: List) -> None:
+                          array_config: str, res_dict: Dict,
+                          standard_res: List) -> None:
     """"""
     for mode in OPERATIONAL_MODES[mode_selection]:
         print("-----------------------------")
@@ -462,7 +463,7 @@ def create_OBs_from_dict(mode_selection: str,
             # NOTE: This avoids a timeout from the query-databases (such as Vizier)
             time.sleep(0.5)
             create_OBs_from_lists(*read_dict_to_lists(night), mode_selection,
-                                  output_dir, res_dict, standard_res)
+                                  output_dir, array_config, res_dict, standard_res)
 
 
 def ob_creation(output_dir: Path,
@@ -516,9 +517,10 @@ def ob_creation(output_dir: Path,
         except ValueError:
             raise ValueError("In case of manual input the four lists must be given!")
         create_OBs_from_lists(sci_lst, cal_lst, tag_lst, order,
-                              mode_selection, output_dir, res_dict, standard_res)
+                              mode_selection, output_dir, array_config,
+                              res_dict, standard_res)
 
-    elif night_plan_path or run_data:
+    elif night_plan_path or night_plan_data:
         create_OBs_from_dict(mode_selection, night_plan_data, night_plan_path,
                              output_dir, res_dict, standard_res)
     else:
@@ -542,8 +544,8 @@ if __name__ == "__main__":
     path2file = "night_plan.yaml"
     outdir = Path("/Users/scheuck/Data/observations/obs/")
 
-    sci_lst = ["MWC 120", "DR Tau", "HD 50138", "HD 100453"]
-    cal_lst = ["HD39364", "HD33554", "HD47667", "HD102461"]
+    sci_lst = []
+    cal_lst = []
     tag_lst = []
 
     # TODO: Make explanation/docs of the order_lst

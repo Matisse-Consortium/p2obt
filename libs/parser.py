@@ -163,8 +163,8 @@ def parse_night_plan(night_plan_path: Path,
     for run_id, run in get_file_section(lines, run_identifier).items():
         nights = {}
         for night_id, night in get_file_section(run, night_identifier).items():
-            # HACK: Only add nights that have content
             night_content = parse_groups(night)
+            # HACK: Only add nights that have content
             if night_content:
                 nights[night_id] = night_content
         runs[run_id] = nights

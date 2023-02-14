@@ -2,17 +2,18 @@
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from libs.parser import parse_night_plan
-from libs.creator import ob_creation
-from libs.uploader import ob_uploader
-from libs.utils import get_password_and_username
+from parser import parse_night_plan
+from creator import ob_creation
+from uploader import ob_uploader
+from utils import get_password_and_username
 
 
-def ob_pipeline(output_dir: Optional[Path] = "",
-                manual_lst: Optional[List] = [],
-                night_plan_path: Optional[Path] = "",
+def ob_pipeline(output_dir: Optional[Path] = None,
+                manual_lst: Optional[List] = None,
+                night_plan_path: Optional[Path] = None,
+                mode_selection: str = "gr",
                 resolution_dict: Optional[Dict] = {},
-                save_yaml_file: Optional[bool] = True,
+                save_yaml_file: Optional[bool] = False,
                 upload: Optional[bool] = False) -> None:
     """
 
@@ -36,19 +37,18 @@ def ob_pipeline(output_dir: Optional[Path] = "",
     if night_plan_path:
         print("Parsing the Night plan!")
         print("-------------------------------------------------------------------")
-        # TODO: Think of way how to implement this run_dict
         if save_yaml_file:
-            run_dict = parse_night_plan(night_plan_path, save_path=output_dir)
+            night_plan_data = parse_night_plan(night_plan_path, save_path=output_dir)
         else:
-            run_dict = parse_night_plan(night_plan_path)
+            night_plan_data = parse_night_plan(night_plan_path)
         print("Parsing complete!")
         print("-------------------------------------------------------------------")
 
     print("Creating the OBs!")
     print("-------------------------------------------------------------------")
-    ob_creation(output_dir, run_data=run_dict,
+    ob_creation(output_dir, night_plan_data=night_plan_data,
                 res_dict=resolution_dict, manual_lst=manual_lst,
-                mode="gr", upload_prep=upload)
+                mode_selection=mode_selection)
     print("OB creation compete!")
     print("-------------------------------------------------------------------")
 
