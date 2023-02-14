@@ -116,7 +116,7 @@ UT_DICT_STANDALONE = {"ACQ": ob.acq_tpl,
                               "RES": ["L-LR_N-LR"]}}
 
 AT_DICT_GRA4MAT = {"ACQ": ob.acq_ft_tpl,
-                   "LOW": {"TEMP": [ob.obs_ft_tpl], "DIT": [0.111], "RES":
+                   "LOW": {"TEMP": [ob.obs_ft_tpl], "DIT": [0.6], "RES":
                            ["L-LR_N-LR"]},
                    "MED": {"TEMP": [ob.obs_ft_tpl],
                            "DIT": [1.3], "RES": ["L-MR_N-LR"]},
@@ -138,7 +138,7 @@ UT_DICT_GRA4MAT = {"ACQ": ob.acq_ft_tpl,
 TEMPLATE_RES_DICT = {"standalone": {"UTs": UT_DICT_STANDALONE, "ATs": UT_DICT_STANDALONE},
                      "GRA4MAT": {"UTs": UT_DICT_GRA4MAT, "ATs": AT_DICT_GRA4MAT}}
 
-AT_CONFIG = ["small", "medium", "large"]
+AT_CONFIG = ["small", "medium", "large", "astrometric"]
 TEL_CONFIG = ["UTs", *AT_CONFIG]
 
 
@@ -198,8 +198,12 @@ def get_night_name_and_date(night_name: str) -> str:
     night = night_name.split(":")[0].strip()
     date = night_name.split(":")[1].split(",")[0].strip()
 
+    # TODO: Write down how the nights need to be written down in the observing plan
     if len(night.split()) > 2:
-        night, date = night.split(",")[:2]
+        try:
+            night, date = night.split(",")[:2]
+        except ValueError:
+            return night
 
     return "_".join([''.join(night.split()), ''.join(date.split())])\
             if date != '' else ''.join(night.split())
@@ -231,11 +235,11 @@ def get_array_config(run_name: Optional[str] = None) -> str:
                 return "large"
         else:
             user_inp = int(input("No configuration can be found, please input"\
-                             " ('UTs': 1; 'small': 2, 'medium': 3, 'large: 4): "))-1
+                             " ('UTs': 1; 'small': 2, 'medium': 3, 'large/astrometric: 4): "))-1
             return TEL_CONFIG[user_inp]
     else:
         user_inp = int(input("No configuration can be found, please input"\
-                         " ('UTs': 1; 'small': 2, 'medium': 3, 'large: 4): "))-1
+                         " ('UTs': 1; 'small': 2, 'medium': 3, 'large/astrometric: 4): "))-1
         return TEL_CONFIG[user_inp]
 
 
@@ -257,7 +261,7 @@ def write_run_prog_id(run_id: str, output_dir: Path) -> None:
     # TODO: Maybe extend this as a (.toml)-file or so
     with open(output_dir / "run_id.txt", "w+") as run_id_file:
         run_id_file.write(prog_id)
-    print("Run's id has been written to 'run_id.txt'")
+    print("[INFO] Run's id has been written to 'run_id.txt'")
 
 
 def make_sci_obs(targets: List, array_config: str,
@@ -284,7 +288,7 @@ def make_sci_obs(targets: List, array_config: str,
     acquisition = template["ACQ"]
 
     if standard_resolution is None:
-        standard_resolution = "LOW" if array_config == "UTs" else "MED"
+        standard_resolution = "LOW"
 
     for index, target in enumerate(targets, start=1):
         try:
@@ -305,6 +309,7 @@ def make_sci_obs(targets: List, array_config: str,
             print(f"ERROR: Skipped OB: SCI-{target} -- Check 'creator.log'-file")
 
 
+# TODO: Make these functions more compact
 def make_cal_obs(calibrators: List, targets: List, tags: List,
                  orders: List, array_config: str, mode_selection: str,
                  output_dir: Path, resolution_dict: Optional[Dict] = {},
@@ -347,7 +352,7 @@ def make_cal_obs(calibrators: List, targets: List, tags: List,
     acquisition = template["ACQ"]
 
     if not standard_resolution:
-        standard_resolution = "LOW" if array_config == "UTs" else "MED"
+        standard_resolution = "LOW"
 
     # TODO: Fix if resolution dict is input then target gets put into the wrong mode
     for calibrator, target, tag, order in zip(calibrators, targets, tags, orders):
@@ -407,7 +412,7 @@ def create_OBs_from_lists(sci_lst, cal_lst, order_lst, tag_lst,
     """"""
     for mode in OPERATIONAL_MODES[mode_selection]:
         print("-----------------------------")
-        print(f"Making OBs for {mode}")
+        print(f"Making OBs for {mode}-mode")
         print("-----------------------------")
         if not tag_lst:
             tag_lst = copy_list_and_replace_all_values(cal_lst, "LN")
@@ -462,7 +467,10 @@ def create_OBs_from_dict(mode_selection: str,
         raise IOError("Either the 'night_plan_data'- or the 'night_plan_path'-parameters"\
                       " must be given a value!")
 
+    # TODO: Write down how the runs need to be written down in the observing plan -> Make
+    # it automatic at some point
     for run_id, run in run_dict.items():
+        print("-----------------------------")
         print(f"Making OBs for {run_id}...")
         logging.info(f"Creating OBs for '{run_id}'...")
 
@@ -481,6 +489,7 @@ def create_OBs_from_dict(mode_selection: str,
             if not night_dir.exists():
                 night_dir.mkdir(parents=True, exist_ok=True)
 
+            print("-----------------------------")
             print(f"Creating folder: '{night_dir.name}', and filling it with OBs")
             logging.info(f"Creating folder: '{night_dir.name}', and filling it with OBs")
 

@@ -49,6 +49,7 @@ def ob_pipeline(output_dir: Optional[Path] = None,
     ob_creation(output_dir, night_plan_data=night_plan_data,
                 res_dict=resolution_dict, manual_lst=manual_lst,
                 mode_selection=mode_selection)
+    print("-------------------------------------------------------------------")
     print("OB creation compete!")
     print("-------------------------------------------------------------------")
 
@@ -59,12 +60,15 @@ def ob_pipeline(output_dir: Optional[Path] = None,
 
 
 if __name__ == "__main__":
-    data_path = Path("/Users/scheuck/Data/observations/")
-    out_path = Path("/Users/scheuck/Data/observations/obs")
-    path = data_path / "P109/june2022" / "p109_observing_plan_v0.9_run3.txt"
+    data_dir = Path("/Users/scheuck/Data/observations/")
+    output_dir = Path("/Users/scheuck/Data/observations/obs")
+    time_slot = data_dir / "P110" / "february_march_2023"
+    night_plan_path = time_slot / "observing_plan_run789_v0.3.txt"
 
     # NOTE: The resolution dict
-    res_dict = {}
+    # TODO: Make also a DIT-dictionary where ppl can change the dit of an individual thing
+    # or make it possible to change either both or once at a time?
+    res_dict = {"HD95881": "MED", "V1028 Cen": "MED", "HD98922": "HIGH"}
 
-    ob_pipeline(output_dir=out_path, night_plan_path=path,
+    ob_pipeline(output_dir=output_dir, night_plan_path=night_plan_path,
                 save_yaml_file=True, upload=False)
