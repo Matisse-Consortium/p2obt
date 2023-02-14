@@ -260,7 +260,7 @@ def query_SIMBAD(name):
     try:
         dic['ra_hms' ]= result_simbad['RA'][0]
         dic['dec_dms'] = result_simbad['DEC'][0]
-        dic['sptype'] = result_simbad['MK_Spectral_type'][0].decode('unicode_escape')
+        dic['sptype'] = result_simbad['MK_Spectral_type'][0]
         # dic['Teff'] = result_table['Fe_H_Teff'][0]
         # dic['logg'] = result_table['Fe_H_log_g'][0]
         # dic['Fe_H'] = result_table['Fe_H_Fe_H'][0]
