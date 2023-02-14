@@ -297,7 +297,6 @@ def make_sci_obs(targets: List, array_config: str,
             else:
                 temp = SimpleNamespace(**template[standard_resolution])
 
-            print(temp.RES)
             ob.mat_gen_ob(target, array_config, 'SCI',
                           outdir=str(output_dir), spectral_setups=temp.RES,
                           obs_tpls=temp.TEMP, acq_tpl=acquisition, DITs=temp.DIT)
