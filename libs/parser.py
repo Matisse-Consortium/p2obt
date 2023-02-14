@@ -22,24 +22,20 @@ Example of usage:
     ... {'run 5, 109.2313.005 = 0109.C-0413(E)': {'nights 2-4: {'SCI': ['MY Lup', ...],
     ...  'CAL': [['HD142198'], ...], 'TAG': [['LN'], ...]}}}
 """
-# TODO: Add order with "a" for "after" and "b" for "before"
 # TODO: Make parser accept more than one calibrator block for one night, by
 # checking if there are integers for numbers higher than last calibrator and
 # then adding these
 
-# TODO: Think about making the parsing work differently, check what readlines
-# accept -> Make similar to loadbobx, readblock and so...
 from re import split
 import yaml
 
 from pathlib import Path
 from collections import namedtuple
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from utils import contains_element
 
-# TODO: Implement automatic check for every week to see if target list has been updated.
-# Online?
+
 def parse_line(parts: str) -> str:
     """Parses a line from the `calibrat_find`-tool and returns the objects name
 
@@ -51,6 +47,7 @@ def parse_line(parts: str) -> str:
     -------
     target_name: str
     """
+    target_name_cutoff = len(parts)
     for index, part in enumerate(parts):
         if index <= len(parts)-4:
             if part.isdigit() and parts[index+1].isdigit()\
@@ -60,34 +57,32 @@ def parse_line(parts: str) -> str:
     return " ".join(parts[1:target_name_cutoff])
 
 
-def parse_groups(lines):
+def parse_groups(section: List):
     """Parses any combination of a calibrator-science target block into a dictionary
     containing all the blocks information"""
     data = {}
     calibrator_labels = ["name", "order", "tag"]
     current_group, current_science_target = [], None
 
-    for line in lines:
+    for line in section:
         parts = line.strip().split()
 
         if not parts:
-            data[current_science_target] = current_group
+            # HACK: Remove the None values so to say, manually
+            if current_science_target is not None:
+                data[current_science_target] = current_group
             current_group, current_science_target = [], None
             continue
         if line.startswith("#") or not line[0].isdigit():
             continue
 
         obj_name = parse_line(parts)
-
         if obj_name.startswith("cal_"):
             tag = obj_name.split("_")[1]
             order = "b" if current_science_target is None else "a"
             calibrator = dict(zip(calibrator_labels,
                                   [obj_name.split("_")[2], order, tag]))
-            if not current_science_target in data:
-                current_group.append(calibrator)
-            else:
-                data[current_science_target].append(calibrator)
+            current_group.append(calibrator)
         else:
             current_science_target = obj_name
     return data
@@ -124,77 +119,10 @@ def _get_file_section(lines: List, identifier: str) -> Dict:
     return {labels: sections for (labels, sections) in zip(labels, sections)}
 
 
-def _get_targets_calibrators_tags(lines: List):
-    """Gets the info for the SCI, CAL and TAGs from the individual lines
-
-    Parameters
-    -----------
-    lines: List
-        The lines to be parsed
-
-    Returns
-    -------
-    Dict:
-        A dictionary that contains the SCI, CAL and TAG lists
-    """
-    line_start = [index for index, line in enumerate(lines) if line[0].isdigit()][0]
-    line_end = [index for index, line in enumerate(lines)\
-                if line.startswith("calibrator_find")][0]
-    lines = ['' if line == '\n' else line for line in lines[line_start:line_end]]
-
-    sci_lst, cal_lst, tag_lst  = [], [[]], [[]]
-    double_sci, counter = False, 0
-
-    for index, line in enumerate(lines):
-        try:
-            if ((line == '') or (not line.split()[0][0].isdigit()))\
-               and (lines[index+1].split()[0][0].isdigit()):
-                counter += 1
-                cal_lst.append([])
-                tag_lst.append([])
-
-            else:
-                line = line.split(' ')
-                if (line[0][0].isdigit()) and (len(line) > 2)\
-                   and (len(line[0].split(":")) == 2):
-                    # NOTE: Gets the CAL
-                    if "cal_" in line[1]:
-                        temp_cal = line[1].split("_")
-                        cal_lst[counter].append(temp_cal[2])
-                        tag_lst[counter].append(temp_cal[1])
-
-                        if double_sci:
-                            cal_lst.append([])
-                            tag_lst.append([])
-                            cal_lst[counter+1].append(temp_cal[2])
-                            tag_lst[counter+1].append(temp_cal[1])
-                            double_sci = False
-                    else:
-                        # NOTE: Fixes the case where one CAL is for two SCI
-                        if (index != len(lines)-3):
-                            try:
-                                if lines[index+1][0][0].isdigit() and\
-                                   not ("cal_" in lines[index+1].split(' ')[1]) and\
-                                   lines[index+2][0][0].isdigit():
-                                    double_sci = True
-                            except:
-                                pass
-
-                        # NOTE: Gets the SCI
-                        if line[3] != '':
-                            sci_lst.append((line[1]+' '+line[2]+' '+line[3]).strip())
-                        else:
-                            sci_lst.append((line[1]+' '+line[2]).strip())
-        except:
-            pass
-
-    return {"SCI": sci_lst, "CAL": cal_lst, "TAG": tag_lst}
-
-
 def parse_night_plan(night_plan_path: Path,
                      run_identifier: Optional[str] = "run",
-                     sub_identifier: Optional[str] = "night",
-                     save_path: Optional[Path] = "") -> Dict[str, List]:
+                     night_identifier: Optional[str] = "night",
+                     save_path: Optional[Path] = None) -> Dict[str, Any]:
     """Parses the night plan created with 'calibrator_find.pro' into the
     individual runs as key of a dictionary, specified by the 'run_identifier'.
     If no match is found then it parses the whole night to 'run_identifier's
@@ -203,14 +131,14 @@ def parse_night_plan(night_plan_path: Path,
     Parameters
     ----------
     night_plan_path: Path
-        The night plan of the '.txt'-file format to be read and parsed
+        The night plan, a (.txt)-file containing the observations for one
+        or more runs
     run_identifier: str, optional
-        Set to default identifier that splits the individual runs into keys of
-        the return dict as 'run'
-    sub_identifier: str, optional
-        Set to default sub identifier that splits the individual runs into the
-        individual nights. That is, in keys of the return dict as 'night'
-    save_to_file: bool, optional
+        The run-identifier that splits night plan into its runs
+    night_identifier: str, optional
+        The night-identifier by which the runs are split into the
+        its nights.
+    save_path: bool, optional
         If this is set to true then it saves the dictionary as
         'night_plan.yaml', Default is 'False'
 
@@ -220,40 +148,29 @@ def parse_night_plan(night_plan_path: Path,
         A dict that contains the <default_search_param> as key and a list
         containing the sub lists 'sci_lst', 'cal_lst' and 'tag_lst'
     """
-    night_plan_dict = {}
     night_plan_path = Path(night_plan_path)
     if night_plan_path.exists():
         with open(Path(night_plan_path), "r+") as night_plan:
             lines = night_plan.readlines()
     else:
-        raise FileNotFoundError(f"File {Path(night_plan_path)} was not found/does not exist!")
+        raise FileNotFoundError(f"File {night_plan_path.name} was not found/does not exist!")
 
-    runs = _get_file_section(lines, run_identifier)
-
-    for label, section in runs.items():
-        subsection_dict = _get_file_section(section, sub_identifier)
-
+    runs = {}
+    for run_id, run in _get_file_section(lines, run_identifier).items():
         nights = {}
-        for sub_label, sub_section in subsection_dict.items():
-            if contains_element(sub_section, "cal_"):
-                nights[sub_label] = _get_targets_calibrators_tags(sub_section)
+        for night_id, night in _get_file_section(run, night_identifier).items():
+            nights[night_id] = parse_groups(night)
+        runs[run_id] = nights
+    print(runs) 
 
-        night_plan_dict[label] = nights
-
-    if save_path:
-        yaml_file_path = Path(save_path) / "night_plan.yaml"
-        with open(yaml_file_path, "w+") as night_plan_yaml:
-            yaml.safe_dump(night_plan_dict, night_plan_yaml)
-        print(f"Created {yaml_file_path}")
-    return night_plan_dict
+    # if save_path:
+        # yaml_file_path = Path(save_path) / "night_plan.yaml"
+        # with open(yaml_file_path, "w+") as night_plan_yaml:
+            # yaml.safe_dump(night_plan_dict, night_plan_yaml)
+        # print(f"Created {yaml_file_path}")
+    # return night_plan_dict
 
 
-# FIXME: Parser is broken right now, fix!
 if __name__ == "__main__":
-    # data_dir = Path().home() / "Data" / "observations" / "P110"
-    # file_path = "AT_run4_p110_MATISSE_YSO_observing_plan_backup.txt"
-    data_dir = Path(__file__).parent.parent / "tests/data" / "group_section.txt"
-    with open(data_dir, "r+") as f:
-        lines = f.readlines()
-    print(parse_groups(lines))
-    # parse_night_plan(data_dir / file_path, save_path=data_dir)
+    data_dir = Path(__file__).parent.parent / "tests/data" / "night_plan_small.txt"
+    print(parse_night_plan(data_dir))
