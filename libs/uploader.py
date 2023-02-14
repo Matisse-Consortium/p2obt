@@ -50,7 +50,6 @@ import loadobx
 # -> FIXME: Need fix of folder creation first
 # BUG: Folder sorting sometimes doesn't work? -> Check if that persists?
 
-
 LOG_PATH = Path(__file__).parent / "logs/uploader.log"
 
 if LOG_PATH.exists():
@@ -323,7 +322,8 @@ def ob_uploader(upload_directory: Path,
                 run_prog_id: Optional[str] = None,
                 container_id: Optional[int] = None,
                 server: Optional[str] = "production",
-                username: Optional[str] = None) -> None:
+                username: Optional[str] = None,
+                password: Optional[str] = None) -> None:
     """This checks if run is specified or given by the folder names and then
     makes the same folders on the P2 and additional folders (e.g., for the
     'main_targets' and 'backup_targets' as well as for all the SCI-OBs. It then
@@ -345,9 +345,7 @@ def ob_uploader(upload_directory: Path,
     username: str, optional
         The username for the P2
     """
-    # TODO: Make automatic upload possible again
-    p2_connection = loadobx.login(username, None, server)
-
+    p2_connection = loadobx.login(username, password, server)
 
     # if container_id:
         # run_id = container_id

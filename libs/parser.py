@@ -180,8 +180,13 @@ def parse_night_plan(night_plan_path: Path,
 
 
 if __name__ == "__main__":
-    data_dir = Path(__file__).parent.parent / "tests/data" / "night_plan.txt"
-    for run_id, run_content in parse_night_plan(data_dir).items():
+    data_dir = Path("/Users/scheuck/Data/observations/")
+    output_dir = Path("/Users/scheuck/Data/observations/obs")
+    time_slot = data_dir / "P110" / "february_march_2023"
+    night_plan_path = time_slot / "observing_plan_run7_v0.1.txt"
+    for run_id, run_content in parse_night_plan(night_plan_path).items():
         for night_id, night in run_content.items():
             lists = read_dict_to_lists(night)
-            breakpoint()
+            print(run_id, night_id)
+            print(lists)
+

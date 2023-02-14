@@ -56,14 +56,14 @@ def ob_pipeline(output_dir: Optional[Path] = None,
     if upload:
         print("Uploading the OBs!")
         print("-------------------------------------------------------------------")
-        ob_uploader(output_dir, run_data=run_data, username=username, password=password)
+        ob_uploader(output_dir, username=username, password=password)
 
 
 if __name__ == "__main__":
     data_dir = Path("/Users/scheuck/Data/observations/")
     output_dir = Path("/Users/scheuck/Data/observations/obs")
     time_slot = data_dir / "P110" / "february_march_2023"
-    night_plan_path = time_slot / "observing_plan_run789_v0.3.txt"
+    night_plan_path = time_slot / "observing_plan_run7_v0.1.txt"
 
     # NOTE: The resolution dict
     # TODO: Make also a DIT-dictionary where ppl can change the dit of an individual thing
@@ -71,4 +71,4 @@ if __name__ == "__main__":
     res_dict = {"HD95881": "MED", "V1028 Cen": "MED", "HD98922": "HIGH"}
 
     ob_pipeline(output_dir=output_dir, night_plan_path=night_plan_path,
-                save_yaml_file=True, upload=False)
+                save_yaml_file=False, upload=True, mode_selection="both")
