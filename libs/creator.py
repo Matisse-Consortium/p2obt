@@ -297,6 +297,7 @@ def make_sci_obs(targets: List, array_config: str,
             else:
                 temp = SimpleNamespace(**template[standard_resolution])
 
+            print(temp.RES)
             ob.mat_gen_ob(target, array_config, 'SCI',
                           outdir=str(output_dir), spectral_setups=temp.RES,
                           obs_tpls=temp.TEMP, acq_tpl=acquisition, DITs=temp.DIT)
@@ -539,7 +540,8 @@ def ob_creation(output_dir: Path,
         If toggled will remove the path given/in which the OBs are to be created
         DISCLAIMER: Danger this will remove all subfolders and data contined in it
     """
-    output_dir = Path(output_dir, "manualOBs") if manual_lst else Path(output_dir)
+    output_dir = Path(output_dir, "manualOBs")\
+            if manual_lst else Path(output_dir, "automaticOBs")
 
     if manual_lst:
         if sub_folder is not None:

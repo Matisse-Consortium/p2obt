@@ -348,6 +348,7 @@ def ob_uploader(upload_directory: Path,
     # TODO: Make automatic upload possible again
     p2_connection = loadobx.login(username, None, server)
 
+
     # if container_id:
         # run_id = container_id
     # elif run_prog_id:
@@ -374,6 +375,6 @@ def ob_uploader(upload_directory: Path,
 # TODO: Make night sorting also
 
 if __name__ == "__main__":
-    path = Path("/Users/scheuck/data/observations/obs/")
+    path = Path("/Users/scheuck/data/observations/obs/automaticOBs/")
     ob_uploader(path, username="MbS")
 
