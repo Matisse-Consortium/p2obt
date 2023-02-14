@@ -74,13 +74,14 @@ Example of usage:
 import os
 import sys
 import shutil
-import yaml
 import time
 import logging
-
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Tuple, Optional
+
+import numpy as np
+import yaml
 
 try:
     module = Path(__file__).name
@@ -90,7 +91,7 @@ except ImportError:
     raise ImportError("'MATISSE_create_OB_2.py'-file must be manually"\
                       " included in the 'libs/'-folder")
 
-# TODO: Make this work for N-band as well
+# NOTE: Make this work for N-band as well -> Right now not needed for the observations
 # FIXME: Check back with Jozsef and or how to act if H_mag error occurs, or
 # other script related errors
 
@@ -125,7 +126,7 @@ AT_DICT_GRA4MAT = {"ACQ": ob.acq_ft_tpl,
                    "HIGH": {"TEMP": [ob.obs_ft_tpl],
                            "DIT": [3.], "RES": ["L-HR_N-LR"]}}
 
-# NOTE: Maybe include the higher resolutions again
+# NOTE: Maybe include the higher resolutions again at some point
 UT_DICT_GRA4MAT = {"ACQ": ob.acq_ft_tpl,
                    "LOW": {"TEMP": [ob.obs_ft_tpl], "DIT": [0.111], "RES":
                            ["L-LR_N-LR"]},
@@ -264,7 +265,7 @@ def make_sci_obs(targets: List, array_config: str,
     template = TEMPLATE_RES_DICT[mode][array_key]
     ACQ = template["ACQ"]
 
-    if not standard_resolution:
+    if standard_resolution is None:
         standard_resolution = "LOW" if array_config == "UTs" else "MED"
 
     for index, target in enumerate(targets, start=1):
@@ -289,7 +290,7 @@ def make_sci_obs(targets: List, array_config: str,
 def make_cal_obs(calibrators: List, targets: List, tags: List,
                  orders: List, array_config: str, mode_selection: str,
                  output_dir: Path, resolution_dict: Optional[Dict] = {},
-                 standard_resolution: Optional[List] = []) -> None:
+                 standard_resolution: Optional[List] = None) -> None:
     """Checks if there are sublists in the calibration list and calls the 'mat_gen_ob'
     with the right inputs to generate the calibration objects.
 
@@ -363,12 +364,53 @@ def make_cal_obs(calibrators: List, targets: List, tags: List,
             print(f"ERROR: Skipped OB: CAL-{calibrator} -- Check 'creator.log'-file")
 
 
-def read_dict_into_OBs(mode_selection: str,
-                       night_plan_path: Optional[Path] = None,
-                       output_dir: Optional[Path] = None,
-                       run_data: Optional[Dict] = {},
-                       res_dict: Optional[Dict] = {},
-                       standard_res: Optional[List] = []) -> None:
+def read_dict_to_lists(night: Dict) -> Tuple[List[Any]]:
+    """Reads the data of the night plan contained in a dictionary into the four lists"""
+    target_lst, calibrator_lst, order_lst, tag_lst = [], [], [], []
+    for science_target, calibrators in night.items():
+        target_lst.append(science_target)
+        if len(calibrators) == 1:
+            calibrator_lst.append(calibrators[0]["name"])
+            order_lst.append(calibrators[0]["order"])
+            tag_lst.append(calibrators[0]["tag"])
+        else:
+            cal_info = np.array([(calibrator["name"], calibrator["order"], calibrator["tag"])\
+                    for calibrator in calibrators])
+            calibrator_lst.append(cal_info[:, 0].tolist())
+            order_lst.append(cal_info[:, 1].tolist())
+            tag_lst.append(cal_info[:, 2].tolist())
+    return target_lst, calibrator_lst, order_lst, tag_lst
+
+
+def create_OBs_from_lists(sci_lst, cal_lst, order_lst, tag_lst,
+                          mode_selection: str, output_dir: Path,
+                          res_dict: Dict, standard_res: List) -> None:
+    """"""
+    for mode in OPERATIONAL_MODES[mode_selection]:
+        print("-----------------------------")
+        print(f"Making OBs for {mode}")
+        print("-----------------------------")
+        if not tag_lst:
+            tag_lst = copy_list_and_replace_all_values(cal_lst, "LN")
+        if not order_lst:
+            order_lst = copy_list_and_replace_all_values(cal_lst, "a")
+
+        mode_out_dir = output_dir / mode
+        if not mode_out_dir.exists():
+            mode_out_dir.mkdir(parents=True, exist_ok=True)
+
+        make_sci_obs(sci_lst, array_config, mode,
+                     mode_out_dir, res_dict, standard_res)
+        make_cal_obs(cal_lst, sci_lst, tag_lst, order_lst, array_config, mode,\
+                     mode_out_dir, res_dict, standard_res)
+
+
+def create_OBs_from_dict(mode_selection: str,
+                         night_plan_data: Optional[Dict] = None,
+                         night_plan_path: Optional[Path] = None,
+                         output_dir: Optional[Path] = None,
+                         res_dict: Optional[Dict] = {},
+                         standard_res: Optional[List] = []) -> None:
     """This reads either the (.yaml)-file into a format suitable for the Jozsef
     Varga's OB creation code or reads out the run dict if 'run_data' is given,
     and subsequently makes the OBs.
@@ -392,51 +434,46 @@ def read_dict_into_OBs(mode_selection: str,
         The default spectral resolutions for L- and N-band. By default it is set
         to medium for L- and low for N-band
     """
-    if run_data:
-        run_dict = run_data
+    if night_plan_data is not None:
+        run_dict = night_plan_data
     elif night_plan_path is not None:
         with open(night_plan_path, "r") as night_plan_yaml:
             run_dict = yaml.safe_load(night_plan_yaml)
     else:
-        raise IOError("Either the 'run_data'- or the 'night_plan_path'-parameters"\
+        raise IOError("Either the 'night_plan_data'- or the 'night_plan_path'-parameters"\
                       " must be given a value!")
 
-    for run_name, run_content in run_dict.items():
-        print(f"Making OBs for {run_name}")
-        # TODO: Add spacing for logging
-        logging.info(f"Creating OBs for '{run_name}'")
-        array_config = get_array_config(run_name)
-        run_name = ''.join(run_name.split(",")[0].strip().split())
-        logging.info(f"Creating folder: '{run_name}'")
+    for run_id, run in run_dict.items():
+        print(f"Making OBs for {run_id}")
+        logging.info(f"Creating OBs for '{run_id}'")
+        array_config = get_array_config(run_id)
+        run_dir = ''.join(run_id.split(",")[0].strip().split())
+        logging.info(f"Creating folder: '{run_dir}'")
 
-        for night_name, night_content in run_content.items():
-            night_name = get_night_name_and_date(night_name)
+        for night_id, night in run.items():
+            night_name = get_night_name_and_date(night_id)
+            night_dir = output_dir / run_dir / night_name
+            if not night_dir.exists():
+                night_dir.mkdir(parents=True, exist_ok=True)
 
-            night_path = output_dir / run_name / night_name
-            if not night_path.exists():
-                night_path.mkdir(parents=True, exist_ok=True)
-
-            print(f"Creating folder: '{night_name}', and filling it with OBs")
-            logging.info(f"Creating folder: '{night_name}', and filling it with OBs")
+            print(f"Creating folder: '{night_dir.name}', and filling it with OBs")
+            logging.info(f"Creating folder: '{night_dir.name}', and filling it with OBs")
 
             # NOTE: This avoids a timeout from the query-databases (such as Vizier)
             time.sleep(0.5)
-
-            night = SimpleNamespace(**night_content)
-            make_sci_obs(night.SCI, array_config,
-                         mode_selection, night_path, res_dict, standard_res)
-            make_cal_obs(night.CAL, night.SCI, night.TAG, night.ORDER, array_config,
-                         mode_selection, night_path, res_dict, standard_res)
+            create_OBs_from_lists(*read_dict_to_lists(night), mode_selection,
+                                  output_dir, res_dict, standard_res)
 
 
 def ob_creation(output_dir: Path,
                 sub_folder: Optional[Path] = None,
-                night_plan_path: Optional[Path] = "",
+                night_plan_data: Optional[Dict] = None,
+                night_plan_path: Optional[Path] = None,
                 manual_lst: Optional[List] = [],
-                run_data: Optional[Dict] = {},
                 res_dict: Optional[Dict] = {},
                 standard_res: Optional[List] = [],
-                mode_selection: str = "st", clean_previous: bool = False) -> None:
+                mode_selection: str = "st",
+                clean_previous: bool = False) -> None:
     """Gets either information from a 'nigh_plan.yaml'-file or a dictionary contain the
     run's data. Then it checks a dictionary for the resolution input for specific science
     targets and generates the OBS. Uses a standard resolution if none is provided.
@@ -446,15 +483,17 @@ def ob_creation(output_dir: Path,
     output_dir: Path
     sub_folder: Path, optional
         A sub-folder in which the scripts are made into (if manually given)
+    night_plan_data: Dict, optional
+        The data that would be saved to a 'night_plan.yaml'-file
     night_plan_path: Path, optional
-        The path to the 'night_plan.yaml'-file
+        The path to a 'night_plan.yaml'-file
     manual_lst: List, optional
-        The manual input of [targets, calibrators, tags, order]
+        The manual input of the four needed lists [targets, calibrators, tags, order].
+        Only the targets and calibrators list need to be provided, tags and order can 
+        be autofilled.
         If this is given the path of execution will be 'output_dir / "manualOBs"'
-        ------ Add explanation here -----
-    run_data: Dict, optional
     resolution_dict: Dict, optional
-        A dict with entries corresponding the resolution
+        A dict with entries corresponding the resolution of specific science targets
     standard_res: List, optional
         The default spectral resolutions for L- and N-band. By default it is set
         to medium for L- and low for N-band
@@ -468,47 +507,35 @@ def ob_creation(output_dir: Path,
     """
     output_dir = Path(output_dir, "manualOBs") if manual_lst else Path(output_dir)
 
-    if manual_lst and (sub_folder is not None):
-        output_dir /= sub_folder
-    if clean_previous:
-        confirmation = input(f"You are trying to remove\n'{output_dir}'\n"
-                             "THIS CANNOT BE REVERSED! Are you sure? (yN): ")
-        if confirmation.lower() == "y":
-            shutil.rmtree(output_dir)
-            print("Files were cleaned up")
-        else:
-            print("Files not cleaned up!")
-
-    array_config = get_array_config()
-
-    for mode in OPERATIONAL_MODES[mode_selection]:
-        print("-----------------------------")
-        print(f"Making OBs for {mode}")
-        print("-----------------------------")
-        if manual_lst:
+    if manual_lst:
+        if sub_folder is not None:
+            output_dir /= sub_folder
+        array_config = get_array_config()
+        try:
             sci_lst, cal_lst, tag_lst, order_lst = manual_lst
-            if not tag_lst:
-                tag_lst = copy_list_and_replace_all_values(cal_lst, "LN")
-            if not order_lst:
-                order_lst = copy_list_and_replace_all_values(cal_lst, "a")
+        except ValueError:
+            raise ValueError("In case of manual input the four lists must be given!")
+        create_OBs_from_lists(sci_lst, cal_lst, tag_lst, order,
+                              mode_selection, output_dir, res_dict, standard_res)
 
-            mode_out_dir = output_dir / mode
+    elif night_plan_path or run_data:
+        create_OBs_from_dict(mode_selection, night_plan_data, night_plan_path,
+                             output_dir, res_dict, standard_res)
+    else:
+        raise IOError("Neither '.yaml'-file nor input list found or input"
+                      " dict found!")
 
-            if not mode_out_dir.exists():
-                mode_out_dir.mkdir(parents=True, exist_ok=True)
+    # TODO: Add this back into the function
+    # if clean_previous:
+        # confirmation = input(f"You are trying to remove\n'{output_dir}'\n"
+                             # "THIS CANNOT BE REVERSED! Are you sure? (yN): ")
+        # if confirmation.lower() == "y":
+            # shutil.rmtree(output_dir)
+            # print("Files were cleaned up!")
+        # else:
+            # print("Files not cleaned up!")
+# 
 
-            make_sci_obs(sci_lst, array_config, mode,
-                         mode_out_dir, res_dict, standard_res)
-            make_cal_obs(cal_lst, sci_lst, tag_lst, order_lst, array_config, mode,\
-                         mode_out_dir, res_dict, standard_res)
-
-        elif night_plan_path or run_data:
-            read_dict_into_OBs(mode, night_plan_path, Path(output_dir, mode),
-                               run_data, res_dict, standard_res)
-
-        else:
-            raise IOError("Neither '.yaml'-file nor input list found or input"
-                          " dict found!")
 
 
 if __name__ == "__main__":

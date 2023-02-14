@@ -25,6 +25,7 @@ Example of usage:
 # TODO: Make parser accept more than one calibrator block for one night, by
 # checking if there are integers for numbers higher than last calibrator and
 # then adding these
+# TODO: Improve the documentation and the docstrings
 
 from re import split
 import yaml
@@ -34,6 +35,7 @@ from collections import namedtuple
 from typing import Any, Dict, List, Optional
 
 from utils import contains_element
+from creator import read_dict_to_lists
 
 
 def parse_line(parts: str) -> str:
@@ -68,7 +70,6 @@ def parse_groups(section: List):
         parts = line.strip().split()
 
         if not parts:
-            # HACK: Remove the None values so to say, manually
             if current_science_target is not None:
                 data[current_science_target] = current_group
             current_group, current_science_target = [], None
@@ -85,10 +86,13 @@ def parse_groups(section: List):
             current_group.append(calibrator)
         else:
             current_science_target = obj_name
+
+    # HACK: Remove all the empty parsings
+    data = {key: value for key, value in data.items() if value}
     return data
 
 
-def _get_file_section(lines: List, identifier: str) -> Dict:
+def get_file_section(lines: List, identifier: str) -> Dict:
     """Gets the section of a file corresponding to the given identifier and
     returns a dict with the keys being the match to the identifier and the
     values being a subset of the lines list
@@ -156,13 +160,17 @@ def parse_night_plan(night_plan_path: Path,
         raise FileNotFoundError(f"File {night_plan_path.name} was not found/does not exist!")
 
     runs = {}
-    for run_id, run in _get_file_section(lines, run_identifier).items():
+    for run_id, run in get_file_section(lines, run_identifier).items():
         nights = {}
-        for night_id, night in _get_file_section(run, night_identifier).items():
-            nights[night_id] = parse_groups(night)
+        for night_id, night in get_file_section(run, night_identifier).items():
+            # HACK: Only add nights that have content
+            night_content = parse_groups(night)
+            if night_content:
+                nights[night_id] = night_content
         runs[run_id] = nights
-    print(runs) 
+    return runs
 
+    # TODO: Add save functionality back into parser
     # if save_path:
         # yaml_file_path = Path(save_path) / "night_plan.yaml"
         # with open(yaml_file_path, "w+") as night_plan_yaml:
@@ -172,5 +180,8 @@ def parse_night_plan(night_plan_path: Path,
 
 
 if __name__ == "__main__":
-    data_dir = Path(__file__).parent.parent / "tests/data" / "night_plan_small.txt"
-    print(parse_night_plan(data_dir))
+    data_dir = Path(__file__).parent.parent / "tests/data" / "night_plan.txt"
+    for run_id, run_content in parse_night_plan(data_dir).items():
+        for night_id, night in run_content.items():
+            lists = read_dict_to_lists(night)
+            breakpoint()
