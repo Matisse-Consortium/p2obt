@@ -50,7 +50,6 @@ import loadobx
 # -> FIXME: Need fix of folder creation first
 # BUG: Folder sorting sometimes doesn't work? -> Check if that persists?
 
-
 LOG_PATH = Path(__file__).parent / "logs/uploader.log"
 
 if LOG_PATH.exists():
@@ -140,6 +139,7 @@ def update_readme():
 
 
 # TODO: This function is not used right now  make it into iterative over subfolders
+# TODO: Make the upload ask for the run-id if it cannot be determined
 def get_subfolders_containing_files(search_directory: Path,
                                     file_type: Optional[str] = ".obx") -> List[Path]:
     """Recursively searches through the whole subtree of the search directory and returns
@@ -265,8 +265,8 @@ def create_folder_structure_and_upload(p2_connection: p2api,
     """
     # FIXME: Make container_id upload work
     container_id = 0
-    # TODO: Sort folders in some way iteratively
 
+    # TODO: Sort folders in some way iteratively
     for parent in obx_folder.parents[::-1][1:]:
         if parent in containers:
             continue
@@ -285,7 +285,7 @@ def create_folder_structure_and_upload(p2_connection: p2api,
         containers.add(parent)
 
     if container_id == 0:
-        # FIXME: This is a botched fix for a weird bug that it only takes folders that
+        # HACK: This is a botched fix for a weird bug that it only takes folders that
         # originated from same file??
         if container_ids:
             container_id = container_ids[obx_folder.parent]
@@ -300,11 +300,30 @@ def create_folder_structure_and_upload(p2_connection: p2api,
     return container_ids, containers
 
 
+# FIXME: This gets called quite often? Important to reduce the number of calls?
+def get_run_prog_id(upload_directory: Path, folder: Path):
+    """"""
+    base_directory = str(folder.parents[-2]) 
+    run_prog_id = None
+    if "run" in base_directory:
+        try:
+            with open(upload_directory / base_directory / "run_id.txt", "r") as f:
+                run_prog_id = f.read()
+        except FileNotFoundError:
+            pass
+
+    if run_prog_id is None:
+        print("Run's id could not be automatically detected!")
+        run_prog_id = input("Please enter the run's id in the following form"
+                            " (<period>.<program>.<run> (e.g., 110.2474.004)): ")
+    return run_prog_id
+
 def ob_uploader(upload_directory: Path,
                 run_prog_id: Optional[str] = None,
                 container_id: Optional[int] = None,
                 server: Optional[str] = "production",
-                username: Optional[str] = None) -> None:
+                username: Optional[str] = None,
+                password: Optional[str] = None) -> None:
     """This checks if run is specified or given by the folder names and then
     makes the same folders on the P2 and additional folders (e.g., for the
     'main_targets' and 'backup_targets' as well as for all the SCI-OBs. It then
@@ -326,21 +345,23 @@ def ob_uploader(upload_directory: Path,
     username: str, optional
         The username for the P2
     """
-    # TODO: Make automatic upload possible again
-    p2_connection = loadobx.login(username, None, server)
+    p2_connection = loadobx.login(username, password, server)
 
-    if container_id:
-        run_id = container_id
-    elif run_prog_id:
-        run_id = get_remote_run(p2_connection, run_prog_id)
-    else:
-        raise IOError("Either run-program-id or container-id must be given!")
+    # if container_id:
+        # run_id = container_id
+    # elif run_prog_id:
+        # run_id = get_remote_run(p2_connection, run_prog_id)
+    # else:
+        # raise IOError("Either run-program-id or container-id must be given!")
 
     obx_folders = get_subfolders_containing_files(upload_directory)
 
     container_ids, containers = {}, set()
-
     for obx_folder in obx_folders:
+        # TODO: Skip this if the run_prog_id is given
+        if run_prog_id is None:
+            run_prog_id = get_run_prog_id(upload_directory, obx_folder)
+            run_id = get_remote_run(p2_connection, run_prog_id)
         container_ids, containers =\
                 create_folder_structure_and_upload(p2_connection, upload_directory,
                                                    obx_folder, run_id,
@@ -352,7 +373,6 @@ def ob_uploader(upload_directory: Path,
 # TODO: Make night sorting also
 
 if __name__ == "__main__":
-    path = Path("/Users/scheuck/data/observations/obs/manualOBs")
-    run_prog_id = "110.2474.004"
-    ob_uploader(path, run_prog_id, username="MbS")
+    path = Path("/Users/scheuck/data/observations/obs/automaticOBs/")
+    ob_uploader(path, username="MbS")
 

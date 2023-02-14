@@ -34,8 +34,3 @@ def get_password_and_username():
     else:
         password = input()
     return username, password
-
-
-if __name__ == "__main__":
-    ...
-
