@@ -172,7 +172,7 @@ def copy_list_and_replace_all_values(input_list: List, value: Any):
 def add_order_tag_to_newest_file(outdir: Path, order_tag: str):
     """Fetches the last created file and adds and order tag to it"""
     latest_file = max(outdir.glob("*.obx"), key=os.path.getctime)
-    latest_file.rename(latest_file.with_stem(latest_file.stem + f"-{order_tag}"))
+    latest_file.rename(latest_file.with_stem(latest_file.stem + f"#{order_tag}"))
 
 
 def get_night_name_and_date(night_name: str) -> str:
@@ -268,8 +268,11 @@ def get_run_instrument(run_name: str) -> str:
 def write_run_information(run_name: str, output_dir: Path) -> None:
     """Writes the run's information to a (.yaml)-file"""
     yaml_file = output_dir / "run.yaml"
-    with open(yaml_file, "r") as f:
-        yaml_content = yaml.safe_load(f)
+    try:
+        with open(yaml_file, "r") as f:
+            yaml_content = yaml.safe_load(f)
+    except FileNotFoundError:
+        yaml_content = None
     yaml_content = yaml_content if yaml_content is not None else {}
 
     run_prog_id = None

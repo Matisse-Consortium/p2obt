@@ -70,7 +70,7 @@ if __name__ == "__main__":
     data_dir = Path("/Users/scheuck/Data/observations/")
     output_dir = Path("/Users/scheuck/Data/observations/obs")
     period_dir = data_dir / "P111"
-    night_plan_path = period_dir / "run004_v1.txt"
+    night_plan_path = period_dir / "run005_v1.txt"
 
     # TODO: Make also a DIT-dictionary where ppl can change the dit of an individual thing
     # or make it possible to change either both or once at a time?

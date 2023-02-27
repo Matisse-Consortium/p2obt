@@ -192,7 +192,7 @@ def sort_science_and_calibrator(science_to_calibrator_dict: Dict) -> Dict:
     science_to_calibrator_dict: Dict
     """
     for science_target, obx_files in science_to_calibrator_dict.items():
-        if any([obx_file.stem.endswith(("-a", "-b")) for obx_file in obx_files]):
+        if any([obx_file.stem.endswith(("#a", "#b")) for obx_file in obx_files]):
             science_to_calibrator_dict[science_target] = \
                     sorted(obx_files, key=lambda x: (x.name.find("b") >= 0,
                                                      x.name.find("a") >= 0))
@@ -214,13 +214,13 @@ def pair_science_to_calibrators(upload_directory: Path, obx_folder: Path) -> Dic
     """
     science_to_calibrator_dict = {}
     obx_files = (upload_directory / obx_folder).glob("*.obx")
-    obx_files = sorted(obx_files, key=lambda x: x.stem.split("-")[1])
+    obx_files = sorted(obx_files, key=lambda x: x.stem.split("#")[1])
 
     for obx_file in obx_files:
         stem = obx_file.stem
         if "SCI" in stem:
             science_target_name = "_".join([part for part\
-                                            in stem.split("-")[0].split("_")[1:]])
+                                            in stem.split("#")[0].split("_")[1:]])
             science_to_calibrator_dict[science_target_name] = [obx_file]
         else:
             science_target_of_calibrator = "_".join(stem.split("_")[2:-1])

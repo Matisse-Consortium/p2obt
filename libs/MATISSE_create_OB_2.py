@@ -25,18 +25,18 @@ Further parameters are optional:
 - obs_tpls: list of observation templates (either user-specified or built-in), default: [obs_tpl]
       Each template is a dictionary, with a set of predifined parameter values.
       Built in template dictionaries:
-          obs_tpl: standard MATISSE standalone template (MATISSE_hyb_obs) - LM-LR+N_HR, DIT=0.111s, wl0=4.1um
-          obs_ft_tpl: standard GRA4MAT template with chopping (MATISSE_hyb_obs_ft) - LM-LR+N_HR, DIT=1.0s, wl0=4.1um, do phometry = True
-          obs_ft_coh_tpl: old GRA4MAT corr. flux template (MATISSE_hyb_obs_ft_coh) - LM-MR+N_HR, DIT = 3s, wl0=3.95um
-          obs_ft_vis_tpl: old GRA4MAT visibility template (MATISSE_hyb_obs_ft_vis) - LM-LR+N_HR, DIT=0.111s, wl0=4.1um
+          OBS_TPL: standard MATISSE standalone template (MATISSE_hyb_obs) - LM-LR+N_HR, DIT=0.111s, wl0=4.1um
+          OBS_FT_TPL: standard GRA4MAT template with chopping (MATISSE_hyb_obs_ft) - LM-LR+N_HR, DIT=1.0s, wl0=4.1um, do phometry = True
+          OBS_FT_COH_TPL: old GRA4MAT corr. flux template (MATISSE_hyb_obs_ft_coh) - LM-MR+N_HR, DIT = 3s, wl0=3.95um
+          OBS_FT_VIS_TPL: old GRA4MAT visibility template (MATISSE_hyb_obs_ft_vis) - LM-LR+N_HR, DIT=0.111s, wl0=4.1um
 
-- acq_tpl: acquisition template, default: [acq_tpl]
+- ACQ_TPL: acquisition template, default: [acq_tpl]
       The template is a dictionary, with a set of predifined parameter values.
       Built in template dictionaries:
           acq_tpl: acquisition template for MATISSE standalone
           acq_ft_tpl: acquisition template for GRA4MAT
       DON'T MIX UP the ft and standalone templates! An acq_ft_tpl must be followed by an _ft_ observation template.
-- header_dic: dictionary for the OB header, default: [header_dic]
+- HEADER_DIC: dictionary for the OB header, default: [header_dic]
 
 First, the program loads the acquisition and observation templates from the template dictionaries.
 The following options can be used to modify the values in the already loaded templates.
@@ -75,7 +75,7 @@ Example usages:
 
 Simplest (good for MATISSE standalone):
 >>> import MATISSE_create_OB_2 as ob
->>> ob.mat_gen_ob('RY Tau','UTs','SCI')
+>>> ob.mat_gen_ob('RY Tau', 'UTs', 'SCI')
 
 For several targets:
 >>> import MATISSE_create_OB_2 as ob
@@ -90,30 +90,30 @@ How to make a GRA4MAT OB:
 >>> import MATISSE_create_OB_2 as ob
 >>> outdir = '/some/dir'
 >>> ob.mat_gen_ob('R Mon','large','SCI',outdir=outdir,
->>>               obs_tpls=[ob.obs_ft_tpl],acq_tpl=ob.acq_ft_tpl)
+>>>               obs_tpls=[ob.OBS_FT_TPL], acq_tpl=ob.ACQ_FT_TPL)
 
 How to make a calibrator OB:
 
 >>> import MATISSE_create_OB_2 as ob
 >>> outdir = '/some/dir'
->>> ob.mat_gen_ob('HD27482','UTs','CAL',outdir=outdir,sci_name='RY Tau',tag='LN')
+>>> ob.mat_gen_ob('HD27482', 'UTs', 'CAL', outdir=outdir, sci_name='RY Tau', tag='LN')
 
 More examples:
 
 Make GRA4MAT OBs for ATs in LR-L with DIT of 1s (central wl is the default 4.1 um)
 
->>> ob.mat_gen_ob(sci_lst[i],'small','SCI',outdir,spectral_setups=['L-LR_N-LR'],
->>>               obs_tpls=[ob.obs_ft_tpl],acq_tpl=ob.acq_ft_tpl,DITs=[1.0])
+>>> ob.mat_gen_ob(sci_lst[i], 'small', 'SCI', outdir, spectral_setups=['L-LR_N-LR'],
+>>>               obs_tpls=[ob.OBS_FT_TPL], acq_tpl=ob.ACQ_FT_TPL, DITs=[1.0])
 
 Make GRA4MAT OBs for ATs in MR-L with DIT of 1.3s (central wl is the default 4.1 um)
 
->>> ob.mat_gen_ob(sci_lst[i],'small','SCI',outdir,spectral_setups=['L-MR_N-LR'],
->>>               obs_tpls=[ob.obs_ft_tpl],acq_tpl=ob.acq_ft_tpl,DITs=[1.3])
+>>> ob.mat_gen_ob(sci_lst[i], 'small', 'SCI', outdir, spectral_setups=['L-MR_N-LR'],
+>>>               obs_tpls=[ob.OBS_FT_TPL], acq_tpl=ob.ACQ_FT_TPL, DITs=[1.3])
 
 Make GRA4MAT OBs for ATs in HR-L with DIT of 3s (central wl is the default 4.1 um)
 
->>> ob.mat_gen_ob(sci_lst[i],'small','SCI',outdir,spectral_setups=['L-HR_N-LR'],
->>>               obs_tpls=[ob.obs_ft_tpl],acq_tpl=ob.acq_ft_tpl,DITs=[3.0])
+>>> ob.mat_gen_ob(sci_lst[i], 'small', 'SCI', outdir, spectral_setups=['L-HR_N-LR'],
+>>>               obs_tpls=[ob.OBS_FT_TPL], acq_tpl=ob.ACQ_FT_TPL, DITs=[3.0])
 """
 import math
 import warnings
@@ -465,16 +465,12 @@ def print_fluxes(target_name):
 
 
 def mat_gen_ob(target_name, baseline_config, object_type, outdir='.',
-               obs_tpls=[
-                   OBS_TPL], acq_tpl=ACQ_TPL, header_dic=HEADER_DIC, spectral_setups=[''],
-               central_wls=[np.nan], DITs=[
-                   np.nan], ncycles=[np.nan], photo_sts=[''],
-               user_comments='', obname='', obs_type='', simbad_data_dic={}, sci_name='', tag='',
+               obs_tpls=[OBS_TPL], acq_tpl=ACQ_TPL, header_dic=HEADER_DIC,
+               spectral_setups=[''], central_wls=[np.nan], DITs=[np.nan],
+               ncycles=[np.nan], photo_sts=[''], user_comments='', obname='',
+               obs_type='', simbad_data_dic={}, sci_name='', tag='',
                print_info=True):
-
-    #print(object_type+' '+target_name+' '+baseline_config+' ',end='')
-
-    # update header
+    # NOTE: Update header
     if obname == '':
         if sci_name == '':
             obname = object_type + '_' + target_name.replace(' ', '_')
