@@ -264,13 +264,14 @@ HEADER_DIC = {
     "strehlratio": 0.0,
     "twilight": 0,
     "watervapour": 30.0,
-    # "atm":"30%  (Seeing < 0.8 arcsec, t0 > 4.1 ms)",
-    "atm": "70%  (Seeing < 1.15 arcsec, t0 > 2.2 ms)",
+    "atm": "30%  (Seeing < 0.8 arcsec, t0 > 4.1 ms)",
+    # "atm": "70%  (Seeing < 1.15 arcsec, t0 > 2.2 ms)",
     "contrast": 0.0,
     "description": '',
     "OBSERVATION.DESCRIPTION.NAME": '',
     "instrument": 'MATISSE'
 }
+
 
 # NOTE: Available acquisition templates: 'MATISSE_acq', 'MATISSE_acq_ft'
 def add_acq_template(tdic):

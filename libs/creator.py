@@ -105,25 +105,25 @@ logging.basicConfig(filename=LOG_PATH, filemode='w',
 # NOTE: Dictionaries for the template- and resolution-configurations
 # NOTE: For the UTs/ATs in standalone there is only one resolution as of yet -> Maybe
 # change in the future. The higher ones, to avoid errors are the same
-UT_DICT_STANDALONE = {"ACQ": ob.acq_tpl,
-                      "LOW": {"TEMP": [ob.obs_tpl], "DIT": [0.111],
+UT_DICT_STANDALONE = {"ACQ": ob.ACQ_TPL,
+                      "LOW": {"TEMP": [ob.OBS_TPL], "DIT": [0.111],
                               "RES": ["L-LR_N-LR"]},
-                      "MED": {"TEMP": [ob.obs_tpl], "DIT": [0.111],
+                      "MED": {"TEMP": [ob.OBS_TPL], "DIT": [0.111],
                               "RES": ["L-LR_N-LR"]},
-                      "HIGH": {"TEMP": [ob.obs_tpl], "DIT": [0.111],
+                      "HIGH": {"TEMP": [ob.OBS_TPL], "DIT": [0.111],
                               "RES": ["L-LR_N-LR"]}}
 
-AT_DICT_GRA4MAT = {"ACQ": ob.acq_ft_tpl,
-                   "LOW": {"TEMP": [ob.obs_ft_tpl], "DIT": [0.6], "RES":
+AT_DICT_GRA4MAT = {"ACQ": ob.ACQ_FT_TPL,
+                   "LOW": {"TEMP": [ob.OBS_FT_TPL], "DIT": [0.6], "RES":
                            ["L-LR_N-LR"]},
-                   "MED": {"TEMP": [ob.obs_ft_tpl],
+                   "MED": {"TEMP": [ob.OBS_FT_TPL],
                            "DIT": [1.3], "RES": ["L-MR_N-LR"]},
-                   "HIGH": {"TEMP": [ob.obs_ft_tpl],
+                   "HIGH": {"TEMP": [ob.OBS_FT_TPL],
                            "DIT": [3.], "RES": ["L-HR_N-LR"]}}
 
 # NOTE: Maybe include the higher resolutions again at some point
-UT_DICT_GRA4MAT = {"ACQ": ob.acq_ft_tpl,
-                   "LOW": {"TEMP": [ob.obs_ft_tpl], "DIT": [0.111], "RES":
+UT_DICT_GRA4MAT = {"ACQ": ob.ACQ_FT_TPL,
+                   "LOW": {"TEMP": [ob.OBS_FT_TPL], "DIT": [0.111], "RES":
                            ["L-LR_N-LR"]},
                    # "LOW_VIS": {"TEMP": [ob.obs_ft_vis_tpl], "DIT": [0.111], "RES":
                                # ["L-LR_N-LR"]},
@@ -231,35 +231,62 @@ def get_array_config(run_name: Optional[str] = None) -> str:
                 return "medium"
             else:
                 return "large"
-        else:
-            user_inp = int(input("No configuration can be found, please input"\
-                             " ('UTs': 1; 'small': 2, 'medium': 3, 'large/astrometric: 4): "))-1
-            return TEL_CONFIG[user_inp]
-    else:
-        user_inp = int(input("No configuration can be found, please input"\
-                         " ('UTs': 1; 'small': 2, 'medium': 3, 'large/astrometric: 4): "))-1
-        return TEL_CONFIG[user_inp]
+    message = "No configuration can be found, please input"\
+        " ('UTs': 1; 'small': 2, 'medium': 3, 'large/astrometric: 4): "
+    user_inp = int(input(message))-1
+    return TEL_CONFIG[user_inp]
 
 
-def write_run_prog_id(run_id: str, output_dir: Path) -> None:
-    """"""
-    prog_id = None
-    for element in run_id.split():
-        try:
-            if len(element.split(".")) == 3:
-                prog_id = element
-        except:
-            continue
-    # TODO: Maybe add a while loop here for wrong input. Do the same above?
-    if prog_id is None:
+# TODO: Make this more robust with the parser looking through all of the run for the
+# resolution and writing it in the yaml file
+def get_run_resolution(run_name: str) -> str:
+    """Gets the run's resolution from the run's name"""
+    if "LR" in run_name:
+        return "LOW"
+    elif "MR" in run_name:
+        return "MED"
+    elif "HR" in run_name:
+        return "HIGH"
+
+    print("Run's resolution could not be automatically detected!")
+    return input("Please enter the run's resolution in the following form"
+                 " ('LOW', 'MED', 'HIGH'): ")
+
+
+def get_run_instrument(run_name: str) -> str:
+    """Gets the run's used instrument, MATISSE or GRA4MAT"""
+    if "GRA4MAT" in run_name:
+        return "gr"
+    elif "MATISSE" in run_name:
+        return "st"
+
+    print("Run's instrument could not be automatically detected!")
+    return input("Please enter the run's instrument in the following form"
+                 " ('gr', 'st'): ")
+
+
+def write_run_information(run_name: str, output_dir: Path) -> None:
+    """Writes the run's information to a (.yaml)-file"""
+    yaml_file = output_dir / "run.yaml"
+    with open(yaml_file, "r") as f:
+        yaml_content = yaml.safe_load(f)
+    yaml_content = yaml_content if yaml_content is not None else {}
+
+    run_prog_id = None
+    for element in run_name.split():
+        if len(element.split(".")) == 3:
+            run_prog_id = element
+            break
+
+    if run_prog_id is None:
         print("Run's id could not be automatically detected!")
-        prog_id = input("Please enter the run's id in the following form"
-                        " (<period>.<program>.<run> (e.g., 110.2474.004)): ")
+        run_prog_id = input("Please enter the run's id in the following form"
+                            " (<period>.<program>.<run> (e.g., 110.2474.004)): ")
+    yaml_content["run_prog_id"] = run_prog_id
 
-    # TODO: Maybe extend this as a (.toml)-file or so
-    with open(output_dir / "run_id.txt", "w+") as run_id_file:
-        run_id_file.write(prog_id)
-    print("[INFO] Run's id has been written to 'run_id.txt'")
+    with open(yaml_file, "w+") as run_file:
+        yaml.dump(yaml_content, run_file)
+    print("[INFO] Run's information has been written to 'run.yaml'")
 
 
 def make_sci_obs(targets: List, array_config: str,
@@ -432,7 +459,8 @@ def create_OBs_from_dict(mode_selection: str,
                          night_plan_path: Optional[Path] = None,
                          output_dir: Optional[Path] = None,
                          res_dict: Optional[Dict] = {},
-                         standard_res: Optional[List] = []) -> None:
+                         standard_res: Optional[List] = [],
+                         observation_mode: Optional[str] = "visitor") -> None:
     """This reads either the (.yaml)-file into a format suitable for the Jozsef
     Varga's OB creation code or reads out the run dict if 'run_data' is given,
     and subsequently makes the OBs.
@@ -472,6 +500,10 @@ def create_OBs_from_dict(mode_selection: str,
         print(f"Making OBs for {run_id}...")
         logging.info(f"Creating OBs for '{run_id}'...")
 
+        if observation_mode == "service":
+            standard_res = get_run_resolution(run_id)
+            mode_selection = get_run_instrument(run_id)
+
         run_name = ''.join(run_id.split(",")[0].strip().split())
         run_dir = output_dir / run_name
         if not run_dir.exists():
@@ -479,7 +511,7 @@ def create_OBs_from_dict(mode_selection: str,
         logging.info(f"Creating folder '{run_name}...'")
 
         array_config = get_array_config(run_id)
-        write_run_prog_id(run_id, run_dir)
+        write_run_information(run_id, run_dir)
 
         for night_id, night in run.items():
             night_name = get_night_name_and_date(night_id)
@@ -505,6 +537,7 @@ def ob_creation(output_dir: Path,
                 res_dict: Optional[Dict] = {},
                 standard_res: Optional[List] = None,
                 mode_selection: str = "st",
+                observation_mode: Optional[str] = "visitor",
                 clean_previous: bool = False) -> None:
     """Gets either information from a 'nigh_plan.yaml'-file or a dictionary contain the
     run's data. Then it checks a dictionary for the resolution input for specific science
@@ -533,6 +566,8 @@ def ob_creation(output_dir: Path,
         The mode MATISSE is operated in and for which the OBs are created.
         Either 'st' for standalone, 'gr' for GRA4MAT_ft_vis or 'both',
         if OBs for both are to be created
+    observation_mode: str, optional
+        Can either be "visitor" for Visitor Mode (VM) or "service" for Service Mode (SM)
     clean_previous: bool
         If toggled will remove the path given/in which the OBs are to be created
         DISCLAIMER: Danger this will remove all subfolders and data contined in it
@@ -550,11 +585,11 @@ def ob_creation(output_dir: Path,
             raise ValueError("In case of manual input the four lists must be given!")
         create_OBs_from_lists(sci_lst, cal_lst, tag_lst, order_lst,
                               mode_selection, output_dir, array_config,
-                              res_dict, standard_res)
+                              res_dict, standard_res, observation_mode)
 
     elif night_plan_path or night_plan_data:
         create_OBs_from_dict(mode_selection, night_plan_data, night_plan_path,
-                             output_dir, res_dict, standard_res)
+                             output_dir, res_dict, standard_res, observation_mode)
     else:
         raise IOError("Neither '.yaml'-file nor input list found or input"
                       " dict found!")
