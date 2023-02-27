@@ -72,8 +72,6 @@ Example of usage:
     # ... SCI HD 142527         15:56:41.888  -42:19:23.248   4.8      9.8   5.0   8.3
 """
 import os
-import sys
-import shutil
 import time
 import logging
 from pathlib import Path
@@ -523,7 +521,7 @@ def ob_creation(output_dir: Path,
         The path to a 'night_plan.yaml'-file
     manual_lst: List, optional
         The manual input of the four needed lists [targets, calibrators, tags, order].
-        Only the targets and calibrators list need to be provided, tags and order can 
+        Only the targets and calibrators list need to be provided, tags and order can
         be autofilled.
         If this is given the path of execution will be 'output_dir / "manualOBs"'
     resolution_dict: Dict, optional
@@ -550,7 +548,7 @@ def ob_creation(output_dir: Path,
             sci_lst, cal_lst, tag_lst, order_lst = manual_lst
         except ValueError:
             raise ValueError("In case of manual input the four lists must be given!")
-        create_OBs_from_lists(sci_lst, cal_lst, tag_lst, order,
+        create_OBs_from_lists(sci_lst, cal_lst, tag_lst, order_lst,
                               mode_selection, output_dir, array_config,
                               res_dict, standard_res)
 
@@ -570,8 +568,7 @@ def ob_creation(output_dir: Path,
             # print("Files were cleaned up!")
         # else:
             # print("Files not cleaned up!")
-# 
-
+#
 
 
 if __name__ == "__main__":

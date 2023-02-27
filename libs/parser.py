@@ -27,14 +27,11 @@ Example of usage:
 # then adding these
 # TODO: Improve the documentation and the docstrings
 
-from re import split
 import yaml
 
 from pathlib import Path
-from collections import namedtuple
 from typing import Any, Dict, List, Optional
 
-from utils import contains_element
 from creator import read_dict_to_lists
 
 
@@ -113,7 +110,7 @@ def get_file_section(lines: List, identifier: str) -> Dict:
     for index, line in enumerate(lines):
         if line.lower().startswith(identifier):
             indices.append(index)
-            labels.append(line.replace('\n', ''))
+            labels.append(line.strip())
 
     if not indices:
         indices, labels = [0], ["full_" + identifier]
@@ -189,4 +186,3 @@ if __name__ == "__main__":
             lists = read_dict_to_lists(night)
             print(run_id, night_id)
             print(lists)
-

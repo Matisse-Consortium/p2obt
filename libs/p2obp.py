@@ -7,6 +7,11 @@ from creator import ob_creation
 from uploader import ob_uploader
 from utils import get_password_and_username
 
+# TODO: Make parser that gets resolution for whole run if not specified otherwise ->
+# Service mode important
+# TODO: Change Jozef's script so that the Guide Stars are automatically put in (with a
+# comment of the Guide star's name)
+
 
 def ob_pipeline(output_dir: Optional[Path] = None,
                 manual_lst: Optional[List] = None,
@@ -62,13 +67,14 @@ def ob_pipeline(output_dir: Optional[Path] = None,
 if __name__ == "__main__":
     data_dir = Path("/Users/scheuck/Data/observations/")
     output_dir = Path("/Users/scheuck/Data/observations/obs")
-    time_slot = data_dir / "P110" / "february_march_2023"
-    night_plan_path = time_slot / "observing_plan_run7_v0.1.txt"
+    period_dir = data_dir / "P111"
+    night_plan_path = period_dir / "run004_v1.txt"
 
-    # NOTE: The resolution dict
     # TODO: Make also a DIT-dictionary where ppl can change the dit of an individual thing
     # or make it possible to change either both or once at a time?
-    res_dict = {"HD95881": "MED", "V1028 Cen": "MED", "HD98922": "HIGH"}
+    # TODO: Add Service Mode, where all contents of the run are posted to it by upload
+    # NOTE: The resolution dict
+    res_dict = {}
 
     ob_pipeline(output_dir=output_dir, night_plan_path=night_plan_path,
                 save_yaml_file=False, upload=True, mode_selection="both")
