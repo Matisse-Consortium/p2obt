@@ -588,7 +588,7 @@ def ob_creation(output_dir: Path,
             raise ValueError("In case of manual input the four lists must be given!")
         create_OBs_from_lists(sci_lst, cal_lst, tag_lst, order_lst,
                               mode_selection, output_dir, array_config,
-                              res_dict, standard_res, observation_mode)
+                              res_dict, standard_res)
 
     elif night_plan_path or night_plan_data:
         create_OBs_from_dict(mode_selection, night_plan_data, night_plan_path,
@@ -613,12 +613,12 @@ if __name__ == "__main__":
     path2file = "night_plan.yaml"
     outdir = Path("/Users/scheuck/Data/observations/obs/")
 
-    sci_lst = []
-    cal_lst = []
+    sci_lst = ["MWC 297"]
+    cal_lst = ["HD161096"]
     tag_lst = []
-
     # TODO: Make explanation/docs of the order_lst
     order_lst = []
+
     manual_lst = [sci_lst, cal_lst, tag_lst, order_lst]
 
     res_dict = {}
@@ -631,6 +631,5 @@ if __name__ == "__main__":
     # TODO: Find way to switch of photometry of template -> Jozsef's script rewrite?
 
     ob_creation(outdir, sub_folder=None, manual_lst=manual_lst,
-                res_dict=res_dict, mode_selection="both",
-                standard_res="LOW", clean_previous=True)
-
+                res_dict=res_dict, mode_selection="gr",
+                standard_res="HIGH", clean_previous=False)
