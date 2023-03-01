@@ -8,12 +8,15 @@ from uploader import ob_uploader
 from utils import get_password_and_username
 
 
+# TODO: Change Jozef's script so that the Guide Stars are automatically put in (with a
+# comment of the Guide star's name)
 def ob_pipeline(output_dir: Optional[Path] = None,
                 manual_lst: Optional[List] = None,
                 night_plan_path: Optional[Path] = None,
-                mode_selection: str = "gr",
+                mode_selection: Optional[str] = "gr",
+                observation_mode: Optional[str] = "visitor",
                 resolution_dict: Optional[Dict] = {},
-                save_yaml_file: Optional[bool] = False,
+                save_to_yaml: Optional[bool] = False,
                 upload: Optional[bool] = False) -> None:
     """
 
@@ -22,6 +25,9 @@ def ob_pipeline(output_dir: Optional[Path] = None,
     output_dir: Path, optional
     upload: bool, optional
     night_plan_path: Path, optional
+    mode_selection: str, optional
+    observation_mode: str, optional
+        Can either be "visitor" for Visitor Mode (VM) or "service" for Service Mode (SM)
     resolution_dict: Dict, optional
     save_yaml_file: bool, optional
     upload: bool, optional
@@ -37,7 +43,7 @@ def ob_pipeline(output_dir: Optional[Path] = None,
     if night_plan_path:
         print("Parsing the Night plan!")
         print("-------------------------------------------------------------------")
-        if save_yaml_file:
+        if save_to_yaml:
             night_plan_data = parse_night_plan(night_plan_path, save_path=output_dir)
         else:
             night_plan_data = parse_night_plan(night_plan_path)
@@ -48,7 +54,8 @@ def ob_pipeline(output_dir: Optional[Path] = None,
     print("-------------------------------------------------------------------")
     ob_creation(output_dir, night_plan_data=night_plan_data,
                 res_dict=resolution_dict, manual_lst=manual_lst,
-                mode_selection=mode_selection)
+                mode_selection=mode_selection, observation_mode=observation_mode,
+                clean_previous=True)
     print("-------------------------------------------------------------------")
     print("OB creation compete!")
     print("-------------------------------------------------------------------")
@@ -56,19 +63,21 @@ def ob_pipeline(output_dir: Optional[Path] = None,
     if upload:
         print("Uploading the OBs!")
         print("-------------------------------------------------------------------")
-        ob_uploader(output_dir, username=username, password=password)
+        ob_uploader(output_dir / "automaticOBs", username=username,
+                    password=password, observation_mode=observation_mode)
 
 
 if __name__ == "__main__":
     data_dir = Path("/Users/scheuck/Data/observations/")
     output_dir = Path("/Users/scheuck/Data/observations/obs")
-    time_slot = data_dir / "P110" / "february_march_2023"
-    night_plan_path = time_slot / "observing_plan_run7_v0.1.txt"
+    period_dir = data_dir / "P111"
+    night_plan_path = period_dir / "runs_v1" / "run009_v1.txt"
 
-    # NOTE: The resolution dict
     # TODO: Make also a DIT-dictionary where ppl can change the dit of an individual thing
     # or make it possible to change either both or once at a time?
-    res_dict = {"HD95881": "MED", "V1028 Cen": "MED", "HD98922": "HIGH"}
+    # TODO: Add Service Mode, where all contents of the run are posted to it by upload
+    # NOTE: The resolution dict
+    res_dict = {}
 
     ob_pipeline(output_dir=output_dir, night_plan_path=night_plan_path,
-                save_yaml_file=False, upload=True, mode_selection="both")
+                save_to_yaml=False, upload=True, observation_mode="service")

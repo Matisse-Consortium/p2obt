@@ -24,30 +24,29 @@ Example of usage:
     >>> from uploader import ob_uploader
 
     # The path to the top most folder
-
     >>> path = "/Users/scheuck/Documents/PhD/matisse_stuff/observation/phase2/obs"
 
     # The data describing the run
-
     >>> run_data = ["109", "2313"]
 
     # The main loop
-
     >>> ob_uploader(path, "production", ESO_USERNAME, ESO_PASSWORD)
 """
 import os
 import logging
-
 from pathlib import Path
 from typing import Dict, List, Optional
+
+import yaml
 
 import p2api
 import loadobx
 
+# FIXME: Cleanup with new startup, or describe folder that needs to uploaded
 # TODO: Make readme template and add additional per night, then upload it
 # FIXME: Make generateFindingCharts work and verification as well
 # TODO: Add complete hour count for folders that have been made
-# -> FIXME: Need fix of folder creation first
+# FIXME: Need fix of folder creation first
 # BUG: Folder sorting sometimes doesn't work? -> Check if that persists?
 
 LOG_PATH = Path(__file__).parent / "logs/uploader.log"
@@ -112,7 +111,9 @@ def remote_container_exists(p2_connection: p2api, container_id: int) -> bool:
         return False
 
 
-def create_remote_container(p2_connection: p2api, name: str, container_id: int) -> int:
+def create_remote_container(p2_connection: p2api,
+                            name: str, container_id: int,
+                            observation_mode: Optional[str] = "visitor") -> int:
     """Creates a container (either a run or folder) on P2
 
     Parameters
@@ -123,15 +124,22 @@ def create_remote_container(p2_connection: p2api, name: str, container_id: int) 
         The folder's name
     container_id: int
         The id that specifies the container (a run or folder on P2)
+    observation_mode: str
+        Can either be "visitor" for Visitor Mode (VM) or "service" for Service Mode (SM)
 
     Returns
     -------
     container_id: int
         The created container's id
     """
-    folder, _ = p2_connection.createFolder(container_id, name)
     print(f"Creating container {name}")
-    return folder["containerId"]
+    if observation_mode == "visitor":
+        container, _ = p2_connection.createFolder(container_id, name)
+    elif observation_mode == "service":
+        container, _ = p2_connection.createConcatenation(container_id, name)
+    else:
+        raise IOError("No such operation mode exists!")
+    return container["containerId"]
 
 
 def update_readme():
@@ -184,7 +192,7 @@ def sort_science_and_calibrator(science_to_calibrator_dict: Dict) -> Dict:
     science_to_calibrator_dict: Dict
     """
     for science_target, obx_files in science_to_calibrator_dict.items():
-        if any([obx_file.stem.endswith(("-a", "-b")) for obx_file in obx_files]):
+        if any([obx_file.stem.endswith(("#a", "#b")) for obx_file in obx_files]):
             science_to_calibrator_dict[science_target] = \
                     sorted(obx_files, key=lambda x: (x.name.find("b") >= 0,
                                                      x.name.find("a") >= 0))
@@ -206,13 +214,13 @@ def pair_science_to_calibrators(upload_directory: Path, obx_folder: Path) -> Dic
     """
     science_to_calibrator_dict = {}
     obx_files = (upload_directory / obx_folder).glob("*.obx")
-    obx_files = sorted(obx_files, key=lambda x: x.stem.split("-")[1])
+    obx_files = sorted(obx_files, key=lambda x: x.stem.split("#")[1])
 
     for obx_file in obx_files:
         stem = obx_file.stem
         if "SCI" in stem:
             science_target_name = "_".join([part for part\
-                                            in stem.split("-")[0].split("_")[1:]])
+                                            in stem.split("#")[0].split("_")[1:]])
             science_to_calibrator_dict[science_target_name] = [obx_file]
         else:
             science_target_of_calibrator = "_".join(stem.split("_")[2:-1])
@@ -222,7 +230,8 @@ def pair_science_to_calibrators(upload_directory: Path, obx_folder: Path) -> Dic
 
 
 def upload_obx_to_container(p2_connection: p2api, target: str,
-                            obx_files: List[Path], container_id: int) -> None:
+                            obx_files: List[Path], container_id: int,
+                            observation_mode) -> None:
     """Uploads (.obx)-files contained in a list to a given container
 
     Parameters
@@ -232,9 +241,11 @@ def upload_obx_to_container(p2_connection: p2api, target: str,
     target: str
     obx_files: List[Path]
     container_id: int
+    observation_mode: str, optional
     """
     print("--------------------------")
-    obx_container_id = create_remote_container(p2_connection, target, container_id)
+    obx_container_id = create_remote_container(p2_connection, target,
+                                               container_id, observation_mode)
 
     for obx_file in obx_files:
         try:
@@ -248,10 +259,13 @@ def upload_obx_to_container(p2_connection: p2api, target: str,
             print(f"ERROR: Skipped OB-Upload: {obx_file.stem} -- Check 'uploader.log'-file")
 
 
+# TODO: Make this upload funcitonality better -> Iteratively, but only upload the relevant
+# names to the runs, such as night or the total run for Service Mode
 def create_folder_structure_and_upload(p2_connection: p2api,
                                        upload_directory: Path,
                                        obx_folder: Path, run_id: int,
-                                       container_ids: Dict, containers: set):
+                                       container_ids: Dict, containers: set,
+                                       observation_mode: str):
     """
 
     Parameters
@@ -262,66 +276,75 @@ def create_folder_structure_and_upload(p2_connection: p2api,
     run_id: int
     container_ids: Dict
     containers: set
+    observation_mode: str, optional
+        Can either be "visitor" for Visitor Mode (VM) or "service" for Service Mode (SM)
     """
     # FIXME: Make container_id upload work
     container_id = 0
 
-    # TODO: Sort folders in some way iteratively
-    for parent in obx_folder.parents[::-1][1:]:
-        if parent in containers:
-            continue
+    # TODO: Sort folders in some way iteratively?
 
-        if parent.parent != Path("."):
+    if observation_mode == "visitor":
+        for parent in obx_folder.parents[::-1][1:]:
+            if parent in containers:
+                continue
+
+            if parent.parent != Path("."):
+                if container_id == 0:
+                    container_id = container_ids[parent.parent]
+
+                container_id = create_remote_container(p2_connection, parent.name,
+                                                       container_id)
+                container_ids[parent] = container_id
+            else:
+                container_id = create_remote_container(p2_connection, parent.name,
+                                                       run_id)
+                container_ids[parent] = container_id
+            containers.add(parent)
+
             if container_id == 0:
-                container_id = container_ids[parent.parent]
+                # HACK: This is a botched fix for a weird bug that it only takes folders that
+                # originated from same file??
+                if container_ids:
+                    container_id = container_ids[obx_folder.parent]
+                else:
+                    container_id = run_id
 
-            container_id = create_remote_container(p2_connection, parent.name,
+            container_id = create_remote_container(p2_connection, obx_folder.stem,
                                                    container_id)
-            container_ids[parent] = container_id
-        else:
-            container_id = create_remote_container(p2_connection, parent.name, run_id)
-            container_ids[parent] = container_id
-
-        containers.add(parent)
-
-    if container_id == 0:
-        # HACK: This is a botched fix for a weird bug that it only takes folders that
-        # originated from same file??
-        if container_ids:
-            container_id = container_ids[obx_folder.parent]
-        else:
-            container_id = run_id
-
-    container_id = create_remote_container(p2_connection, obx_folder.stem, container_id)
+    elif observation_mode == "service":
+        container_id = run_id
 
     for target, obx_files in pair_science_to_calibrators(upload_directory, obx_folder).items():
-        upload_obx_to_container(p2_connection, target, obx_files, container_id)
+        upload_obx_to_container(p2_connection, target,
+                                obx_files, container_id, observation_mode)
 
     return container_ids, containers
 
 
 # FIXME: This gets called quite often? Important to reduce the number of calls?
 def get_run_prog_id(upload_directory: Path, folder: Path):
-    """"""
-    base_directory = str(folder.parents[-2]) 
+    """Gets the run's program id from the (.yaml)-file of the run or manual input"""
+    base_directory = str(folder.parents[-2])
     run_prog_id = None
     if "run" in base_directory:
-        try:
-            with open(upload_directory / base_directory / "run_id.txt", "r") as f:
-                run_prog_id = f.read()
-        except FileNotFoundError:
-            pass
+        yaml_file = upload_directory / base_directory / "run.yaml"
+        with open(yaml_file, "r") as f:
+            yaml_content = yaml.safe_load(f)
+        if yaml_content is not None:
+            return yaml_content["run_prog_id"]
 
     if run_prog_id is None:
         print("Run's id could not be automatically detected!")
-        run_prog_id = input("Please enter the run's id in the following form"
-                            " (<period>.<program>.<run> (e.g., 110.2474.004)): ")
-    return run_prog_id
+        return input("Please enter the run's id in the following form"
+                     " (<period>.<program>.<run> (e.g., 110.2474.004)): ")
+
 
 def ob_uploader(upload_directory: Path,
                 run_prog_id: Optional[str] = None,
                 container_id: Optional[int] = None,
                 server: Optional[str] = "production",
+                observation_mode: Optional[str] = "visitor",
                 username: Optional[str] = None,
                 password: Optional[str] = None) -> None:
     """This checks if run is specified or given by the folder names and then
@@ -339,11 +362,15 @@ def ob_uploader(upload_directory: Path,
         If this is provided then only the subtrees of the upload_directory will be
         given container. This overrides the run_data input. This will upload to the
         specified container directly
+    observation_mode: str, optional
+        Can either be "visitor" for Visitor Mode (VM) or "service" for Service Mode (SM)
     server: str
         The enviroment to which the (.obx)-file is uploaded, 'demo' for testing,
         'production' for paranal and 'production_lasilla' for la silla
     username: str, optional
         The username for the P2
+    password: str, optional
+        The password for the P2
     """
     p2_connection = loadobx.login(username, password, server)
 
@@ -358,21 +385,21 @@ def ob_uploader(upload_directory: Path,
 
     container_ids, containers = {}, set()
     for obx_folder in obx_folders:
-        # TODO: Skip this if the run_prog_id is given
+        # NOTE: Skip this if the run_prog_id is given
         if run_prog_id is None:
             run_prog_id = get_run_prog_id(upload_directory, obx_folder)
             run_id = get_remote_run(p2_connection, run_prog_id)
         container_ids, containers =\
                 create_folder_structure_and_upload(p2_connection, upload_directory,
                                                    obx_folder, run_id,
-                                                   container_ids, containers)
+                                                   container_ids, containers,
+                                                   observation_mode)
 
 
 # TODO: Make container id also upload files to an empty folder directly
 # TODO: Sort GRA4MAT to the top
 # TODO: Make night sorting also
-
 if __name__ == "__main__":
     path = Path("/Users/scheuck/data/observations/obs/automaticOBs/")
-    ob_uploader(path, username="MbS")
+    ob_uploader(path, username="MbS", observation_mode="service")
 
