@@ -123,7 +123,7 @@ AT_DICT_GRA4MAT = {"ACQ": ob.ACQ_FT_TPL,
 
 # NOTE: Maybe include the higher resolutions again at some point
 UT_DICT_GRA4MAT = {"ACQ": ob.ACQ_FT_TPL,
-                   "LOW": {"TEMP": [ob.OBS_FT_TPL], "DIT": [0.111], "RES":
+                   "LOW": {"TEMP": [ob.OBS_FT_TPL], "DIT": [0.6], "RES":
                            ["L-LR_N-LR"]},
                    # "LOW_VIS": {"TEMP": [ob.obs_ft_vis_tpl], "DIT": [0.111], "RES":
                                # ["L-LR_N-LR"]},
@@ -613,8 +613,8 @@ if __name__ == "__main__":
     path2file = "night_plan.yaml"
     outdir = Path("/Users/scheuck/Data/observations/obs/")
 
-    sci_lst = ["MWC 297"]
-    cal_lst = ["HD161096"]
+    sci_lst = ["Beta Leo", "HD 100453"]
+    cal_lst = ["HD100920", "HD102964"]
     tag_lst = []
     # TODO: Make explanation/docs of the order_lst
     order_lst = []
@@ -631,5 +631,5 @@ if __name__ == "__main__":
     # TODO: Find way to switch of photometry of template -> Jozsef's script rewrite?
 
     ob_creation(outdir, sub_folder=None, manual_lst=manual_lst,
-                res_dict=res_dict, mode_selection="gr",
-                standard_res="HIGH", clean_previous=False)
+                res_dict=res_dict, mode_selection="both",
+                standard_res="LOW", clean_previous=False)

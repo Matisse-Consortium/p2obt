@@ -1,7 +1,8 @@
 import sys
 import getpass
+from typing import Tuple, List
 
-from typing import List
+import astropy.units as u
 
 
 def contains_element(list_to_search: List, element_to_search: str) -> bool:
@@ -25,7 +26,7 @@ def contains_element(list_to_search: List, element_to_search: str) -> bool:
 def get_password_and_username():
     """Gets the user's ESO-user password to access the p2ui"""
     username = input("Input your ESO-username: ")
-    password_prompt = f"Input your ESO-password: "
+    password_prompt = "Input your ESO-password: "
     if sys.platform == 'ios':
         import console
         password = console.password_alert(password_prompt)
@@ -34,3 +35,14 @@ def get_password_and_username():
     else:
         password = input()
     return username, password
+
+
+def convert_proper_motions(*args: u.mas) -> Tuple:
+    """Converts the proper motions from [mas/yr] to [arcsec/yr]"""
+    if any([not isinstance(x, u.Quantity) for x in args]):
+        args = map(lambda x: x*u.mas, args)
+    return [x.to(u.arcsec) for x in args]
+
+
+if __name__ == "__main__":
+    print(convert_proper_motions(1.28, 1.278))

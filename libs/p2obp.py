@@ -70,8 +70,8 @@ def ob_pipeline(output_dir: Optional[Path] = None,
 if __name__ == "__main__":
     data_dir = Path("/Users/scheuck/Data/observations/")
     output_dir = Path("/Users/scheuck/Data/observations/obs")
-    period_dir = data_dir / "P111"
-    night_plan_path = period_dir / "runs_v1" / "run009_v1.txt"
+    period_dir = data_dir / "P110"
+    night_plan_path = period_dir / "february_march_2023" / "observing_plan_run8_v0.1.txt"
 
     # TODO: Make also a DIT-dictionary where ppl can change the dit of an individual thing
     # or make it possible to change either both or once at a time?
@@ -80,4 +80,5 @@ if __name__ == "__main__":
     res_dict = {}
 
     ob_pipeline(output_dir=output_dir, night_plan_path=night_plan_path,
-                save_to_yaml=False, upload=True, observation_mode="service")
+                save_to_yaml=False, upload=True, mode_selection="st",
+                observation_mode="visitor")
