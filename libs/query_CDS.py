@@ -261,9 +261,8 @@ def query_CDS(name, catalogs=['simbad', 'nomad', 'wise', 'mdfc'], match_radius=5
         if verbose == True:
             print_msg(name, 'SIMBAD', ret)
         c = SkyCoord(dic['RA']+' '+dic['DEC'], unit=(u.hourangle, u.deg))
-        dic['ra_hms'] = '%02d:%02d:%06.3f' % c.ra.hms
-        dic['dec_dms'] = '%02d:%02d:%06.3f' % (
-            c.dec.dms[0], abs(c.dec.dms[1]), abs(c.dec.dms[2]))
+        dic['ra_hms'] = c.ra.to_string(unit=u.hourangle, sep=":", pad=True, precision=3)
+        dic['dec_dms'] = c.dec.to_string(sep=":", pad=True, precision=3)
         dic['ra_deg'] = c.ra.deg
         dic['dec_deg'] = c.dec.deg
 
