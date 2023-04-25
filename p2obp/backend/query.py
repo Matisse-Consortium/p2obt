@@ -1,5 +1,6 @@
 import time
 from typing import Optional, Dict, List
+from pprint import pprint
 
 import astropy.units as u
 from astropy.table import Table
@@ -24,21 +25,27 @@ CATALOGS = {"gaia": {"catalog": "I/345/gaia2"},
             "nomad": {"catalog": "I/297/out"},
             "2mass": {"catalog": "II/246/out"},
             "wise": {"catalog": "II/311/wise"},
-            "mdfc": {"catalog": "II/361/mdfc-v10", "columns": ["**"]}}
+            "mdfc": {"catalog": "II/361/mdfc-v10", "columns": ["**"]},
+            "simbad": ""}
 
 QUERIES = {"gaia": ["Gmag"], "tycho": ["VTmag"],
-           "nomad": ["Vmag"], "2mass": ["Jmag"],
-           "wise": ["W1mag", "W3mag"],
-           "mdfc": ["med-Lflux", "med-Nflux"],
-           "simbad": ["RA", "DEC", "PMRA", "PMDEC", "FLUX_V", "FLUX_H", "FLUX_K"]}
+           "nomad": ["Vmag"], "2mass": ["Jmag", "Hmag", "Kmag"],
+           "wise": ["W1mag", "W3mag", "Hmag", "Kmag"],
+           "mdfc": ["med-Lflux", "med-Nflux", "Hmag", "Kmag"],
+           "simbad": ["RA", "DEC", "PMRA", "PMDEC",
+                      "FLUX_V", "FLUX_H", "FLUX_K"]}
 
 
 # TODO: Make function that removes all None keys from the dictionary
-def get_best_match(catalog_table: Table, query_keys: List) -> Table:
+def get_best_match(target: Dict,
+                   catalog_table: Table,
+                   query_keys: List) -> Table:
     """Gets the best match from the catalog entries
 
     Parameters
     ----------
+    target : dict
+        The target's queried information.
     catalog_table : Table
         The table containing the queried catalog's results.
     query_keys : List
@@ -54,12 +61,23 @@ def get_best_match(catalog_table: Table, query_keys: List) -> Table:
     for query_key in query_keys:
         if query_key in catalog_table.columns:
             if len(catalog_table) == 1:
-                best_matches[query_key] = catalog_table[query_key][0]
+                value = catalog_table[query_key][0]
             else:
                 # NOTE: Get lowest element in case magnitude is queried
                 if "mag" in query_key:
-                    best_matches[query_key] = catalog_table[query_key].min()
-                best_matches[query_key] = catalog_table[query_key].max()
+                    value = catalog_table[query_key].min()
+                else:
+                    value = catalog_table[query_key].max()
+
+            if query_key in target:
+                if "mag" in query_key:
+                    if target[query_key] > value:
+                        best_matches[query_key] = value
+                else:
+                    if target[query_key] < value:
+                        best_matches[query_key] = value
+            else:
+                best_matches[query_key] = value
     return best_matches
 
 
@@ -127,11 +145,12 @@ def query(name: str,
 
     for catalog in catalogs:
         catalog_table = get_catalog(name, catalog, match_radius)
-        target = {**target, **get_best_match(catalog_table, QUERIES[catalog])}
+        target = {**target,
+                  **get_best_match(target, catalog_table, QUERIES[catalog])}
         time.sleep(sleep_time)
     return target
 
 
 if __name__ == "__main__":
-    test = query("hd142666", catalogs=["simbad"])
-    breakpoint()
+    test = query("hd142666")
+    pprint(test)
