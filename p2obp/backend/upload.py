@@ -403,3 +403,23 @@ if __name__ == "__main__":
     path = Path("/Users/scheuck/data/observations/obs/automaticOBs/")
     ob_uploader(path, username="MbS", observation_mode="service")
 
+
+
+#########
+# New Stuff
+
+
+# TODO: Think of way to immediately populate the templates and avoid unnecessary overhead
+def _add_templates(p2_connection: p2api,
+                   ob_id: int, templates: List[str]):
+    """Adds templates to an OB
+
+    Parameters
+    ----------
+    p2_connection: p2api
+    ob_id: int
+    templates: List[str]
+    """
+    for template in templates:
+        content, id = p2api.createTemplate(ob_id, template)
+    return

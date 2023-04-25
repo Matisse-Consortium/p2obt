@@ -26,12 +26,11 @@ CATALOGS = {"gaia": {"catalog": "I/345/gaia2"},
             "wise": {"catalog": "II/311/wise"},
             "mdfc": {"catalog": "II/361/mdfc-v10", "columns": ["**"]}}
 
-# TODO: Maybe lists so that multiple things can be queried?
 QUERIES = {"gaia": ["Gmag"], "tycho": ["VTmag"],
            "nomad": ["Vmag"], "2mass": ["Jmag"],
            "wise": ["W1mag", "W3mag"],
            "mdfc": ["med-Lflux", "med-Nflux"],
-           "simbad": ["RA", "DEC", "FLUX_V"]}
+           "simbad": ["RA", "DEC", "PMRA", "PMDEC", "FLUX_V", "FLUX_H", "FLUX_K"]}
 
 
 # TODO: Make function that removes all None keys from the dictionary
@@ -50,10 +49,10 @@ def get_best_match(catalog_table: Table, query_keys: List) -> Table:
     best_match : Table
         The best match from the queried catalog's table.
     """
+    # TODO: Handle case of empty catalog? -> Check that
     best_matches = {}
     for query_key in query_keys:
         if query_key in catalog_table.columns:
-            # TODO: Handle case of empty catalog? -> Check that
             if len(catalog_table) == 1:
                 best_matches[query_key] = catalog_table[query_key][0]
             else:
@@ -131,3 +130,8 @@ def query(name: str,
         target = {**target, **get_best_match(catalog_table, QUERIES[catalog])}
         time.sleep(sleep_time)
     return target
+
+
+if __name__ == "__main__":
+    test = query("hd142666", catalogs=["simbad"])
+    breakpoint()
