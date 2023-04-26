@@ -39,6 +39,7 @@ dependencies = [
   "numpy >= 1.23.4",
   "pytest >= 7.2.0",
   "toml >= 0.10.2",
+  "p2api >= 1.0.5",
 ]
 
 [options.extras_require]

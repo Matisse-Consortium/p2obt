@@ -27,8 +27,6 @@ Example of usage:
 # then adding these
 # TODO: Improve the documentation and the docstrings
 
-import yaml
-
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 

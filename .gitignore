@@ -1,12 +1,13 @@
-# General folders/files to ignore
+# General folders to ignore
 __pycache__/
 .pytest_cache/
 logs/
-.DS_Store
-tests/data/
 *egg-info*/
+
+# General files to ignore
+.DS_Store
 
 # Specific files to ignore
 
-# Folders to ignore
-other_scripts/
+# Package folders to ignore
+p2obp/tests/data/
