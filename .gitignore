@@ -4,6 +4,7 @@ __pycache__/
 logs/
 .DS_Store
 tests/data/
+*egg-info*/
 
 # Specific files to ignore
 
