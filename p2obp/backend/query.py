@@ -1,6 +1,5 @@
 import time
 from typing import Optional, Dict, List
-from pprint import pprint
 
 import astropy.units as u
 from astropy.table import Table
@@ -36,7 +35,6 @@ QUERIES = {"gaia": ["Gmag"], "tycho": ["VTmag"],
                       "FLUX_V", "FLUX_H", "FLUX_K"]}
 
 
-# TODO: Make function that removes all None keys from the dictionary
 def get_best_match(target: Dict,
                    catalog_table: Table,
                    query_keys: List) -> Table:
@@ -114,7 +112,6 @@ def get_catalog(name: str, catalog: str,
         query_site.add_votable_fields(*SIMBAD_FIELDS)
         catalog_table = query_site.query_object(name)
     else:
-        # CHECK: Does this always return a table list?
         query_site = Vizier(**CATALOGS[catalog])
         catalog_table = query_site.query_object(name, radius=match_radius)
 
@@ -128,7 +125,8 @@ def query(name: str,
           catalogs: Optional[List] = None,
           match_radius: Optional[float] = 5.,
           sleep_time: float = 0.1) -> Dict:
-    """Queries an astronomical target by its name from 
+    """Queries information for an astronomical target by its name from
+    various catalogs.
 
     Parameters
     ----------
@@ -155,8 +153,3 @@ def query(name: str,
                   **get_best_match(target, catalog_table, QUERIES[catalog])}
         time.sleep(sleep_time)
     return target
-
-
-if __name__ == "__main__":
-    test = query("hd142666")
-    pprint(test)

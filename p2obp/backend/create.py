@@ -410,8 +410,3 @@ def create_ob(target_name: str,
         ob_name = set_ob_name(target, observation_type, sci_name, tag)
         write_ob(ob, ob_name, output_dir)
     return ob
-
-
-if __name__ == "__main__":
-    create_ob("hd142666", "sci", "uts",
-              operational_mode="gr", output_dir="")
