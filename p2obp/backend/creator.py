@@ -1,10 +1,11 @@
-""""""
-import pkg_resources
+"""
+
+"""
 from pathlib import Path
 from typing import Optional, Dict, Tuple
 
 import astropy.units as u
-import numpy as np
+import pkg_resources
 import toml
 from astropy.coordinates import SkyCoord
 
@@ -17,48 +18,6 @@ from .utils import convert_proper_motions
 
 
 TEMPLATE_FILE = Path(pkg_resources.resource_filename("p2obp", "data/templates.toml"))
-
-# CHECK: Should query function already convert the RA and DEC?
-
-# UT_DICT_STANDALONE = {"ACQ": ACQ_TPL,
-#                       "LOW": {"TEMP": [ob.OBS_TPL], "DIT": [0.111],
-#                               "RES": ["L-LR_N-LR"]},
-#                       "MED": {"TEMP": [ob.OBS_TPL], "DIT": [0.111],
-#                               "RES": ["L-LR_N-LR"]},
-#                       "HIGH": {"TEMP": [ob.OBS_TPL], "DIT": [0.111],
-#                               "RES": ["L-LR_N-LR"]}}
-#
-# AT_DICT_GRA4MAT = {"ACQ": ob.ACQ_FT_TPL,
-#                    "LOW": {"TEMP": [ob.OBS_FT_TPL], "DIT": [0.6], "RES":
-#                            ["L-LR_N-LR"]},
-#                    "MED": {"TEMP": [ob.OBS_FT_TPL],
-#                            "DIT": [1.3], "RES": ["L-MR_N-LR"]},
-#                    "HIGH": {"TEMP": [ob.OBS_FT_TPL],
-#                            "DIT": [3.], "RES": ["L-HR_N-LR"]}}
-#
-# # NOTE: Maybe include the higher resolutions again at some point
-# UT_DICT_GRA4MAT = {"ACQ": ob.ACQ_FT_TPL,
-#                    "LOW": {"TEMP": [ob.OBS_FT_TPL], "DIT": [0.6], "RES":
-#                            ["L-LR_N-LR"]},
-#                    # "LOW_VIS": {"TEMP": [ob.obs_ft_vis_tpl], "DIT": [0.111], "RES":
-#                                # ["L-LR_N-LR"]},
-#                    # "MED": {"TEMP": [ob.obs_ft_coh_tpl, ob.obs_ft_vis_tpl],
-#                            # "DIT": [1.3, 0.111], "RES": ["L-MR_N-LR"]},
-#                    # "HIGH": {"TEMP": [ob.obs_ft_coh_tpl, ob.obs_ft_vis_tpl],
-#                            # "DIT": [3., 0.111], "RES": ["L-HR_N-LR"]}
-#                   }
-#
-# TEMPLATE_RES_DICT = {"standalone": {"UTs": UT_DICT_STANDALONE, "ATs": UT_DICT_STANDALONE},
-#                      "GRA4MAT": {"UTs": UT_DICT_GRA4MAT, "ATs": AT_DICT_GRA4MAT}}
-#
-# AT_CONFIG = ["small", "medium", "large", "astrometric"]
-# TEL_CONFIG = ["UTs", *AT_CONFIG]
-#
-#
-# OPERATIONAL_MODES = {"both": ["standalone", "GRA4MAT"],
-#                      "st": ["standalone"], "gr": ["GRA4MAT"]}
-
-
 
 
 # def print_content():
@@ -135,6 +94,37 @@ def set_ob_name(target: str,
     return ob_name if tag is None else f"{ob_name}_{tag}"
 
 
+def set_resolution_and_dit(resolution: str,
+                           operational_mode: str,
+                           array_configuration: str) -> Tuple[str, float]:
+    """
+
+    Parameters
+    ----------
+    resolution : str
+    operational_mode : str
+    array_configuration : str
+
+    Returns
+    -------
+    resolution : str
+    dit : float
+    """
+    if "ut" in array_configuration:
+        if operational_mode == "matisse":
+            dit = 0.111
+        else:
+            resolution, dit = "LOW", 0.6
+    else:
+        if resolution == "low":
+            dit = 0.6
+        elif resolution == "med":
+            dit = 1.3
+        else:
+            dit = 3.
+    return resolution.upper(), dit
+
+
 def format_proper_motions(target: Dict) -> Tuple[float, float]:
     """Correctly formats the right ascension's and declination's
     proper motions."""
@@ -152,7 +142,8 @@ def format_ra_and_dec(target: Dict) -> Tuple[str, str]:
                                         precision=3)
     return ra_hms, dec_dms
 
-# TODO: Implement some way to show that flux has been not set?
+
+# CHECK: Implement some way to show that flux has been not set?
 def format_fluxes(target: Dict) -> Tuple[float, float]:
     """Correctly gets and formats the fluxes from the queried data."""
     flux_lband, flux_nband = None, None
@@ -229,7 +220,6 @@ def fill_acquisition(target: Dict,
     """
     acquisition = load_template(TEMPLATE_FILE, "acquisition", operational_mode)
     flux_lband, flux_nband = format_fluxes(target)
-    print(flux_lband, flux_nband)
 
     if "Vmag" in target:
         acquisition["COU.GS.MAG"] = target["Vmag"]
@@ -240,7 +230,6 @@ def fill_acquisition(target: Dict,
         array_configuration = "UTs"
 
     acquisition["ISS.BASELINE"] = array_configuration
-    acquisition["ISS.VLTITYPE"] = "snapshot"
     acquisition['SEQ.TARG.FLUX.L'] = flux_lband
     acquisition['SEQ.TARG.FLUX.N'] = flux_nband
     acquisition["SEQ.TARG.MAG.K"] = round(target["Kmag"], 2)
@@ -250,75 +239,32 @@ def fill_acquisition(target: Dict,
     return acquisition
 
 
-def fill_observation(target: Dict,
-                     operational_mode: str) -> Dict:
+def fill_observation(resolution: str,
+                     observation_type: str,
+                     operational_mode: str,
+                     array_configuration: str) -> Dict:
     """Gets the for the operational mode correct acquisition template
     and then fills it in with the information from the query.
 
     Parameters
     ----------
-    target : dict
+    resolution : str
+    observation_type : str
     operational_mode : str
+    array_configuration : str
 
     Returns
     -------
     acquisition : dict
     """
     observation = load_template(TEMPLATE_FILE, "observation", operational_mode)
+    resolution, dit = set_resolution_and_dit(resolution, operational_mode,
+                                             array_configuration)
+    observation_type = "SCIENCE" if observation_type == "sci" else "CALIB"
+    observation["DPR.CATG"] = observation_type
+    observation["INS.DIL.NAME"] = resolution
+    observation["DET1.DIT"] = dit
     return observation
-
-    # update observation templates
-    # if object_type == 'SCI':
-    #     obs_tpls[i]['DPR.CATG'] = "SCIENCE"
-    # if object_type == 'CAL':
-    #     obs_tpls[i]['DPR.CATG'] = "CALIB"
-
-# def set_resolution():
-#     """"""
-#     for i in range(len(obs_tpls)):
-#         # update the spectral resolutions if needed
-#         try:
-#             spectral_setup = spectral_setups[i]
-#         except IndexError as e:
-#             spectral_setup = ''
-#         if spectral_setup != '':
-#             spectral_setup_L = spectral_setup.split('_')[0]
-#             spectral_setup_N = spectral_setup.split('_')[1]
-#             if spectral_setup_L == 'L-LR':
-#                 obs_tpls[i]['INS.DIL.NAME'] = 'LOW'
-#             if spectral_setup_L == 'L-MR':
-#                 obs_tpls[i]['INS.DIL.NAME'] = 'MED'
-#             if spectral_setup_L == 'L-HR':
-#                 obs_tpls[i]['INS.DIL.NAME'] = 'HIGH'
-#             if spectral_setup_N == 'N-LR':
-#                 obs_tpls[i]['INS.DIN.NAME'] = 'LOW'
-#             if spectral_setup_N == 'N-HR':
-#                 obs_tpls[i]['INS.DIN.NAME'] = 'HIGH'
-#
-#         try:
-#             if not math.isnan(central_wls[i]):
-#                 obs_tpls[i]['SEQ.DIL.WL0'] = central_wls[i]
-#         except IndexError as e:
-#             pass
-#
-#         try:
-#             if not math.isnan(DITs[i]):
-#                 obs_tpls[i]['DET1.DIT'] = DITs[i]
-#         except IndexError as e:
-#             pass
-#
-#         try:
-#             if not math.isnan(ncycles[i]):
-#                 obs_tpls[i]['SEQ.FRINGES.NCYCLES'] = ncycles[i]
-#         except IndexError as e:
-#             pass
-#
-#         try:
-#             if photo_sts[i] != '':
-#                 if 'SEQ.PHOTO.ST' in obs_tpls[i]:
-#                     obs_tpls[i]['SEQ.PHOTO.ST'] = photo_sts[i]
-#         except IndexError as e:
-#             pass
 
 
 # TODO: Think of a way to efficiently create the three different types of templates
@@ -329,6 +275,7 @@ def create_ob(target_name: str,
               operational_mode: Optional[str] = "st",
               sci_name: Optional[str] = None,
               comment: Optional[str] = None,
+              resolution: Optional[str] = "low",
               output_dir: Optional[Path] = None):
     """
 
@@ -345,6 +292,7 @@ def create_ob(target_name: str,
         Default is standalone.
     sci_name : str, optional
     comment : str, optional
+    resolution : str, optional
     output_dir : path, optional
     """
     array_configuration = array_configuration.lower()
@@ -369,6 +317,11 @@ def create_ob(target_name: str,
                       " Choose from 'st'/'standalone' or"
                       " 'gr'/'gra4mat'.")
 
+    resolution = resolution.lower()
+    if resolution not in ["low", "med", "high"]:
+        raise IOError("Unknown resolution provided!"
+                      " Choose from 'low', 'med' or 'high'.")
+
     target = query(target_name)
     header = fill_header(target, array_configuration,
                          observation_type, sci_name, comment)
@@ -376,9 +329,9 @@ def create_ob(target_name: str,
                                    operational_mode,
                                    array_configuration)
 
-    observation = fill_observation(target,
-                                   operational_mode,
-                                   array_configuration)
+    observation = fill_observation(resolution, observation_type,
+                                   operational_mode, array_configuration)
+
     print(observation)
 
     # TODO: Implement this via the sheets written
