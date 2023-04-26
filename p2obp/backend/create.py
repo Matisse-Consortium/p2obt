@@ -115,6 +115,8 @@ def write_ob(ob: Dict, ob_name: str, output_dir: Path) -> None:
             else:
                 write_dict(obx_file, dictionary)
                 obx_file.write("\n\n")
+    # TODO: Make this a better message or a function
+    print(f"OB: '{ob_name}' has been created.")
 
 
 def set_ob_name(target: str,
@@ -138,7 +140,7 @@ def set_ob_name(target: str,
     --------
     """
     ob_name = f"{observation_type.upper()}"\
-              f"_{target['name'].replace(' ', '_').upper()}"
+              f"_{target['name'].replace(' ', '_')}"
     if sci_name is not None:
         ob_name += f"_{sci_name.replace(' ', '_')}"
     return ob_name if tag is None else f"{ob_name}_{tag}"
@@ -348,10 +350,10 @@ def create_ob(target_name: str,
     Parameters
     ----------
     target_name : str
+    observation_type : str
     array_configuration : str
         Determines the array configuration. Possible values are "UTs",
         "small", "medium", "large", "extended".
-    observation_type : str
     operational_mode : str, optional
         The mode of operation for MATISSE. Can be either "st"/"standalone"
         for the MATISSE-standalone mode or "gr"/"gra4mat" for GRA4MAT.

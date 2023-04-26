@@ -56,8 +56,10 @@ def get_best_match(target: Dict,
     best_match : Table
         The best match from the queried catalog's table.
     """
-    # TODO: Handle case of empty catalog? -> Check that
     best_matches = {}
+    if not catalog_table:
+        return best_matches
+
     for query_key in query_keys:
         if query_key in catalog_table.columns:
             if len(catalog_table) == 1:
@@ -114,7 +116,11 @@ def get_catalog(name: str, catalog: str,
     else:
         # CHECK: Does this always return a table list?
         query_site = Vizier(**CATALOGS[catalog])
-        catalog_table = query_site.query_object(name, radius=match_radius)[0]
+        catalog_table = query_site.query_object(name, radius=match_radius)
+
+        # NOTE: Only get table from TableList if not empty
+        if catalog_table:
+            catalog_table = catalog_table[0]
     return catalog_table
 
 
