@@ -2,9 +2,11 @@
 
 """
 from pathlib import Path
-from typing import Optional, Dict, Tuple
+from typing import Optional, Any, Dict, Tuple
+from pprint import pprint
 
 import astropy.units as u
+import json
 import pkg_resources
 import toml
 from astropy.coordinates import SkyCoord
@@ -17,8 +19,26 @@ from .utils import convert_proper_motions
 # Make functions for that that check if that is the case -> Maybe even after query?
 
 
-TEMPLATE_FILE = Path(pkg_resources.resource_filename("p2obp", "data/templates.toml"))
-
+# TODO: Implement this via the sheets written
+# Off-axis Coude guide star not implemented
+# else:
+#     COU_AG_ALPHA = dd2dms(['guide_star_RA'][i]/15.0) #<---
+#     COU_AG_DELTA = dd2dms(['guide_star_dec'][i]) #<---
+#     COU_AG_EPOCH = 2000.0
+#     COU_AG_EQUINOX = 2000.0
+#     COU_AG_GSSOURCE = "SETUPFILE"
+#     COU_AG_PMA = dfs['GS_pm_RA'][i]/1000.0 #<---
+#     COU_AG_PMD = dfs['GS_pm_dec'][i]/1000.0 #<---
+#     COU_AG_TYPE = "DEFAULT"
+#     COU_GS_MAG = dfs['GS_V_mag'][i] #V mag of guide star from input table
+# if math.isnan(sdic['Hmag']):
+#     sdic['Hmag'] = sdic['FLUX_H']
+# if math.isnan(sdic['Kmag']):
+#     sdic['Kmag'] = sdic['FLUX_K']
+#
+# if 'SEQ.TARG.MAG.H' in acq_tpl:
+#     acq_tpl['SEQ.TARG.MAG.H'] = sdic['Hmag']
+# acq_tpl['SEQ.TARG.MAG.K'] = sdic['Kmag']
 
 # def print_content():
 #     if print_info:
@@ -41,8 +61,13 @@ TEMPLATE_FILE = Path(pkg_resources.resource_filename("p2obp", "data/templates.to
 #             print('')
 #
 #
+
+TEMPLATE_FILE = Path(pkg_resources.resource_filename("p2obp", "data/templates.toml"))
+
+
 def load_template(file: Path,
                   header: str,
+                  sub_header: Optional[str] = None,
                   operational_mode: Optional[str] = None) -> Dict:
     """Loads a template from a (.toml)-file.
 
@@ -51,7 +76,9 @@ def load_template(file: Path,
     file : path
         A (.toml)-file containing templates.
     header : str
-        The name of the specific tempalte.
+        The name of the specific template.
+    sub_header : str, optional
+        The name of a sub-template.
     operational_mode : str, optional
         The mode in which MATISSE is operated, either
         "gra4mat" or "matisse".
@@ -61,10 +88,33 @@ def load_template(file: Path,
     template : dict
         A dictionary that is the template.
     """
+    # TODO: Make this more robust?
     with open(file, "r+", encoding="utf-8") as toml_file:
         if operational_mode is not None:
             return toml.load(toml_file)[operational_mode][header]
-        return toml.load(toml_file)[header]
+        return toml.load(toml_file)[header][sub_header]
+
+
+def write_dict(file, dictionary: Dict):
+    """Iterates over the key and value pairs of a
+    dictionary and writes them."""
+    for key, value in dictionary.items():
+        file.write(f'{key.ljust(40)}"{str(value)}"'+"\n")
+
+
+# TODO: Make this properly and move to different file
+def write_ob(ob: Dict, ob_name: str, output_dir: Path) -> None:
+    """Writes the (.obx)-file to the specified directory"""
+    out_file = Path(output_dir) / f"{ob_name}.obx"
+    with open(out_file, "w+", encoding="utf-8") as obx_file:
+        for dictionary in ob.values():
+            if any(isinstance(value, dict) for value in dictionary.values()):
+                for sub_dict in dictionary.values():
+                    write_dict(obx_file, sub_dict)
+                    obx_file.write("\n\n")
+            else:
+                write_dict(obx_file, dictionary)
+                obx_file.write("\n\n")
 
 
 def set_ob_name(target: str,
@@ -183,22 +233,36 @@ def fill_header(target: Dict,
     -------
     header : dict
     """
-    header = load_template(TEMPLATE_FILE, "header")
+    header = {}
+    header_user = load_template(TEMPLATE_FILE,
+                                "header", sub_header="user")
+    header_target = load_template(TEMPLATE_FILE,
+                                  "header", sub_header="target")
+    header_constraints = load_template(TEMPLATE_FILE,
+                                       "header", sub_header="constraints")
+    header_observation = load_template(TEMPLATE_FILE,
+                                       "header", sub_header="observation")
     ob_name = set_ob_name(target, observation_type, sci_name, tag)
     ra_hms, dec_dms = format_ra_and_dec(target)
     prop_ra, prop_dec = format_proper_motions(target)
 
-    header["name"] = ob_name
-    header["OBSERVATION.DESCRIPTION.NAME"] = ob_name
-    header["TARGET.NAME"] = target["name"].replace(' ', '_')
-    header["ra"], header["dec"] = ra_hms, dec_dms
-    header["propRA"], header["propDec"] = prop_ra, prop_dec
-
+    header_user["name"] = ob_name
     if comment is not None:
-        header["userComments"] = comment
+        header_user["userComments"] = comment
+
+    header_target["TARGET.NAME"] = target["name"].replace(' ', '_')
+    header_target["ra"], header_target["dec"] = ra_hms, dec_dms
+    header_target["propRA"], header_target["propDec"] = prop_ra, prop_dec
 
     if "ut" in array_configuration:
-        header["moon_angular_distance"] = 10
+        header_constraints["moon_angular_distance"] = 10
+
+    header_observation["OBSERVATION.DESCRIPTION.NAME"] = ob_name
+
+    header["user"] = header_user
+    header["target"] = header_target
+    header["constraints"] = header_constraints
+    header["observation"] = header_observation
     return header
 
 
@@ -218,7 +282,8 @@ def fill_acquisition(target: Dict,
     -------
     acquisition : dict
     """
-    acquisition = load_template(TEMPLATE_FILE, "acquisition", operational_mode)
+    acquisition = load_template(TEMPLATE_FILE, "acquisition",
+                                operational_mode=operational_mode)
     flux_lband, flux_nband = format_fluxes(target)
 
     if "Vmag" in target:
@@ -257,7 +322,8 @@ def fill_observation(resolution: str,
     -------
     acquisition : dict
     """
-    observation = load_template(TEMPLATE_FILE, "observation", operational_mode)
+    observation = load_template(TEMPLATE_FILE, "observation",
+                                operational_mode=operational_mode)
     resolution, dit = set_resolution_and_dit(resolution, operational_mode,
                                              array_configuration)
     observation_type = "SCIENCE" if observation_type == "sci" else "CALIB"
@@ -268,13 +334,13 @@ def fill_observation(resolution: str,
 
 
 # TODO: Think of a way to efficiently create the three different types of templates
-# TODO: Rename this
 def create_ob(target_name: str,
               observation_type: str,
               array_configuration: str,
               operational_mode: Optional[str] = "st",
               sci_name: Optional[str] = None,
               comment: Optional[str] = None,
+              tag: Optional[str] = None,
               resolution: Optional[str] = "low",
               output_dir: Optional[Path] = None):
     """
@@ -291,6 +357,7 @@ def create_ob(target_name: str,
         for the MATISSE-standalone mode or "gr"/"gra4mat" for GRA4MAT.
         Default is standalone.
     sci_name : str, optional
+    tag : str, optional
     comment : str, optional
     resolution : str, optional
     output_dir : path, optional
@@ -323,8 +390,9 @@ def create_ob(target_name: str,
                       " Choose from 'low', 'med' or 'high'.")
 
     target = query(target_name)
-    header = fill_header(target, array_configuration,
-                         observation_type, sci_name, comment)
+    header = fill_header(target, observation_type,
+                         array_configuration, sci_name,
+                         tag, comment)
     acquisition = fill_acquisition(target,
                                    operational_mode,
                                    array_configuration)
@@ -332,42 +400,16 @@ def create_ob(target_name: str,
     observation = fill_observation(resolution, observation_type,
                                    operational_mode, array_configuration)
 
-    print(observation)
+    ob = {"header": header,
+          "acquisition": acquisition,
+          "observation": observation}
 
-    # TODO: Implement this via the sheets written
-    # Off-axis Coude guide star not implemented
-    # else:
-    #     COU_AG_ALPHA = dd2dms(['guide_star_RA'][i]/15.0) #<---
-    #     COU_AG_DELTA = dd2dms(['guide_star_dec'][i]) #<---
-    #     COU_AG_EPOCH = 2000.0
-    #     COU_AG_EQUINOX = 2000.0
-    #     COU_AG_GSSOURCE = "SETUPFILE"
-    #     COU_AG_PMA = dfs['GS_pm_RA'][i]/1000.0 #<---
-    #     COU_AG_PMD = dfs['GS_pm_dec'][i]/1000.0 #<---
-    #     COU_AG_TYPE = "DEFAULT"
-    #     COU_GS_MAG = dfs['GS_V_mag'][i] #V mag of guide star from input table
-    # if math.isnan(sdic['Hmag']):
-    #     sdic['Hmag'] = sdic['FLUX_H']
-    # if math.isnan(sdic['Kmag']):
-    #     sdic['Kmag'] = sdic['FLUX_K']
-    #
-    # if 'SEQ.TARG.MAG.H' in acq_tpl:
-    #     acq_tpl['SEQ.TARG.MAG.H'] = sdic['Hmag']
-    # acq_tpl['SEQ.TARG.MAG.K'] = sdic['Kmag']
-
-
-# TODO: Make this properly and move to different file
-# def create_ob():
-#     # write obx file
-#     outfile = outdir+'/'+obname + '.obx'
-#     # print(outfile)
-#     obfile = open(outfile, "w")
-#     obfile.write(add_header(header_dic))
-#     obfile.write(add_acq_template(acq_tpl))
-#     for i in range(len(obs_tpls)):
-#         obfile.write(add_obs_template(obs_tpls[i]))
-#     obfile.close()
+    if output_dir is not None:
+        ob_name = set_ob_name(target, observation_type, sci_name, tag)
+        write_ob(ob, ob_name, output_dir)
+    return ob
 
 
 if __name__ == "__main__":
-    create_ob("hd142666", "sci", "uts", operational_mode="st")
+    create_ob("hd142666", "sci", "uts",
+              operational_mode="gr", output_dir="")

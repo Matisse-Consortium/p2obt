@@ -1,18 +1,23 @@
 [header]
+[header.user]
 "name" = ""
 "userComments" = ""
 "InstrumentComments" = ""
 "userPriority" = 1
 "type" = "O"
+
+[header.target]
 "TARGET.NAME" = ""
 "propRA" = 0.0
 "propDec" = 0.0
 "diffRA" = 0.0
 "diffDec" = 0.0
 "equinox" = 2000
-"epoch" = 2000.0
+"epoch" = 2000
 "ra" = "00:00:00.000"
 "dec" = "00:00:00.000"
+
+[header.constraints]
 "CONSTRAINT.SET.NAME" = "No Name"
 "seeing" = 2.0
 "sky_transparency" = "Clear"
@@ -25,6 +30,8 @@
 "atm" = "30%  (Seeing < 0.8 arcsec, t0 > 4.1 ms)"
 "contrast" = 0.0
 "description" = ""
+
+[header.observation]
 "OBSERVATION.DESCRIPTION.NAME" = ""
 "instrument" = "MATISSE"
 
