@@ -139,7 +139,7 @@ def query(name: str,
     target : dict
         The target's queried information.
     """
-    target = {}
+    target = {"name": name}
     if catalogs is None:
         catalogs = [*CATALOGS.keys()]
 

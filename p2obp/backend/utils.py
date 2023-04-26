@@ -1,6 +1,6 @@
 import sys
 import getpass
-from typing import Tuple, List
+from typing import Optional, Tuple, List
 
 import astropy.units as u
 
@@ -37,11 +37,19 @@ def get_password_and_username():
     return username, password
 
 
-def convert_proper_motions(*args: u.mas) -> Tuple:
-    """Converts the proper motions from [mas/yr] to [arcsec/yr]"""
-    if any([not isinstance(x, u.Quantity) for x in args]):
-        args = map(lambda x: x*u.mas, args)
-    return [x.to(u.arcsec) for x in args]
+def convert_proper_motions(*proper_motions: u.mas,
+                           rfloat: Optional[bool] = True) -> Tuple:
+    """Converts the proper motions from [mas/yr] to [arcsec/yr].
+
+    Input is assumed to be in [mas], if given as float.
+    """
+    if all(not isinstance(x, u.Quantity) for x in proper_motions):
+        proper_motions = map(lambda x: x*u.mas, proper_motions)
+    else:
+        raise IOError("Please input proper motions as float or"
+                      " astropy.units.mas.")
+    proper_motions = u.Quantity([x.to(u.arcsec) for x in proper_motions])
+    return proper_motions.value if rfloat else proper_motions
 
 
 if __name__ == "__main__":

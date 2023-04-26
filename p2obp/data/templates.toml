@@ -1,4 +1,4 @@
-[ob]
+[header]
 "name" = ""
 "userComments" = ""
 "InstrumentComments" = ""
@@ -18,11 +18,11 @@
 "sky_transparency" = "Clear"
 "air_mass" = 2.0
 "fractional_lunar_illumination" = 1.0
-"moon_angular_distance" = 20
+"moon_angular_distance" = 3
 "strehlratio" = 0.0
 "twilight" = 0
 "watervapour" = 30.0
-"atm" = "70%  (Seeing < 1.15 arcsec, t0 > 2.2 ms)"
+"atm" = "30%  (Seeing < 0.8 arcsec, t0 > 4.1 ms)"
 "contrast" = 0.0
 "description" = ""
 "OBSERVATION.DESCRIPTION.NAME" = ""
