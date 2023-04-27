@@ -333,7 +333,7 @@ def fill_observation(resolution: str,
 
 # TODO: Think of a way to efficiently create the three different types of templates
 def create_ob(target_name: str,
-              observation_type: str,
+              observational_type: str,
               array_configuration: str,
               operational_mode: Optional[str] = "st",
               sci_name: Optional[str] = None,
@@ -345,7 +345,7 @@ def create_ob(target_name: str,
     Parameters
     ----------
     target_name : str
-    observation_type : str
+    observational_type : str
     array_configuration : str
         Determines the array configuration. Possible values are "UTs",
         "small", "medium", "large", "extended".
@@ -364,7 +364,7 @@ def create_ob(target_name: str,
                       " Choose from 'UTs', 'small', 'medium',"
                       " 'large' or 'extended'.")
 
-    observation_type = observation_type.lower()
+    observation_type = observational_type.lower()
     if observation_type not in ["sci", "cal"]:
         raise IOError("Unknown observation type provided!"
                       " Choose from 'SCI' or 'CAL', for "

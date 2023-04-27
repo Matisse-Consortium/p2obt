@@ -67,7 +67,7 @@ def parse_array_config(run_name: Optional[str] = None) -> str:
                 array_configuration = "extended"
     else:
         array_configuration = prompt_user("array_configuration",
-                                          at_configs[1:])
+                                          ["UTs"]+at_configs[1:])
     return array_configuration
 
 
