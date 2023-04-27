@@ -328,8 +328,9 @@ def create_obs_from_lists(sci_lst: List, cal_lst: List, order_lst: List,
                           res_dict: Dict, standard_res: List) -> None:
     """"""
     for mode in OPERATIONAL_MODES[operational_mode]:
+        # TODO: Exchange these print statements
         print("-----------------------------")
-        print(f"Making OBs for {mode}-mode")
+        print(f"Creating OBs for {mode}-mode...")
         print("-----------------------------")
         if not tag_lst:
             tag_lst = copy_list_and_replace_all_values(cal_lst, "LN")
@@ -379,7 +380,7 @@ def create_obs_from_dict(operational_mode: str,
     # it automatic at some point
     for run_id, run in night_plan.items():
         print("-----------------------------")
-        print(f"Making OBs for {run_id}...")
+        print(f"Creating OBs for {run_id}...")
         # logging.info(f"Creating OBs for '{run_id}'...")
 
         if observation_mode == "sm":
@@ -400,7 +401,7 @@ def create_obs_from_dict(operational_mode: str,
                 night_dir.mkdir(parents=True, exist_ok=True)
 
             print("-----------------------------")
-            print(f"Creating folder: '{night_dir.name}', and filling it with OBs")
+            print(f"Creating folder: '{night_dir.name}', and filling it with OBs...")
             # logging.info(f"Creating folder: '{night_dir.name}', and filling it with OBs")
 
             # NOTE: This avoids a timeout from the query-databases (such as Vizier)
@@ -457,8 +458,10 @@ def ob_creation(output_dir: Path,
         array_config = get_array_config()
         try:
             sci_lst, cal_lst, tag_lst, order_lst = manual_lst
-        except ValueError:
-            raise ValueError("In case of manual input the four lists must be given!")
+        except ValueError as exc:
+            raise ValueError("In case of manual input four lists "
+                             " (science_targets, calibrators, orders, tag)"
+                             " must be given!") from exc
         create_obs_from_lists(sci_lst, cal_lst, order_lst, tag_lst,
                               operational_mode, output_dir, array_config,
                               res_dict, standard_res)

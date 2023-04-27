@@ -12,6 +12,7 @@ import toml
 from astropy.coordinates import SkyCoord
 
 from .query import query
+from .upload import upload_ob
 from .utils import convert_proper_motions
 
 # TODO: Include file overwrite with online files and comments for
@@ -218,8 +219,7 @@ def fill_header(target: Dict,
                 observation_type: str,
                 array_configuration: str,
                 sci_name: Optional[str] = None,
-                tag: Optional[str] = None,
-                comment: Optional[str] = None) -> Dict:
+                tag: Optional[str] = None) -> Dict:
     """Fills in the header dictionary with the information from the query.
 
     Parameters
@@ -229,7 +229,6 @@ def fill_header(target: Dict,
     array_configuration : str
     sci_name : str, optional
     tag : str, optional
-    comment : str, optional
 
     Returns
     -------
@@ -249,9 +248,6 @@ def fill_header(target: Dict,
     prop_ra, prop_dec = format_proper_motions(target)
 
     header_user["name"] = ob_name
-    if comment is not None:
-        header_user["userComments"] = comment
-
     header_target["TARGET.NAME"] = target["name"].replace(' ', '_')
     header_target["ra"], header_target["dec"] = ra_hms, dec_dms
     header_target["propRA"], header_target["propDec"] = prop_ra, prop_dec
@@ -341,7 +337,6 @@ def create_ob(target_name: str,
               array_configuration: str,
               operational_mode: Optional[str] = "st",
               sci_name: Optional[str] = None,
-              comment: Optional[str] = None,
               tag: Optional[str] = None,
               resolution: Optional[str] = "low",
               output_dir: Optional[Path] = None):
@@ -360,7 +355,6 @@ def create_ob(target_name: str,
         Default is standalone.
     sci_name : str, optional
     tag : str, optional
-    comment : str, optional
     resolution : str, optional
     output_dir : path, optional
     """
@@ -393,8 +387,7 @@ def create_ob(target_name: str,
 
     target = query(target_name)
     header = fill_header(target, observation_type,
-                         array_configuration, sci_name,
-                         tag, comment)
+                         array_configuration, sci_name, tag)
     acquisition = fill_acquisition(target,
                                    operational_mode,
                                    array_configuration)
@@ -410,3 +403,8 @@ def create_ob(target_name: str,
         ob_name = set_ob_name(target, observation_type, sci_name, tag)
         write_ob(ob, ob_name, output_dir)
     return ob
+
+
+if __name__ == "__main__":
+    ob = create_ob("HD 142666", "sci", "uts", "st")
+    upload_ob(ob, 3001217, username="52052", password="tutorial", server="demo")

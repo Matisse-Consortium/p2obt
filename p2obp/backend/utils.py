@@ -23,20 +23,6 @@ def contains_element(list_to_search: List, element_to_search: str) -> bool:
     return any([element_to_search in element for element in list_to_search])
 
 
-def get_password_and_username():
-    """Gets the user's ESO-user password to access the p2ui"""
-    username = input("Input your ESO-username: ")
-    password_prompt = "Input your ESO-password: "
-    if sys.platform == 'ios':
-        import console
-        password = console.password_alert(password_prompt)
-    elif sys.stdin.isatty():
-        password = getpass.getpass(password_prompt)
-    else:
-        password = input()
-    return username, password
-
-
 def convert_proper_motions(*proper_motions: u.mas,
                            rfloat: Optional[bool] = True) -> Tuple:
     """Converts the proper motions from [mas/yr] to [arcsec/yr].
