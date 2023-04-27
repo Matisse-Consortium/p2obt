@@ -60,6 +60,11 @@ TEMPLATE_MAPPING = {"ACQUISITION.TEMPLATE.NAME": str,
                     "INS.DIN.NAME": str,
                     "DPR.CATG": str}
 
+# TODO: Hard code this and check for upload
+README_TEMPLATE = {"Date": "", "Main observer": "",
+                   "e-mail": "", "Phone number": "",
+                   "Skype": "", "Zoom": ""}
+
 
 def login(username: Optional[str] = None,
           password: Optional[str] = None,
@@ -89,6 +94,83 @@ def login(username: Optional[str] = None,
             # TODO: Remove this, too unsafe?
             password = input(password_prompt)
     return p2api.ApiConnection(server, username, password)
+
+
+def get_remote_run(connection: p2api, run_id: str) -> Optional[int]:
+    """Gets the run that corresponds to the period, proposal and the number and
+    returns its runId.
+
+    Parameters
+    ----------
+    connection : p2api
+        The p2ui python api.
+    run_id : str
+        The run's id in the format <period.proposal_tag.run_number>.
+
+    Returns
+    -------
+    run_id : int, optional
+        The run's id that can be used to access and modify it with the p2api.
+        If not found return "None".
+    """
+    for run in connection.getRuns()[0]:
+        if run_id == run["progId"]:
+            return run["containerId"]
+    return None
+
+
+def remote_container_exists(connection: p2api, container_id: int) -> bool:
+    """Checks if the container with this id exists on p2.
+
+    Parameters
+    ----------
+    connection : p2api
+        The p2ui python api.
+    container_id : int
+        The id of the container on p2.
+
+    Returns
+    -------
+    container_exists : bool
+        'True' if container exists, otherwise 'False'.
+    """
+    try:
+        if connection.getContainer(container_id):
+            return True
+    except p2api.p2api.P2Error:
+        pass
+    return False
+
+
+def create_remote_container(connection: p2api,
+                            name: str, container_id: int,
+                            observational_mode: Optional[str] = "vm") -> int:
+    """Creates a container on p2.
+
+    Parameters
+    ----------
+    connection : p2api
+        The P2 python api.
+    name: str
+        The container's name.
+    container_id : int
+        The id that specifies the container.
+    observation_mode : str
+        Can either be "vm" for visitor mode (VM) or "sm" for service mode (SM).
+
+    Returns
+    -------
+    container_id : int
+        The created container's id.
+    """
+    print(f"Creating container '{name}' on p2...")
+    if observational_mode == "vm":
+        container, _ = connection.createFolder(container_id, name)
+    elif observational_mode == "sm":
+        container, _ = connection.createConcatenation(container_id, name)
+    else:
+        raise IOError("No such operation mode exists!")
+    return container["containerId"]
 
 
 def create_ob(connection: p2api, container_id: int, header: Dict) -> int:
@@ -172,3 +254,5 @@ def upload_ob(ob: Dict, container_id: int,
     ob_id = create_ob(connection, container_id, ob["header"])
     acq_template = add_template(connection, ob_id, ob, "acquisition")
     obs_template = add_template(connection, ob_id, ob, "observation")
+
+
