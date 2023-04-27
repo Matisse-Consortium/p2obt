@@ -50,8 +50,8 @@ TEMPLATE_MAPPING = {"ACQUISITION.TEMPLATE.NAME": str,
                     "SEQ.DIL.USER.WL0": float,
                     "SEQ.DIL.WL0": float,
                     "SEQ.FRINGES.NCYCLES": float,
-                    "SEQ.OFFSET.ALPHA": float,
-                    "SEQ.OFFSET.DELTA": float,
+                    "SEQ.OFFSET.ALPHA": list,
+                    "SEQ.OFFSET.DELTA": list,
                     "SEQ.PHOTO.ST": bool,
                     "SEQ.SKY.OFFS.ALPHA": float,
                     "SEQ.SKY.OFFS.DELTA": float,
@@ -245,14 +245,16 @@ def add_template(connection: p2api, ob_id: int, ob: Dict, template_kind: str) ->
 
 
 
-def upload_ob(ob: Dict, container_id: int,
-              username: Optional[str] = None,
-              password: Optional[str] = None,
-              server: Optional[str] = "production"):
-    """"""
-    connection = login(username, password, server)
+def upload_ob(connection: p2api,
+              ob: Dict, container_id: int) -> None:
+    """
+
+    Parameters
+    ----------
+
+    Returns
+    -------
+    """
     ob_id = create_ob(connection, container_id, ob["header"])
-    acq_template = add_template(connection, ob_id, ob, "acquisition")
-    obs_template = add_template(connection, ob_id, ob, "observation")
-
-
+    add_template(connection, ob_id, ob, "acquisition")
+    add_template(connection, ob_id, ob, "observation")
