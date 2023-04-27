@@ -61,11 +61,10 @@ def read_dict_to_lists(night: Dict) -> Tuple[List[Any]]:
     return targets, calibrators, orders, tags
 
 
-# TODO: Finish this function
 def unwrap_lists(target: str,
-                 calibrators: Union[str, List[str]],
-                 orders: Union[str, List[str]],
-                 tags: Union[str, List[str]]):
+                 calibrator: Union[str, List[str]],
+                 order: Union[str, List[str]],
+                 tag: Union[str, List[str]]):
     """This untangles the calibrators, orders and tags
     lists into a sequential lists that has the target at
     its centre.
@@ -80,18 +79,17 @@ def unwrap_lists(target: str,
     -------
     """
     calibrators_before, calibrators_after = [], []
-    for calibrator, order, tag in zip(calibrators, orders, tags):
-        if isinstance(calibrator, list):
-            for cal, ord, tg in zip(calibrator, order, tag):
-                if ord == "b":
-                    calibrators_before.append((cal, "cal", tg))
-                else:
-                    calibrators_after.append((cal, "cal", tg))
-        else:
-            if order == "b":
-                calibrators_before.append((calibrator, "cal", tag))
+    if isinstance(calibrator, list):
+        for cal, ord, tg in zip(calibrator, order, tag):
+            if ord == "b":
+                calibrators_before.append((cal, "cal", tg))
             else:
-                calibrators_after.append((calibrator, "cal", tag))
+                calibrators_after.append((cal, "cal", tg))
+    else:
+        if order == "b":
+            calibrators_before.append((calibrator, "cal", tag))
+        else:
+            calibrators_after.append((calibrator, "cal", tag))
     return calibrators_before + [(target, "sci", None)] + calibrators_after
 
 
@@ -157,9 +155,8 @@ def create_obs_from_lists(targets: List[str],
         else:
             mode_id = None
 
-        # TODO: Add proper for loops
-        # TODO: Think how to order the OB-creation here
-        for target, calibrator in zip(targets, calibrators):
+        for target, calibrator, order, tag \
+                in zip(targets, calibrators, orders, tags):
             if observational_mode == "vm":
                 if mode_id is not None:
                     target_id = create_remote_container(connection, target,
@@ -167,6 +164,8 @@ def create_obs_from_lists(targets: List[str],
                 elif container_id is not None:
                     target_id = create_remote_container(connection, target,
                                                         container_id, observational_mode)
+                else:
+                    target_id = None
 
             if isinstance(resolution, dict):
                 if target in resolution:
@@ -176,13 +175,15 @@ def create_obs_from_lists(targets: List[str],
                 else:
                     resolution = "low"
 
-            unwrapped_lists = unwrap_lists(target, calibrators, orders, tags)
+            unwrapped_lists = unwrap_lists(target, calibrator, order, tag)
             for (name, sci_cal_flag, tag) in unwrapped_lists:
                 sci_name = target if sci_cal_flag == "cal" else None
                 ob = create_ob(name, sci_cal_flag,
                                array_configuration,
                                mode, sci_name,
-                               tag, resolution, output_dir)
+                               tag, resolution, mode_out_dir)
+                if target_id is not None:
+                    upload_ob(connection, ob, target_id)
 
 
 # TODO: Write down how the runs need to be written down in the observing plan -> Make
@@ -273,6 +274,9 @@ def create_obs(night_plan: Optional[Dict] = None,
                observational_mode: Optional[str] = "vm",
                resolution: Optional[Union[str, Dict]] = "low",
                container_id: Optional[int] = None,
+               username: Optional[str] = None,
+               password: Optional[str] = None,
+               server: Optional[str] = "production",
                output_dir: Optional[Path] = None) -> None:
     """
 
@@ -302,6 +306,9 @@ def create_obs(night_plan: Optional[Dict] = None,
         a standard resolution for all not listed science targets, if not this
         will default to "low".
     container_id : int
+    username: str, optional
+    password: str, optional
+    server: str, optional
     output_dir: path, optional
         The output directory, where the (.obx)-files will be created in.
         If left at "None" no files will be created.
@@ -323,7 +330,7 @@ def create_obs(night_plan: Optional[Dict] = None,
                              " (science_targets, calibrators, orders, tag)"
                              " must be given!") from exc
         if container_id is not None:
-            connection = login(server="production")
+            connection = login(username, password, server)
         else:
             connection = None
         create_obs_from_lists(targets, calibrators, orders,
@@ -350,7 +357,9 @@ if __name__ == "__main__":
     res_dict = {}
 
     create_obs(manual_input=manual_lst, output_dir=outdir,
-               operational_mode="both", resolution="low")
+               operational_mode="both", resolution="low",
+               container_id=3001407, username="52052",
+               password="tutorial", server="demo")
 
     # TOOD: Add night astronomer comments to template of Jozsefs -> Rewrite his script?
     # TODO: Find way to switch of photometry of template -> Jozsef's script rewrite?
