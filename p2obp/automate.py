@@ -6,7 +6,7 @@ import p2api
 
 from .backend.create import create_ob
 from .backend.parse import parse_array_config, parse_operational_mode,\
-    parse_run_resolution, parse_run_prog_id, parse_night_name
+    parse_run_resolution, parse_run_prog_id, parse_night_name, parse_night_plan
 from .backend.upload import login, create_remote_container, upload_ob
 
 
@@ -268,7 +268,7 @@ def create_obs_from_dict(night_plan: Dict,
                                   connection, night_id, night_dir)
 
 
-def create_obs(night_plan: Optional[Dict] = None,
+def create_obs(night_plan: Optional[Path] = None,
                manual_input: Optional[List[List]] = None,
                operational_mode: str = "st",
                observational_mode: Optional[str] = "vm",
@@ -282,7 +282,7 @@ def create_obs(night_plan: Optional[Dict] = None,
 
     Parameters
     ----------
-    night_plan : dict, optional
+    night_plan : path, optional
         A dictionary containing a parsed night plan. If given
         it will automatically upload the obs to p2.
     manual_input : list of lists, optional
@@ -339,6 +339,7 @@ def create_obs(night_plan: Optional[Dict] = None,
                               connection, container_id, output_dir)
 
     elif night_plan is not None:
+        night_plan = parse_night_plan(night_plan)
         create_obs_from_dict(night_plan, operational_mode,
                              observational_mode, resolution, output_dir)
     else:
