@@ -155,7 +155,7 @@ def create_remote_container(connection: p2api,
         The container's name.
     container_id : int
         The id that specifies the container.
-    observation_mode : str
+    observational_mode : str
         Can either be "vm" for visitor mode (VM) or "sm" for service mode (SM).
 
     Returns
