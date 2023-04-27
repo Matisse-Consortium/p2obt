@@ -1,27 +1,3 @@
-"""Night Plan Parser
-
-This script parses the night plans made with Roy van Boekel's "calibrator_find"
-IDL script into a (.yaml)-file that contains the CALs sorted to their
-corresponding SCI-targets in a dictionary  of the following structure
-
-It first specifies the run, then the individual night with the corresponding the SCIs,
-CALs and TAGs (The Tags show if the calibrator is N-, L-band or both)
-
-The night plan has to be a (.txt)-file or of a similar filetype/file
-
-This file can also be imported as a module and contains the following functions:
-    * _get_file_section - Gets a section of the (.txt)/lines
-    * _get_targets_calibrators_tags - Creates a lists containing nested lists with the
-                                      SCI, CAL and TAG information
-    * parse_night_plan - Parses the night plan -> The main function of this script
-
-Example of usage:
-    >>> from parser import parse_night_plan
-    >>> run_dict = parse_night_plan(path_to_file, save_path="")
-    >>> print(run_dict)
-    ... {'run 5, 109.2313.005 = 0109.C-0413(E)': {'nights 2-4: {'SCI': ['MY Lup', ...],
-    ...  'CAL': [['HD142198'], ...], 'TAG': [['LN'], ...]}}}
-"""
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -31,6 +7,125 @@ from .utils import prompt_user
 # TODO: Make parser accept more than one calibrator block for one night, by
 # checking if there are integers for numbers higher than last calibrator and
 # then adding these
+
+
+def parse_operational_mode(run_name: str) -> str:
+    """Parses the run's used instrument from string containing it,
+    either MATISSE or GRA4MAT.
+
+    If no match can be found it prompts the user for
+    manual operational mode input.
+
+    Parameters
+    ----------
+    run_name : str, optional
+        The name of the run.
+
+    Returns
+    -------
+    operational_mode : str
+        Either "MATISSE" or "GRA4MAT".
+    """
+    if "GRA4MAT" in run_name:
+        operational_mode = "gr"
+    elif "MATISSE" in run_name:
+        operational_mode = "st"
+    else:
+        operational_mode = prompt_user("instrument",
+                                       ["MATISSE", "GRA4MAT"])
+    return operational_mode
+
+
+def parse_array_config(run_name: Optional[str] = None) -> str:
+    """Parses the array configuration from string containing it.
+
+    If no run name is specified or no match can be found
+    it prompts the user for manual configuration input.
+
+    Parameters
+    ----------
+    run_name : str, optional
+        The name of the run.
+
+    Returns
+    -------
+    array_configuration : str
+        Either "UTs", "small", "medium", "large" or "extended".
+    """
+    at_configs = ["ATs", "small", "medium", "large", "extended"]
+    if run_name:
+        if "UTs" in run_name:
+            array_configuration = "UTs"
+        elif any(config in run_name for config in at_configs):
+            if "small" in run_name:
+                array_configuration = "small"
+            elif "medium" in run_name:
+                array_configuration = "medium"
+            elif "large" in run_name:
+                array_configuration = "large"
+            else:
+                array_configuration = "extended"
+    else:
+        array_configuration = prompt_user("array_configuration",
+                                          at_configs[1:])
+    return array_configuration
+
+
+def parse_run_resolution(run_name: str) -> str:
+    """Parses the run's resolution from string containing it.
+
+    If no match can be found it prompts the user for
+    manual resolution input.
+
+    Parameters
+    ----------
+    run_name : str, optional
+        The name of the run.
+
+    Returns
+    -------
+    resolution : str
+        Either "LOW", "MED" or "HIGH".
+    """
+    if "LR" in run_name:
+        resolution = "LOW"
+    elif "MR" in run_name:
+        resolution = "MED"
+    elif "HR" in run_name:
+        resolution = "HIGH"
+    else:
+        resolution = prompt_user("resolution", ["LOW", "MED", "HIGH"])
+    return resolution
+
+
+def parse_run_prog_id(run_name: str) -> str:
+    """Parses the run's resolution from string containing it.
+
+    If no match can be found it prompts the user for
+    manual resolution input.
+
+    Parameters
+    ----------
+    run_name : str, optional
+        The name of the run.
+
+    Returns
+    -------
+    run_prog_id : str
+        The run's program id in the form of
+        <period>.<program>.<run> (e.g., 110.2474.004).
+    """
+    run_prog_id = None
+    for element in run_name.split():
+        if len(element.split(".")) == 3:
+            run_prog_id = element
+            break
+
+    if run_prog_id is None:
+        print("Run's program id could not be automatically detected!")
+        run_prog_id = input("Please enter the run's id in the following form"
+                            " (<period>.<program>.<run> (e.g., 110.2474.004)): ")
+    return run_prog_id
 
 
 # TODO: Write down how the nights need to be written down in the observing plan
@@ -63,74 +158,6 @@ def parse_night_name(night_name: str) -> str:
 
     return "_".join([''.join(night.split()), ''.join(date.split())])\
         if date != '' else ''.join(night.split())
-
-
-def parse_array_config(run_name: Optional[str] = None) -> str:
-    """Parses the array configuration from string containing it.
-
-    If no run name is specified or no match can be found
-    it prompts the user for manual configuration input.
-
-    Parameters
-    ----------
-    run_name : str, optional
-        The name of the run.
-
-    Returns
-    -------
-    array_configuration : str
-    """
-    at_configs = ["ATs", "small", "medium", "large", "extended"]
-    if run_name:
-        if "UTs" in run_name:
-            array_configuration = "UTs"
-        elif any(config in run_name for config in at_configs):
-            if "small" in run_name:
-                array_configuration = "small"
-            elif "medium" in run_name:
-                array_configuration = "medium"
-            elif "large" in run_name:
-                array_configuration = "large"
-            else:
-                array_configuration = "extended"
-    else:
-        array_configuration = prompt_user("array_configuration",
-                                          at_configs[1:])
-    return array_configuration
-
-
-def parse_run_resolution(run_name: str) -> str:
-    """Parses the run's resolution from string containing it.
-
-    If no match can be found it prompts the user for
-    manual resolution input.
-    """
-    if "LR" in run_name:
-        resolution = "LOW"
-    elif "MR" in run_name:
-        resolution = "MED"
-    elif "HR" in run_name:
-        resolution = "HIGH"
-    else:
-        resolution = prompt_user("resolution", ["LOW", "MED", "HIGH"])
-    return resolution
-
-
-def parse_operational_mode(run_name: str) -> str:
-    """Parses the run's used instrument from string containing it,
-    either MATISSE or GRA4MAT.
-
-    If no match can be found it prompts the user for
-    manual operational mode input.
-    """
-    if "GRA4MAT" in run_name:
-        operational_mode = "gr"
-    elif "MATISSE" in run_name:
-        operational_mode = "st"
-    else:
-        operational_mode = prompt_user("instrument",
-                                       ["matisse", "gra4mat"])
-    return operational_mode
 
 
 def parse_line(parts: str) -> str:
@@ -168,7 +195,7 @@ def parse_groups(section: List) -> Dict:
 
     Returns
     -------
-    data : Dict
+    data : dict
         The individual science target/calibrator group within a section.
         Can be for instance, "SCI-CAL" or "CAL-SCI-CAL" or any combination.
     """
@@ -205,19 +232,19 @@ def parse_groups(section: List) -> Dict:
 def get_file_section(lines: List, identifier: str) -> Dict:
     """Gets the section of a file corresponding to the given identifier and
     returns a dict with the keys being the match to the identifier and the
-    values being a subset of the lines list
+    values being a subset of the lines list.
 
     Parameters
     ----------
-    lines: List
-        The lines read from a file
-    identifier: str
-        The identifier by which they should be split into subsets
+    lines : list
+        The lines read from a file.
+    identifier : str
+        The identifier by which they should be split into subsets.
 
     Returns
     --------
-    subset: dict
-        A dict that contains a subsets of the original lines
+    subset : dict
+        A dict that contains a subsets of the original lines.
     """
     indices, labels = [], []
     for index, line in enumerate(lines):
@@ -264,6 +291,9 @@ def parse_night_plan(night_plan: Path,
     Returns
     -------
     night_dict : dict
+        A dictionary containing the individual runs, their nights
+        and in those the individual observing blocks for the science targets
+        with their associated calibrators.
     """
     night_plan = Path(night_plan)
     if night_plan.exists():
