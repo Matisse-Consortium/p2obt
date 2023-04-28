@@ -4,16 +4,19 @@ from typing import Union, Optional, Any, Dict, List, Tuple
 import numpy as np
 import p2api
 
-from .backend.create import create_ob
+from .backend import create_ob, parse_night_plan, upload_ob
 from .backend.parse import parse_array_config, parse_operational_mode,\
-    parse_run_resolution, parse_run_prog_id, parse_night_name, parse_night_plan
-from .backend.upload import login, create_remote_container, upload_ob
+    parse_run_resolution, parse_run_prog_id, parse_night_name
+from .backend.upload import login, get_remote_run, create_remote_container
 
 
 OPERATIONAL_MODES = {"both": ["standalone", "GRA4MAT"],
-                     "st": ["standalone"], "gr": ["GRA4MAT"]}
+                     "st": ["standalone"], "gr": ["GRA4MAT"],
+                     "matisse": ["standalone"], "gra4mat": ["GRA4MAT"]}
 
 
+# TOOD: Add night astronomer comments to template
+# TODO: Find way to switch of photometry of template
 def copy_list_and_replace_values(input_list: List[Any], value: Any) -> List:
     """Replaces all values in list with the given value. Takes into account
     nested lists.
@@ -93,6 +96,7 @@ def unwrap_lists(target: str,
     return calibrators_before + [(target, "sci", None)] + calibrators_after
 
 
+# FIXME: Multiple runs are created in same folder
 def create_obs_from_lists(targets: List[str],
                           calibrators: Union[List[str], List[List[str]]],
                           orders: Union[List[str], List[List[str]]],
@@ -134,7 +138,7 @@ def create_obs_from_lists(targets: List[str],
         The output directory, where the (.obx)-files will be created in.
         If left at "None" no files will be created.
     """
-    for mode in OPERATIONAL_MODES[operational_mode]:
+    for mode in OPERATIONAL_MODES[operational_mode.lower()]:
         print(f"{'':-^50}")
         print(f"Creating OBs for {mode}-mode...")
         print(f"{'':-^50}")
@@ -148,6 +152,8 @@ def create_obs_from_lists(targets: List[str],
             mode_out_dir = output_dir / mode
             if not mode_out_dir.exists():
                 mode_out_dir.mkdir(parents=True, exist_ok=True)
+        else:
+            mode_out_dir = output_dir
 
         if observational_mode == "vm" and container_id is not None:
             mode_id = create_remote_container(connection, mode,
@@ -188,10 +194,15 @@ def create_obs_from_lists(targets: List[str],
 
 # TODO: Write down how the runs need to be written down in the observing plan -> Make
 # it automatic at some point
+# TODO: Make print better if both uploading and making is active
+# TODO: Log if nan appears in dataset or empty value
 def create_obs_from_dict(night_plan: Dict,
                          operational_mode: str,
                          observational_mode: str,
                          resolution: str,
+                         username: str,
+                         password: str,
+                         server: str,
                          output_dir: Optional[Path] = None) -> None:
     """
 
@@ -220,20 +231,25 @@ def create_obs_from_dict(night_plan: Dict,
         In case of a dictionary one can set a key called "standard" to set
         a standard resolution for all not listed science targets, if not this
         will default to "low".
+    username: str
+    password: str
+    server: str
     output_dir : path
         The output directory, where the (.obx)-files will be created in.
         If left at "None" no files will be created.
     """
+    connection = login(username, password, server)
     for run_key, run in night_plan.items():
-        print(f"{'':-^50}")
-        print(f"Creating OBs for {run_key}...")
-
         # TODO: Enable direct user input for these? Add more parameters?
-        connection = login(server="production")
+        run_prog_id = parse_run_prog_id(run_key)
+        run_id = get_remote_run(connection, run_prog_id)
         array_config = parse_array_config(run_key)
         operational_mode = parse_operational_mode(run_key)
         resolution = parse_run_resolution(run_key)
-        run_prog_id = parse_run_prog_id(run_key)
+
+        if output_dir is None and run_id is None:
+            raise ValueError("Determining run id automatically"
+                             " or via input has failed!")
 
         if output_dir is not None:
             run_name = ''.join(run_key.split(",")[0].strip().split())
@@ -243,25 +259,28 @@ def create_obs_from_dict(night_plan: Dict,
         else:
             run_dir = None
 
-        for night_id, night in run.items():
+        print(f"{'':-^50}")
+        print(f"Creating OBs for {run_key}...")
+        for night_key, night in run.items():
             print(f"{'':-^50}")
-            night_name = parse_night_name(night_id)
+
+            night_name = parse_night_name(night_key)
             if operational_mode == "vm":
                 night_id = create_remote_container(connection,
                                                    night_name,
-                                                   run_prog_id,
+                                                   run_id,
                                                    observational_mode)
             else:
-                night_id = None
+                night_id = run_id
 
             if run_dir is not None:
                 night_dir = run_dir / night_name
                 print(f"Creating folder: '{night_dir.name}', and filling it with OBs...")
+                if not night_dir.exists():
+                    night_dir.mkdir(parents=True, exist_ok=True)
             else:
                 night_dir = None
 
-            if not night_dir.exists():
-                night_dir.mkdir(parents=True, exist_ok=True)
 
             create_obs_from_lists(*read_dict_to_lists(night), operational_mode,
                                   observational_mode, array_config, resolution,
@@ -313,8 +332,9 @@ def create_obs(night_plan: Optional[Path] = None,
         The output directory, where the (.obx)-files will be created in.
         If left at "None" no files will be created.
     """
-    if output_dir is None and container_id is None:
-        raise IOError("Either output directory or container id must be set!")
+    if night_plan is None and output_dir is None and container_id is None:
+        raise IOError("Either output directory, container id or"
+                      " night plan must be set!")
 
     if output_dir is not None:
         output_dir = Path(output_dir, "manualOBs")\
@@ -341,7 +361,8 @@ def create_obs(night_plan: Optional[Path] = None,
     elif night_plan is not None:
         night_plan = parse_night_plan(night_plan)
         create_obs_from_dict(night_plan, operational_mode,
-                             observational_mode, resolution, output_dir)
+                             observational_mode, resolution,
+                             username, password, server, output_dir)
     else:
         raise IOError("Neither '.yaml'-file nor input list found or input"
                       " dict found!")
@@ -349,6 +370,7 @@ def create_obs(night_plan: Optional[Path] = None,
 
 if __name__ == "__main__":
     outdir = Path("/Users/scheuck/Data/observations/obs/")
+    night_plan = Path("/Users/scheuck/Data/observations/P111/newest_plan.txt")
 
     sci_lst = ["Beta Leo", "HD 100453"]
     cal_lst = ["HD100920", "HD102964"]
@@ -357,10 +379,5 @@ if __name__ == "__main__":
 
     res_dict = {}
 
-    create_obs(manual_input=manual_lst, output_dir=outdir,
-               operational_mode="both", resolution="low",
-               container_id=3001407, username="52052",
-               password="tutorial", server="demo")
-
-    # TOOD: Add night astronomer comments to template of Jozsefs -> Rewrite his script?
-    # TODO: Find way to switch of photometry of template -> Jozsef's script rewrite?
+    create_obs(night_plan=night_plan, operational_mode="both",
+               resolution="low", username="MbS", server="production")

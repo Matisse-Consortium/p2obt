@@ -143,13 +143,13 @@ def query(name: str,
     target : dict
         The target's queried information.
     """
+    time.sleep(sleep_time)
     target = {"name": name}
     if catalogs is None:
         catalogs = [*CATALOGS.keys()]
 
     for catalog in catalogs:
         catalog_table = get_catalog(name, catalog, match_radius)
-        target = {**target,
-                  **get_best_match(target, catalog_table, QUERIES[catalog])}
-        time.sleep(sleep_time)
+        best_matches = get_best_match(target, catalog_table, QUERIES[catalog])
+        target = {**target, **best_matches}
     return target

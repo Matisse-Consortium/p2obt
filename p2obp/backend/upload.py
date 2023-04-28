@@ -1,11 +1,10 @@
 import sys
 import getpass
-from pprint import pprint
-from typing import Optional, Dict, List, Tuple
+from typing import Optional, Dict
 
-import json
 import numpy as np
 import p2api
+
 
 # TODO: Credit the guy for loadobx.py
 TARGET_MAPPING = {"TARGET.NAME": "name",
@@ -173,6 +172,7 @@ def create_remote_container(connection: p2api,
     return container["containerId"]
 
 
+# TODO: Make logger here
 def create_ob(connection: p2api, container_id: int, header: Dict) -> int:
     """
 
@@ -182,7 +182,6 @@ def create_ob(connection: p2api, container_id: int, header: Dict) -> int:
     Returns
     -------
     """
-    print(f"Creating OB '{header['user']['name']}'...")
     ob, version = connection.createOB(container_id, header["user"]["name"])
     ob["instrument"] = header["observation"]["instrument"]
     ob["obsDescription"]["name"] = header["user"]["name"]
@@ -239,10 +238,9 @@ def add_template(connection: p2api, ob_id: int, ob: Dict, template_kind: str) ->
         template_name = f"ACQUISITION.{template_name}"
     content = ob[template_kind]
     apply_mapping(content, TEMPLATE_MAPPING)
-    print(f"\tAdding template '{content[template_name]}'...")
+    print(f"\t\tAdding template '{content[template_name]}'...")
     template, version = connection.createTemplate(ob_id, content[template_name])
     template, version = connection.setTemplateParams(ob_id, template, content, version)
-
 
 
 def upload_ob(connection: p2api,
@@ -255,6 +253,11 @@ def upload_ob(connection: p2api,
     Returns
     -------
     """
-    ob_id = create_ob(connection, container_id, ob["header"])
-    add_template(connection, ob_id, ob, "acquisition")
-    add_template(connection, ob_id, ob, "observation")
+    ob_name = ob['header']['user']['name']
+    print(f"\tCreating OB '{ob_name}'...")
+    try:
+        ob_id = create_ob(connection, container_id, ob["header"])
+        add_template(connection, ob_id, ob, "acquisition")
+        add_template(connection, ob_id, ob, "observation")
+    except p2api.P2Error:
+        print(f"[ERROR]: Failed creating OB '{ob_name}'!")

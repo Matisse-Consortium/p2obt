@@ -1,12 +1,7 @@
-"""
-
-"""
 from pathlib import Path
 from typing import Optional, Any, Dict, Tuple
-from pprint import pprint
 
 import astropy.units as u
-import json
 import pkg_resources
 import toml
 from astropy.coordinates import SkyCoord
@@ -63,6 +58,8 @@ from .utils import convert_proper_motions
 #
 #
 
+# TODO: Include log message if nan has been replaced
+
 TEMPLATE_FILE = Path(pkg_resources.resource_filename("p2obp", "data/templates.toml"))
 
 
@@ -89,7 +86,6 @@ def load_template(file: Path,
     template : dict
         A dictionary that is the template.
     """
-    # TODO: Make this more robust?
     with open(file, "r+", encoding="utf-8") as toml_file:
         if operational_mode is not None:
             return toml.load(toml_file)[operational_mode][header]
@@ -103,7 +99,6 @@ def write_dict(file, dictionary: Dict):
         file.write(f'{key.ljust(40)}"{str(value)}"'+"\n")
 
 
-# TODO: Make this properly and move to different file
 def write_ob(ob: Dict, ob_name: str, output_dir: Path) -> None:
     """Writes the (.obx)-file to the specified directory"""
     out_file = Path(output_dir) / f"{ob_name}.obx"
@@ -117,7 +112,7 @@ def write_ob(ob: Dict, ob_name: str, output_dir: Path) -> None:
                 write_dict(obx_file, dictionary)
                 obx_file.write("\n\n")
     # TODO: Make this a better message or a function
-    print(f"OB: '{ob_name}' has been created.")
+    print(f"Created OB: '{ob_name}'.")
 
 
 def set_ob_name(target: str,

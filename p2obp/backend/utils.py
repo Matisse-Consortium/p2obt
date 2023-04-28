@@ -39,7 +39,7 @@ def contains_element(list_to_search: List, element_to_search: str) -> bool:
     element_in_list: bool
         'True' if element is found, 'False' otherwise
     """
-    return any([element_to_search in element for element in list_to_search])
+    return any(element_to_search in element for element in list_to_search)
 
 
 def convert_proper_motions(*proper_motions: u.mas,
