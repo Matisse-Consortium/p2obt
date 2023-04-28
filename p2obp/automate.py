@@ -266,7 +266,7 @@ def create_obs_from_dict(night_plan: Dict,
             print(f"{'':-^50}")
 
             night_name = parse_night_name(night_key)
-            if operational_mode == "vm":
+            if observational_mode == "vm":
                 night_id = create_remote_container(connection,
                                                    night_name,
                                                    run_id,
@@ -381,5 +381,5 @@ if __name__ == "__main__":
 
     res_dict = {"Beta Leo": "med"}
 
-    create_obs(operational_mode="both", manual_input=manual_lst, container_id=3501578,
+    create_obs(night_plan=night_plan, operational_mode="both",
                resolution=res_dict, username="MbS", server="production")
