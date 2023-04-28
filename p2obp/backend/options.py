@@ -1,5 +1,7 @@
 options = {}
 
+# TODO: Think of implementation of uploading after parsing?
+
 # NOTE: Sets the standard resolution
 options["resolution"] = "low"
 options["central_wl"] = 4.1
