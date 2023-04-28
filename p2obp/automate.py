@@ -181,12 +181,17 @@ def create_obs_from_lists(targets: List[str],
             unwrapped_lists = unwrap_lists(target, calibrator, order, tag)
             for (name, sci_cal_flag, tag) in unwrapped_lists:
                 sci_name = target if sci_cal_flag == "cal" else None
-                ob = create_ob(name, sci_cal_flag,
-                               array_configuration,
-                               mode, sci_name,
-                               tag, res, mode_out_dir)
-                if target_id is not None:
-                    upload_ob(connection, ob, target_id)
+                try:
+                    ob = create_ob(name, sci_cal_flag,
+                                   array_configuration,
+                                   mode, sci_name,
+                                   tag, res, mode_out_dir)
+                    if target_id is not None:
+                        upload_ob(connection, ob, target_id)
+
+                # TODO Make this e into logging and catch the exception better
+                except KeyError:
+                    print(f"[Error]: Failed OB Creation '{target}'!")
 
 
 # TODO: Write down how the runs need to be written down in the observing plan -> Make
@@ -372,7 +377,7 @@ def create_obs(night_plan: Optional[Path] = None,
 
 if __name__ == "__main__":
     outdir = Path("/Users/scheuck/Data/observations/obs/")
-    night_plan = Path("/Users/scheuck/Data/observations/P111/newest_plan.txt")
+    night_plan = Path("/Users/scheuck/Data/observations/P110/may2023/obsplan.txt")
 
     sci_lst = ["Beta Leo", "HD 100453"]
     cal_lst = ["HD100920", "HD102964"]

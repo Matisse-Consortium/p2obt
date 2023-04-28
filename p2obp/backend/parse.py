@@ -26,13 +26,14 @@ def parse_operational_mode(run_name: str) -> str:
     operational_mode : str
         Either "MATISSE" or "GRA4MAT".
     """
+    operational_modes = ["MATISSE", "GRA4MAT", "Both"]
     if "GRA4MAT" in run_name:
         operational_mode = "gr"
     elif "MATISSE" in run_name:
         operational_mode = "st"
     else:
         operational_mode = prompt_user("instrument",
-                                       ["MATISSE", "GRA4MAT"])
+                                       operational_modes)
     return operational_mode
 
 
