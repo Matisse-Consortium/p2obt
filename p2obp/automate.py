@@ -4,7 +4,7 @@ from typing import Union, Optional, Any, Dict, List, Tuple
 import numpy as np
 import p2api
 
-from .backend import create_ob, parse_night_plan, upload_ob
+from .backend import create_ob, options, parse_night_plan, upload_ob
 from .backend.parse import parse_array_config, parse_operational_mode,\
     parse_run_resolution, parse_run_prog_id, parse_night_name
 from .backend.upload import login, get_remote_run, create_remote_container
@@ -104,7 +104,7 @@ def create_obs_from_lists(targets: List[str],
                           operational_mode: str,
                           observational_mode: str,
                           array_configuration: str,
-                          resolution: Union[str, Dict],
+                          resolution: Dict,
                           connection: p2api,
                           container_id: int,
                           output_dir: Path) -> None:
@@ -124,16 +124,16 @@ def create_obs_from_lists(targets: List[str],
         Can either be "vm" for Visitor Mode (VM) or "sm" for Service
         Mode (SM). Default is "vm".
     array_configuration : str
-    resolution : list, optional
-        The default spectral resolutions for the obs in L-band. This can
-        either be a string of ("low", "med", "high") or a dictionary containing
-        as entries individual science targets (the calibrators will be
-        matched).
-        In case of a dictionary one can set a key called "standard" to set
-        a standard resolution for all not listed science targets, if not this
-        will default to "low".
+    resolution : dict, optional
+        The default spectral resolutions for the obs in L-band. This is
+        a dictionary containing as keys the individual science targets
+        (the calibrators will be matched) and as values the resolution
+        of the specific target. The values have to be either "low", "med"
+        or "high".
     connection : p2api
+        The P2 python api.
     container_id : int
+        The id that specifies the ob on p2.
     output_dir : path
         The output directory, where the (.obx)-files will be created in.
         If left at "None" no files will be created.
@@ -173,13 +173,10 @@ def create_obs_from_lists(targets: List[str],
                 else:
                     target_id = None
 
-            if isinstance(resolution, dict):
-                if target in resolution:
-                    resolution = resolution[target]
-                elif "standard" in resolution:
-                    resolution = resolution["standard"]
-                else:
-                    resolution = "low"
+            if resolution is not None and target in resolution:
+                res = resolution[target]
+            else:
+                res = options["resolution"]
 
             unwrapped_lists = unwrap_lists(target, calibrator, order, tag)
             for (name, sci_cal_flag, tag) in unwrapped_lists:
@@ -187,7 +184,7 @@ def create_obs_from_lists(targets: List[str],
                 ob = create_ob(name, sci_cal_flag,
                                array_configuration,
                                mode, sci_name,
-                               tag, resolution, mode_out_dir)
+                               tag, res, mode_out_dir)
                 if target_id is not None:
                     upload_ob(connection, ob, target_id)
 
@@ -231,9 +228,11 @@ def create_obs_from_dict(night_plan: Dict,
         In case of a dictionary one can set a key called "standard" to set
         a standard resolution for all not listed science targets, if not this
         will default to "low".
-    username: str
-    password: str
-    server: str
+    username : str
+        The p2 user name.
+    password : str
+        The p2 user password.
+    server: str, optional
     output_dir : path
         The output directory, where the (.obx)-files will be created in.
         If left at "None" no files will be created.
@@ -241,11 +240,13 @@ def create_obs_from_dict(night_plan: Dict,
     connection = login(username, password, server)
     for run_key, run in night_plan.items():
         # TODO: Enable direct user input for these? Add more parameters?
+        # Maybe make this parsing more robust?
         run_prog_id = parse_run_prog_id(run_key)
         run_id = get_remote_run(connection, run_prog_id)
         array_config = parse_array_config(run_key)
         operational_mode = parse_operational_mode(run_key)
-        resolution = parse_run_resolution(run_key)
+        # TODO: Make this so it automatically sets the option
+        options["resolution"] = parse_run_resolution(run_key)
 
         if output_dir is None and run_id is None:
             raise ValueError("Determining run id automatically"
@@ -281,7 +282,6 @@ def create_obs_from_dict(night_plan: Dict,
             else:
                 night_dir = None
 
-
             create_obs_from_lists(*read_dict_to_lists(night), operational_mode,
                                   observational_mode, array_config, resolution,
                                   connection, night_id, night_dir)
@@ -291,7 +291,7 @@ def create_obs(night_plan: Optional[Path] = None,
                manual_input: Optional[List[List]] = None,
                operational_mode: str = "st",
                observational_mode: Optional[str] = "vm",
-               resolution: Optional[Union[str, Dict]] = "low",
+               resolution: Optional[Dict] = None,
                container_id: Optional[int] = None,
                username: Optional[str] = None,
                password: Optional[str] = None,
@@ -316,17 +316,19 @@ def create_obs(night_plan: Optional[Path] = None,
     observational_mode : str, optional
         Can either be "vm" for Visitor Mode (VM) or "sm" for Service
         Mode (SM). Default is "vm".
-    resolution: str or dict, optional
-        The default spectral resolutions for the obs in L-band. This can
-        either be a string of ("low", "med", "high") or a dictionary containing
-        as entries individual science targets (the calibrators will be
-        matched).
-        In case of a dictionary one can set a key called "standard" to set
-        a standard resolution for all not listed science targets, if not this
-        will default to "low".
-    container_id : int
-    username: str, optional
-    password: str, optional
+    resolution: dict, optional
+        The default spectral resolutions for the obs in L-band. This is
+        a dictionary containing as keys the individual science targets
+        (the calibrators will be matched) and as values the resolution
+        of the specific target. The values have to be either "low", "med"
+        or "high". Default resolution is "low" and can be set via
+        options["resolution"].
+    container_id : int, optional
+        The id that specifies the ob on p2.
+    username : str, optional
+        The p2 user name.
+    password : str, optional
+        The p2 user password.
     server: str, optional
     output_dir: path, optional
         The output directory, where the (.obx)-files will be created in.
@@ -364,8 +366,8 @@ def create_obs(night_plan: Optional[Path] = None,
                              observational_mode, resolution,
                              username, password, server, output_dir)
     else:
-        raise IOError("Neither '.yaml'-file nor input list found or input"
-                      " dict found!")
+        raise IOError("Neither manul input list or input"
+                      " night plan path has been detected!")
 
 
 if __name__ == "__main__":
@@ -377,7 +379,7 @@ if __name__ == "__main__":
     order_lst, tag_lst = ["b", "a"], []
     manual_lst = [sci_lst, cal_lst, order_lst, tag_lst]
 
-    res_dict = {}
+    res_dict = {"Beta Leo": "med"}
 
-    create_obs(night_plan=night_plan, operational_mode="both",
-               resolution="low", username="MbS", server="production")
+    create_obs(operational_mode="both", manual_input=manual_lst, container_id=3501578,
+               resolution=res_dict, username="MbS", server="production")

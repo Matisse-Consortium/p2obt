@@ -74,7 +74,7 @@ def login(username: Optional[str] = None,
     username : str, optional
         The p2 user name.
     password : str, optional
-        If none is given, then it will ask for it.
+        The p2 user password.
     server: str, optional
         Either "demo", "production" for paranal or "production_lasilla" for la
         silla.
@@ -104,7 +104,7 @@ def get_remote_run(connection: p2api, run_id: str) -> Optional[int]:
     connection : p2api
         The p2ui python api.
     run_id : str
-        The run's id in the format <period.proposal_tag.run_number>.
+        The id that specifies the run on p2.
 
     Returns
     -------
@@ -126,7 +126,7 @@ def remote_container_exists(connection: p2api, container_id: int) -> bool:
     connection : p2api
         The p2ui python api.
     container_id : int
-        The id of the container on p2.
+        The id that specifies the container on p2.
 
     Returns
     -------
@@ -153,7 +153,7 @@ def create_remote_container(connection: p2api,
     name: str
         The container's name.
     container_id : int
-        The id that specifies the container.
+        The id that specifies the container on p2.
     observational_mode : str
         Can either be "vm" for visitor mode (VM) or "sm" for service mode (SM).
 
@@ -178,6 +178,11 @@ def create_ob(connection: p2api, container_id: int, header: Dict) -> int:
 
     Parameters
     ----------
+    connection : p2api
+        The P2 python api.
+    container_id : int
+        The id that specifies the container on p2.
+    header : Dict
 
     Returns
     -------
@@ -229,7 +234,9 @@ def add_template(connection: p2api, ob_id: int, ob: Dict, template_kind: str) ->
     Parameters
     ----------
     connection : p2api
+        The P2 python api.
     ob_id : int
+        The id that specifies the ob on p2.
     ob : dict
     template_kind : str
     """
@@ -249,9 +256,11 @@ def upload_ob(connection: p2api,
 
     Parameters
     ----------
-
-    Returns
-    -------
+    connection : p2api
+        The P2 python api.
+    ob : dict
+    container_id : int
+        The id that specifies the container on p2.
     """
     ob_name = ob['header']['user']['name']
     print(f"\tCreating OB '{ob_name}'...")

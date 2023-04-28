@@ -7,7 +7,7 @@ import toml
 from astropy.coordinates import SkyCoord
 
 from .query import query
-from .upload import upload_ob
+from .options import options
 from .utils import convert_proper_motions
 
 # TODO: Include file overwrite with online files and comments for
@@ -158,25 +158,14 @@ def set_resolution_and_dit(resolution: str,
     resolution : str
     dit : float
     """
-    if "ut" in array_configuration:
-        if operational_mode == "matisse":
-            dit = 0.111
-        else:
-            resolution, dit = "LOW", 0.6
-    else:
-        if resolution == "low":
-            dit = 0.6
-        elif resolution == "med":
-            dit = 1.3
-        else:
-            dit = 3.
-    return resolution.upper(), dit
+    array = "uts" if "ut" in array_configuration else "ats"
+    key = f"dit.{operational_mode}.{array}.{resolution}"
+    return resolution.upper(), options[key]
 
 
 def format_proper_motions(target: Dict) -> Tuple[float, float]:
     """Correctly formats the right ascension's and declination's
     proper motions."""
-    # TODO: Implement check if key is missing or np.nan?
     return convert_proper_motions(target["PMRA"], target["PMDEC"])
 
 
@@ -323,6 +312,7 @@ def fill_observation(resolution: str,
     observation["DPR.CATG"] = observation_type
     observation["INS.DIL.NAME"] = resolution
     observation["DET1.DIT"] = dit
+    observation["SEQ.DIL.WL0"] = options["central_wl"]
     return observation
 
 
@@ -401,5 +391,5 @@ def create_ob(target_name: str,
 
 
 if __name__ == "__main__":
-    ob = create_ob("HD 142666", "sci", "uts", "st")
-    upload_ob(ob, 3001217, username="52052", password="tutorial", server="demo")
+    options["central_wl"] = 3.3
+    ob = create_ob("HD 142666", "sci", "small", "gr", resolution="med", output_dir="")

@@ -53,21 +53,20 @@ def parse_array_config(run_name: Optional[str] = None) -> str:
         Either "UTs", "small", "medium", "large" or "extended".
     """
     at_configs = ["ATs", "small", "medium", "large", "extended"]
-    if run_name:
+    if run_name is not None:
         if "UTs" in run_name:
-            array_configuration = "UTs"
-        elif any(config in run_name for config in at_configs):
+            return "UTs"
+        if any(config in run_name for config in at_configs):
             if "small" in run_name:
-                array_configuration = "small"
-            elif "medium" in run_name:
-                array_configuration = "medium"
-            elif "large" in run_name:
-                array_configuration = "large"
-            else:
-                array_configuration = "extended"
-    else:
-        array_configuration = prompt_user("array_configuration",
-                                          ["UTs"]+at_configs[1:])
+                return "small"
+            if "medium" in run_name:
+                return "medium"
+            if "large" in run_name:
+                return "large"
+            if "extended" in run_name:
+                return "extended"
+    array_configuration = prompt_user("array_configuration",
+                                      ["UTs"]+at_configs[1:])
     return array_configuration
 
 
