@@ -10,24 +10,93 @@ _Under maintenance/In development_
 
 <!-- About The Project -->
 ## About the Project
-The Phase 2 OB Pipeline (p2obp) has been made to streamline/automate the whole process of MATISSE observation preparation
+The Phase 2 OB Pipeline (p2obp) has been made to streamline/automate
+the process of MATISSE observation preparation on p2.
 
-* For more info see [Features](#features)
-* For upcoming features or bugs see the **issues** of this project
-* To get started see [Installation](#installation) and [Usage](#usage)
+* For more infomration on the inner workings see [Features](#features).
+* For upcoming features or to report bugs see the **issues**.
+* To get started see [Installation](#installation) and [Usage](#usage).
+
+<!-- Getting Started -->
+## Installation
+To install `p2obp` simple use the commands
+```
+git clone 
+cd p2obp
+pip install .
+```
+or
+```
+pip install git+
+```
+
+### Optional
+* R. van Boekel's `calibrator_find.pro` IDL software for calibrator finding
+(optional) and `night_plan` creation (which can then used to feed the parser and
+the ob-creation).
 
 <!-- Features -->
 ## Features
-All of the following scripts, which are executed by `p2obp.py` are also usable individually and have more extensive usage information in their file docstrings.<br>
-The full pipeline is made up of the following scripts:<br>
+The full pipeline can cover the following:<br>
 
-* [Night Plan Parsing](#night-plan-parsing): `parser.py`
-* [OB-Creation](#ob-creation): `creator.py`
-* [P2ui Access](#p2ui-access): `uploader.py`
+* [Night Plan Parsing](#night-plan-parsing)
+* [OB-Creation](#ob-creation)
+* [Upload](#upload)
 
 ### Night-Plan Parsing
-Parses night plans created with `calibrator_find.pro` by R. van Boekel (optional).<br>
-The format is based on the following `night_plan`-excerpt (Comments in between the lines are ignored, the parser looks for the **run**, **night** and **calibrator** keyword to define the individual sections and subsections):
+Night/observation plans ((.txt)-files) created with `calibrator_find.pro` by R. van Boekel (optional)
+can be parsed into dictionaries to be used by other parts of the program.<br><br>
+The parser
+* looks for the **runs** and splits them into individual keys/sections.
+* looks for the **nights** and then splits them into keys/sections as well.
+* ignores comments and other things in between the lines.
+* in conjunction with the `create_obs`-function, can autodetect many things
+(c.f., [Formatting Guidelines](#formatting-guidelines))
+The **night** sections are ended as soon as a line containing the **cal_find**
+software name is detected.<br>
+
+#### Formatting Guidelines
+In order to even better utilise the parser it is helpful to adhere to some
+guidlines while writting the night/observation plans.<br>
+These are outlined in the following:
+
+##### Run Names
+The parser will only identify sections of a file as a run, that contain a line
+starting with **run**.<br>
+If none of them are detected then the whole file will be identified as one run and
+attributed as **full_run**.<br>
+Additionally, if the run name has a certain shape/format, then the `create_obs` script
+can automatically determine the following things about the run:<br>
+* The **array configuration** (*UTs, small, medium, large, extended*)
+* The **operational mode** (*MATISSE, GRA4MAT or BOTH*)
+* The **resolution** (*LOW, MED or HIGH*)
+* The **program id** (and by this the container id on p2)
+
+In order to be properly parsed, one needs to first write the name of the run (e.g., run9)
+then write the program id after it separated by a comma.<br>
+Then the next separator needs to be **NOT** a comma and after that it doesn't matter how
+things are separated.<br>
+Here is a few working examples:<br>
+```
+run 2, 111.253T.002 - UTs, both, med
+run 3, 109.2313.003 = 0109.C-0413(C), ATs large array
+```
+For the first example (and generally). The order after the dash,
+or first other thing than a comma does not really matter anymore
+(neither does the capitalization). This would upload both the
+MATISSE standalone as well as the GRA4MAT obs to the run2 (111.253T.002) on p2
+in medium resolution for the UTs array configuration.
+
+##### Night Names
+The parser can also identify individual nights that are contained within a run by
+lines starting with **night** that are followed up by some block containing
+science targets and calibrators. This means, there is no need to avoid the word night
+to, for instance, give a more detailed description in the night plan for the observers.<br>
+
+##### Block Identifiers
+
+##### Example
+Here is an example of such a `night_plan`:
 ```
 run 3, 109.2313.003 = 0109.C-0413(C), ATs large array
 
@@ -61,76 +130,24 @@ calibrator_find,zoom=3,duration=30,delay='large',max_d_am=0.2,max_d_az=90,minF10
 calibrator_find,zoom=3,duration=30,delay='large',max_d_am=0.2,max_d_az=90,minF10=5,max_diam=3,do_cal=0,LN=0,'HD 98922',LST='14:10',cal='HD102461',/print
 ...
 ```
-Into a dictionary, which can be saved into a `night_plan.yaml`. Example:
-```
-run 3, 109.2313.003 = 0109.C-0413(C), ATs large array:
-  'night 2, June 6:':
-    CAL:
-    - - HD138538
-    - - HD102839
-    - - HD96918
-      - HD102461
-    ...
-    SCI:
-    - HD 104237
-    - HD 100546
-    - HD 98922
-    - HD 142666
-    ...
-    TAG:
-    - - LN
-    - - LN
-    - - L
-      - N
-    ...
-```
 
 ### OB-Creation
-* Creates (.obx)-files from either manual input list or a `night_plan.yaml`
+The ob-creation scripts (for multiple obs `create_obs` or for singular obs `create_ob`)
 * Sorts them into folders in the order given (either CAL-SCI or SCI-CAL or CAL-SCI-CAL)<br>
-Example of automatically generated `creator.log`-file:
-```
-2022-11-13 04:26:59,703 - Creating OBs for 'run 3, 109.2313.003 = 0109.C-0413(C), ATs large array'
-2022-11-13 04:26:59,704 - Creating folder: 'run3'
-2022-11-13 04:26:59,704 - Creating folder: 'night2_June6', and filling it with OBs
-2022-11-13 04:27:00,864 - Created OB SCI-HD 104237
-2022-11-13 04:27:01,428 - Created OB SCI-HD 100546
-2022-11-13 04:27:02,030 - Created OB SCI-HD 98922
-...
-```
 
-### P2ui Access
-* Uploads the folders, containing the OBs, to the p2ui environment in the following structure:<br>
-> For the individual nights<br>
-![alt-text-1](images/night_folders_p2ui.png "Night Folders")<br>
-> And in the night folders for either the MATISSE-standalone, the GRA4MAT or both (these make use of different templates)<br>
-![alt-text-2](images/folder_structure_p2ui.png "Folder Structure")
-
-* Generates finding charts for the individual OBs and then checks and verifies them
-
-<!-- Getting Started -->
-## Installation
-### Prerequisites
-The software will raise an error if any of the following cannot be imported (scripts need to be put in `lib/`):
-* J. Varga's `MATISSE_create_OB_2.py` automated (.obx)-template creation script
-* J. Varga's `query_CDS.py` querying script
-
-> For the specific files write a message to any of the [Contributors](#contributors), as the files have been slighlty altered and are of a specific maybe more out of date version
-
-### Dependencies
-Install the rest of the dependencies via the `requirements.txt` (as this is a semi-package) with:
-```
-pip install -r requirements.txt
-```
-
-### Optional
-* R. van Boekel's `calibrator_find.pro` IDL software for calibrator finding (optional) and `night_plan` creation
+### Upload
 
 <!-- USAGE EXAMPLES -->
 ## Usage
-...
+The `p2obp` software makes three functions directly available to the user:
+* The `query` script, that gives the user direct information on the target.
+* The `create_ob` script, which makes singular ob-creation and upload possible.
+* The `create_obs` script, which has the capability of fully automated
+night/observation plan parsing and from this ob creation and upload. Alternatively, it
+also provides the same automated (local (.obx)) creation and upload for manual input.<br><br>
+For examples of the above scripts' usage, see the `examples/`-directory.<br>
 
-## Ressources
+## Resources
 * [Phase 2 API](https://www.eso.org/sci/observing/phase2/p2intro/Phase2API.html)
 * [User-contributed software ESO](https://www.eso.org/sci/observing/phase2/p2intro/Phase2API/ApiContributedSoftware.html)
 
@@ -141,10 +158,14 @@ Distributed under the MIT License. See LICENSE for more information.
 <!-- Credit -->
 # Credit
 ## Used Code by
-* M. Pruemm (`loadobx.py`)
 * T. Bierwirth (`p2api`)
-* J. Varga (`MATISSE_create_OB_2.py` and `query_CDS.py`, not included in this repo)
 * R. van Boekel (`calibrator_find.pro`, not included in this repo and optional)
+
+## Inspiration
+* M. Pruemm whose `loadobxy` script inspired the
+`p2obp.backend.upload` andj `p2obp.backend.compose` scripts.
+* J. Varga whose `MATISSE_create_OB_2.py` and `query_CDS.py` scripts inspired
+the `p2obp.backend.query` and `p2obp.backend.compose` scripts.
 
 ## Contributors
 * [M. B. Scheuck](https://www.github.com/MBSck/)

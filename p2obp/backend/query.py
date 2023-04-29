@@ -96,6 +96,7 @@ def get_catalog(name: str, catalog: str,
     return catalog_table
 
 
+# TODO: Make a pretty print built in functionality for the dictionary.
 def query(name: str,
           catalogs: Optional[List] = None,
           exclude_catalogs: Optional[List] = None,
