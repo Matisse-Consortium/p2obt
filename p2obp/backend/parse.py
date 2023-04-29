@@ -316,8 +316,3 @@ def parse_night_plan(night_plan: Path,
                 nights[night_id] = night_content
         runs[run_id] = nights
     return runs
-
-
-if __name__ == "__main__":
-    path = Path("/Users/scheuck/Data/observations/P111/newest_plan.txt")
-    print(parse_night_plan(path))

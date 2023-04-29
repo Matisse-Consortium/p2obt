@@ -384,8 +384,3 @@ def compose_ob(target_name: str,
 
     return {"header": header,
             "acquisition": acquisition, "observation": observation}
-
-
-if __name__ == "__main__":
-    options["central_wl"] = 3.3
-    ob = compose_ob("HD 142666", "sci", "small", "gr", resolution="med", output_dir="")
