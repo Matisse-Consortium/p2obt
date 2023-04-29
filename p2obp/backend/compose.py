@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Optional, Any, Dict, Tuple
+from typing import Union, Optional, Dict, Tuple
 
 import astropy.units as u
 import pkg_resources
@@ -115,7 +115,7 @@ def write_ob(ob: Dict, ob_name: str, output_dir: Path) -> None:
     print(f"Created OB: '{ob_name}'.")
 
 
-def set_ob_name(target: str,
+def set_ob_name(target: Union[Dict, str],
                 observation_type: str,
                 sci_name: Optional[str] = None,
                 tag: Optional[str] = None) -> str:
@@ -123,7 +123,7 @@ def set_ob_name(target: str,
 
     Parameters
     ----------
-    target_name : str
+    target : dict or str
     observation_type : str
     sci_name : str, optional
     tag : str, Optional
@@ -135,8 +135,11 @@ def set_ob_name(target: str,
     Examples
     --------
     """
-    ob_name = f"{observation_type.upper()}"\
-              f"_{target['name'].replace(' ', '_')}"
+    ob_name = f"{observation_type.upper()}"
+    if isinstance(target, dict):
+        ob_name += f"_{target['name'].replace(' ', '_')}"
+    else:
+        ob_name += f"_{target.replace(' ', '_')}"
     if sci_name is not None:
         ob_name += f"_{sci_name.replace(' ', '_')}"
     return ob_name if tag is None else f"{ob_name}_{tag}"
@@ -316,17 +319,16 @@ def fill_observation(resolution: str,
     return observation
 
 
-# TODO: Think of a way to efficiently create the three different types of templates
-# TODO: Think of changing the `create_ob` script to also take upload into account
-def create_ob(target_name: str,
-              observational_type: str,
-              array_configuration: str,
-              operational_mode: Optional[str] = "st",
-              sci_name: Optional[str] = None,
-              tag: Optional[str] = None,
-              resolution: Optional[str] = "low",
-              output_dir: Optional[Path] = None):
-    """
+# TODO: Move the output dir to create_ob
+def compose_ob(target_name: str,
+               observational_type: str,
+               array_configuration: str,
+               operational_mode: Optional[str] = "st",
+               sci_name: Optional[str] = None,
+               tag: Optional[str] = None,
+               resolution: Optional[str] = "low",
+               ):
+    """Composes the dictionary
 
     Parameters
     ----------
@@ -342,7 +344,6 @@ def create_ob(target_name: str,
     sci_name : str, optional
     tag : str, optional
     resolution : str, optional
-    output_dir : path, optional
     """
     array_configuration = array_configuration.lower()
     if array_configuration not in ["uts", "small", "medium", "large", "extended"]:
@@ -350,8 +351,8 @@ def create_ob(target_name: str,
                       " Choose from 'UTs', 'small', 'medium',"
                       " 'large' or 'extended'.")
 
-    observation_type = observational_type.lower()
-    if observation_type not in ["sci", "cal"]:
+    observational_type = observational_type.lower()
+    if observational_type not in ["sci", "cal"]:
         raise IOError("Unknown observation type provided!"
                       " Choose from 'SCI' or 'CAL', for "
                       "a science target or a calibrator.")
@@ -372,25 +373,19 @@ def create_ob(target_name: str,
                       " Choose from 'low', 'med' or 'high'.")
 
     target = query(target_name)
-    header = fill_header(target, observation_type,
+    header = fill_header(target, observational_type,
                          array_configuration, sci_name, tag)
     acquisition = fill_acquisition(target,
                                    operational_mode,
                                    array_configuration)
 
-    observation = fill_observation(resolution, observation_type,
+    observation = fill_observation(resolution, observational_type,
                                    operational_mode, array_configuration)
 
-    ob = {"header": header,
-          "acquisition": acquisition,
-          "observation": observation}
-
-    if output_dir is not None:
-        ob_name = set_ob_name(target, observation_type, sci_name, tag)
-        write_ob(ob, ob_name, output_dir)
-    return ob
+    return {"header": header,
+            "acquisition": acquisition, "observation": observation}
 
 
 if __name__ == "__main__":
     options["central_wl"] = 3.3
-    ob = create_ob("HD 142666", "sci", "small", "gr", resolution="med", output_dir="")
+    ob = compose_ob("HD 142666", "sci", "small", "gr", resolution="med", output_dir="")

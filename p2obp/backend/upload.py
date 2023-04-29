@@ -49,8 +49,8 @@ TEMPLATE_MAPPING = {"ACQUISITION.TEMPLATE.NAME": str,
                     "SEQ.DIL.USER.WL0": float,
                     "SEQ.DIL.WL0": float,
                     "SEQ.FRINGES.NCYCLES": float,
-                    "SEQ.OFFSET.ALPHA": list,
-                    "SEQ.OFFSET.DELTA": list,
+                    "SEQ.OFFSET.ALPHA": float,
+                    "SEQ.OFFSET.DELTA": float,
                     "SEQ.PHOTO.ST": bool,
                     "SEQ.SKY.OFFS.ALPHA": float,
                     "SEQ.SKY.OFFS.DELTA": float,
@@ -63,6 +63,27 @@ TEMPLATE_MAPPING = {"ACQUISITION.TEMPLATE.NAME": str,
 README_TEMPLATE = {"Date": "", "Main observer": "",
                    "e-mail": "", "Phone number": "",
                    "Skype": "", "Zoom": ""}
+
+
+def apply_mapping(content: Dict, mapping: Dict) -> None:
+    """Applies mapping to make template serializable."""
+    for key, value in content.items():
+        if key in mapping:
+            if isinstance(value, mapping[key]):
+                continue
+            if mapping[key] == list:
+                value = [value]
+            elif mapping[key] == float:
+                if isinstance(value, (np.float32, np.float64)):
+                    value = value.item()
+                else:
+                    value = float(value)
+                value = round(value, 2)
+            elif mapping[key] == str:
+                value = str(value)
+            elif mapping[key] == bool:
+                value = True if value == "T" else False
+        content[key] = value
 
 
 def login(username: Optional[str] = None,
@@ -207,27 +228,6 @@ def create_ob(connection: p2api, container_id: int, header: Dict) -> int:
     return ob["obId"]
 
 
-def apply_mapping(content: Dict, mapping: Dict) -> None:
-    """Applies mapping to make template serializable."""
-    for key, value in content.items():
-        if key in mapping:
-            if isinstance(value, mapping[key]):
-                continue
-            if mapping[key] == list:
-                value = [value]
-            elif mapping[key] == float:
-                if isinstance(value, (np.float32, np.float64)):
-                    value = value.item()
-                else:
-                    value = float(value)
-                value = round(value, 2)
-            elif mapping[key] == str:
-                value = str(value)
-            elif mapping[key] == bool:
-                value = True if value == "T" else False
-        content[key] = value
-
-
 def add_template(connection: p2api, ob_id: int, ob: Dict, template_kind: str) -> None:
     """Adds template to an (.obx)-file on the p2.
 
@@ -269,4 +269,4 @@ def upload_ob(connection: p2api,
         add_template(connection, ob_id, ob, "acquisition")
         add_template(connection, ob_id, ob, "observation")
     except p2api.P2Error:
-        print(f"[ERROR]: Failed creating OB '{ob_name}'!")
+        print(f"[ERROR]: Failed uploading OB '{ob_name}'!")

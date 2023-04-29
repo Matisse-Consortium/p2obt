@@ -4,10 +4,12 @@ from typing import Union, Optional, Any, Dict, List, Tuple
 import numpy as np
 import p2api
 
-from .backend import compose_ob, options, parse_night_plan, upload_ob
+from .backend import options
+from .backend.compose import set_ob_name, write_ob, compose_ob
 from .backend.parse import parse_array_config, parse_operational_mode,\
-    parse_run_resolution, parse_run_prog_id, parse_night_name
-from .backend.upload import login, get_remote_run, create_remote_container
+    parse_run_resolution, parse_run_prog_id, parse_night_name, parse_night_plan
+from .backend.upload import login, get_remote_run,\
+    create_remote_container, upload_ob
 
 
 OPERATIONAL_MODES = {"both": ["standalone", "GRA4MAT"],
@@ -96,13 +98,58 @@ def unwrap_lists(target: str,
     return calibrators_before + [(target, "sci", None)] + calibrators_after
 
 
-# FIXME: Multiple runs are created in same folder
+def create_ob(target: str,
+              observational_type: str,
+              array_configuration: str,
+              operational_mode: Optional[str] = "st",
+              sci_name: Optional[str] = None,
+              tag: Optional[str] = None,
+              resolution: Optional[str] = "low",
+              connection: Optional[p2api] = None,
+              container_id: Optional[int] = None,
+              server: Optional[str] = "production",
+              output_dir: Optional[Path] = None) -> None:
+    """
+
+    target : str
+    observational_type : str
+    array_configuration : str
+        Determines the array configuration. Possible values are "UTs",
+        "small", "medium", "large", "extended".
+    operational_mode : str, optional
+        The mode of operation for MATISSE. Can be either "st"/"standalone"
+        for the MATISSE-standalone mode or "gr"/"gra4mat" for GRA4MAT.
+        Default is standalone.
+    sci_name : str, optional
+    tag : str, optional
+    resolution : str, optional
+    connection : p2api, optional
+    container_id : int, optional
+    output_dir : path, optional
+    """
+    try:
+        ob = compose_ob(target, observational_type,
+                        array_configuration, operational_mode,
+                        sci_name, tag, resolution)
+        if container_id is not None:
+            if connection is None:
+                connection = login(server=server)
+            upload_ob(connection, ob, container_id)
+
+        if output_dir is not None:
+            ob_name = set_ob_name(target, observational_type, sci_name, tag)
+            write_ob(ob, ob_name, output_dir)
+    # TODO Make this e into logging and catch the exception better
+    except KeyError:
+        print(f"[Error]: Failed creating OB '{target}'!")
+
+
 def create_obs_from_lists(targets: List[str],
                           calibrators: Union[List[str], List[List[str]]],
                           orders: Union[List[str], List[List[str]]],
                           tags: Union[List[str], List[List[str]]],
                           operational_mode: str,
-                          observational_mode: str,
+                          observational_type: str,
                           array_configuration: str,
                           resolution: Dict,
                           connection: p2api,
@@ -155,21 +202,21 @@ def create_obs_from_lists(targets: List[str],
         else:
             mode_out_dir = output_dir
 
-        if observational_mode == "vm" and container_id is not None:
+        if observational_type == "vm" and container_id is not None:
             mode_id = create_remote_container(connection, mode,
-                                              container_id, observational_mode)
+                                              container_id, observational_type)
         else:
             mode_id = None
 
         for target, calibrator, order, tag \
                 in zip(targets, calibrators, orders, tags):
-            if observational_mode == "vm":
+            if observational_type == "vm":
                 if mode_id is not None:
                     target_id = create_remote_container(connection, target,
-                                                        mode_id, observational_mode)
+                                                        mode_id, observational_type)
                 elif container_id is not None:
                     target_id = create_remote_container(connection, target,
-                                                        container_id, observational_mode)
+                                                        container_id, observational_type)
                 else:
                     target_id = None
 
@@ -181,17 +228,9 @@ def create_obs_from_lists(targets: List[str],
             unwrapped_lists = unwrap_lists(target, calibrator, order, tag)
             for (name, sci_cal_flag, tag) in unwrapped_lists:
                 sci_name = target if sci_cal_flag == "cal" else None
-                try:
-                    ob = create_ob(name, sci_cal_flag,
-                                   array_configuration,
-                                   mode, sci_name,
-                                   tag, res, mode_out_dir)
-                    if target_id is not None:
-                        upload_ob(connection, ob, target_id)
-
-                # TODO Make this e into logging and catch the exception better
-                except KeyError:
-                    print(f"[Error]: Failed OB Creation '{target}'!")
+                create_ob(name, sci_cal_flag, array_configuration,
+                          operational_mode, sci_name, tag, res,
+                          connection, target_id, output_dir)
 
 
 # TODO: Write down how the runs need to be written down in the observing plan -> Make
@@ -246,6 +285,8 @@ def create_obs_from_dict(night_plan: Dict,
     for run_key, run in night_plan.items():
         # TODO: Enable direct user input for these? Add more parameters?
         # Maybe make this parsing more robust?
+        # TODO: Avoid program stoppage caused by this parsing errors and
+        # just give user that information.
         run_prog_id = parse_run_prog_id(run_key)
         run_id = get_remote_run(connection, run_prog_id)
         array_config = parse_array_config(run_key)
@@ -253,6 +294,8 @@ def create_obs_from_dict(night_plan: Dict,
         # TODO: Make this so it automatically sets the option
         options["resolution"] = parse_run_resolution(run_key)
 
+        # TODO: Improve this error and make it possible to also only
+        # generated (.obx)-files.
         if output_dir is None and run_id is None:
             raise ValueError("Determining run id automatically"
                              " or via input has failed!")
