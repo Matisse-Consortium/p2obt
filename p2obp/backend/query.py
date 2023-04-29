@@ -6,48 +6,21 @@ from astropy.table import Table
 from astroquery.simbad import Simbad
 from astroquery.vizier import Vizier
 
-
-SIMBAD_FIELDS = ["mk", "sp", "sptype", "fe_h",
-                 "pm", "plx", "rv_value",
-                 "flux(U)", "flux_error(U)",
-                 "flux(B)", "flux_error(B)",
-                 "flux(V)", "flux_error(V)",
-                 "flux(R)", "flux_error(R)",
-                 "flux(I)", "flux_error(I)",
-                 "flux(J)", "flux_error(J)",
-                 "flux(H)", "flux_error(H)",
-                 "flux(K)", "flux_error(K)"]
-
-CATALOGS = {"gaia": {"catalog": "I/345/gaia2"},
-            "tycho": {"catalog": "I/350/tyc2tdsc",
-                      "columns": ["*", "e_BTmag", "e_VTmag"]},
-            "nomad": {"catalog": "I/297/out"},
-            "2mass": {"catalog": "II/246/out"},
-            "wise": {"catalog": "II/311/wise"},
-            "mdfc": {"catalog": "II/361/mdfc-v10", "columns": ["**"]},
-            "simbad": ""}
-
-QUERIES = {"gaia": ["Gmag"], "tycho": ["VTmag"],
-           "nomad": ["Vmag"], "2mass": ["Jmag", "Hmag", "Kmag"],
-           "wise": ["W1mag", "W3mag", "Hmag", "Kmag"],
-           "mdfc": ["med-Lflux", "med-Nflux", "Hmag", "Kmag"],
-           "simbad": ["RA", "DEC", "PMRA", "PMDEC",
-                      "FLUX_V", "FLUX_H", "FLUX_K"]}
+from .options import options
 
 
-def get_best_match(target: Dict,
-                   catalog_table: Table,
-                   query_keys: List) -> Table:
+def get_best_match(target: Dict, catalog: str,
+                   catalog_table: Table) -> Table:
     """Gets the best match from the catalog entries
 
     Parameters
     ----------
     target : dict
         The target's queried information.
+    catalog : str
+        The catalog's name.
     catalog_table : Table
         The table containing the queried catalog's results.
-    query_keys : List
-        The keys that are queried.
 
     Returns
     -------
@@ -58,7 +31,7 @@ def get_best_match(target: Dict,
     if not catalog_table:
         return best_matches
 
-    for query_key in query_keys:
+    for query_key in options[f"catalogs.{catalog}.query"]:
         if query_key in catalog_table.columns:
             if len(catalog_table) == 1:
                 value = catalog_table[query_key][0]
@@ -109,10 +82,12 @@ def get_catalog(name: str, catalog: str,
 
     if catalog == "simbad":
         query_site = Simbad()
-        query_site.add_votable_fields(*SIMBAD_FIELDS)
+        simbad_fields = options["catalogs.simbad.fields"]
+        query_site.add_votable_fields(*simbad_fields)
         catalog_table = query_site.query_object(name)
     else:
-        query_site = Vizier(**CATALOGS[catalog])
+        query_site = Vizier(catalog=options[f"catalogs.{catalog}.catalog"],
+                            columns=options[f"catalogs.{catalog}.fields"])
         catalog_table = query_site.query_object(name, radius=match_radius)
 
         # NOTE: Only get table from TableList if not empty
@@ -123,8 +98,8 @@ def get_catalog(name: str, catalog: str,
 
 def query(name: str,
           catalogs: Optional[List] = None,
-          match_radius: Optional[float] = 5.,
-          sleep_time: float = 0.1) -> Dict:
+          exclude_catalogs: Optional[List] = None,
+          match_radius: Optional[float] = 5.) -> Dict:
     """Queries information for an astronomical target by its name from
     various catalogs.
 
@@ -132,8 +107,12 @@ def query(name: str,
     ----------
     name : str
         The target's name.
-    catalogs : list, optional
-        The catalog's name.
+    catalogs : list of str, optional
+        The catalogs to query. By default the catalogs "gaia",
+        "tycho", "nomad", "2mass", "wise", "mdfc" and "simbad"
+        are included.
+    exclude_catalogs : list of str
+        A list of catalog to be excluded.
     match_radius : float, optional
         The radius in which is queried.
         Default is 5.
@@ -143,13 +122,16 @@ def query(name: str,
     target : dict
         The target's queried information.
     """
-    time.sleep(sleep_time)
     target = {"name": name}
     if catalogs is None:
-        catalogs = [*CATALOGS.keys()]
+        catalogs = options["catalogs"]
+
+    if exclude_catalogs is not None:
+        catalogs = [catalog for catalog in catalogs
+                    if catalog not in exclude_catalogs]
 
     for catalog in catalogs:
         catalog_table = get_catalog(name, catalog, match_radius)
-        best_matches = get_best_match(target, catalog_table, QUERIES[catalog])
+        best_matches = get_best_match(target, catalog, catalog_table)
         target = {**target, **best_matches}
     return target

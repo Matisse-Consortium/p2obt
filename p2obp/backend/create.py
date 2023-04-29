@@ -317,6 +317,7 @@ def fill_observation(resolution: str,
 
 
 # TODO: Think of a way to efficiently create the three different types of templates
+# TODO: Think of changing the `create_ob` script to also take upload into account
 def create_ob(target_name: str,
               observational_type: str,
               array_configuration: str,
