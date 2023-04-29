@@ -4,7 +4,7 @@ from typing import Union, Optional, Any, Dict, List, Tuple
 import numpy as np
 import p2api
 
-from .backend import create_ob, options, parse_night_plan, upload_ob
+from .backend import compose_ob, options, parse_night_plan, upload_ob
 from .backend.parse import parse_array_config, parse_operational_mode,\
     parse_run_resolution, parse_run_prog_id, parse_night_name
 from .backend.upload import login, get_remote_run, create_remote_container
@@ -292,6 +292,9 @@ def create_obs_from_dict(night_plan: Dict,
                                   connection, night_id, night_dir)
 
 
+# TODO: Think of implementation of uploading after parsing?
+# TODO: Think of adding the `create_ob` script that combines `compose_ob` and 
+# `upload_ob`.
 def create_obs(night_plan: Optional[Path] = None,
                manual_input: Optional[List[List]] = None,
                operational_mode: str = "st",
