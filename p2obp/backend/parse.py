@@ -1,3 +1,5 @@
+import re
+from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -9,6 +11,7 @@ from .utils import prompt_user
 # then adding these
 
 
+# TODO: Maybe substiute with match and cases?
 def parse_operational_mode(run_name: str) -> str:
     """Parses the run's used instrument from string containing it,
     either MATISSE or GRA4MAT.
@@ -26,17 +29,17 @@ def parse_operational_mode(run_name: str) -> str:
     operational_mode : str
         Either "MATISSE" or "GRA4MAT".
     """
+    run_name = run_name.lower()
     operational_modes = ["MATISSE", "GRA4MAT", "Both"]
-    if "GRA4MAT" in run_name:
-        operational_mode = "gr"
-    elif "MATISSE" in run_name:
-        operational_mode = "st"
-    else:
-        operational_mode = prompt_user("instrument",
-                                       operational_modes)
-    return operational_mode
+    if "gra4mat" in run_name:
+        return "gr"
+    if "matisse" in run_name:
+        return "st"
+    if "both" in run_name:
+        return "both"
+    return prompt_user("instrument", operational_modes)
 
-
+# TODO: Maybe substitute with match and cases?
 def parse_array_config(run_name: Optional[str] = None) -> str:
     """Parses the array configuration from string containing it.
 
@@ -55,7 +58,8 @@ def parse_array_config(run_name: Optional[str] = None) -> str:
     """
     at_configs = ["ATs", "small", "medium", "large", "extended"]
     if run_name is not None:
-        if "UTs" in run_name:
+        run_name = run_name.lower()
+        if "uts" in run_name:
             return "UTs"
         if any(config in run_name for config in at_configs):
             if "small" in run_name:
@@ -66,9 +70,7 @@ def parse_array_config(run_name: Optional[str] = None) -> str:
                 return "large"
             if "extended" in run_name:
                 return "extended"
-    array_configuration = prompt_user("array_configuration",
-                                      ["UTs"]+at_configs[1:])
-    return array_configuration
+    return prompt_user("array_configuration", ["UTs"]+at_configs[1:])
 
 
 def parse_run_resolution(run_name: str) -> str:
@@ -79,7 +81,7 @@ def parse_run_resolution(run_name: str) -> str:
 
     Parameters
     ----------
-    run_name : str, optional
+    run_name : str
         The name of the run.
 
     Returns
@@ -87,15 +89,14 @@ def parse_run_resolution(run_name: str) -> str:
     resolution : str
         Either "LOW", "MED" or "HIGH".
     """
-    if "LR" in run_name:
-        resolution = "LOW"
-    elif "MR" in run_name:
-        resolution = "MED"
-    elif "HR" in run_name:
-        resolution = "HIGH"
-    else:
-        resolution = prompt_user("resolution", ["LOW", "MED", "HIGH"])
-    return resolution
+    run_name = run_name.lower()
+    if any(res in run_name for res in ["lr", "low"]):
+        return "LOW"
+    if any(res in run_name for res in ["mr", "med", "medium"]):
+        return "MED"
+    if any(res in run_name for res in ["hr", "high"]):
+        return "HIGH"
+    return prompt_user("resolution", ["LOW", "MED", "HIGH"])
 
 
 def parse_run_prog_id(run_name: str) -> str:
@@ -115,49 +116,52 @@ def parse_run_prog_id(run_name: str) -> str:
         The run's program id in the form of
         <period>.<program>.<run> (e.g., 110.2474.004).
     """
-    run_prog_id = None
-    for element in run_name.split():
-        if len(element.split(".")) == 3:
-            run_prog_id = element
-            break
+    pattern = r"\b\d{3}\.\w+?\.\d{3}\b"
+    run_prog_id = re.search(run_name, pattern)
 
-    if run_prog_id is None:
+    if not run_prog_id:
         print("Run's program id could not be automatically detected!")
         run_prog_id = input("Please enter the run's id in the following form"
                             " (<period>.<program>.<run> (e.g., 110.2474.004)): ")
     return run_prog_id
 
 
-# TODO: Write down how the nights need to be written down in the observing plan
 def parse_night_name(night_name: str) -> str:
     """Automatically gets the night's date from a night key of
     the dictionary if the date it is included in the key.
 
     Parameters
     ----------
-    night_key : str
-        The dictionary's keys that describes a night.
+    night_name : str
+        The dictionary's key for a night.
 
     Returns
     -------
-    night_name : str
-        If night date in night then of the format <night>_<night_date> if not
-        then <night>.
+    night : str
+        The parsed night name.
+    date : str, optional
+        The parsed date.
     """
     if "full" in night_name:
         return night_name
+    regex = r"(?i)night\s+(\d+).*?((\d{1,2}\s+(?:\w{3}|\w+))|(\w+\s+\d{1,2}))"
+    day_month, month_day = "%d %b", "%B %d"
 
-    night = night_name.split(":")[0].strip()
-    date = night_name.split(":")[1].split(",")[0].strip()
+    match = re.search(regex, night_name)
+    night = match.group(1) if match else None
+    date_str = match.group(2) if match else None
 
-    if len(night.split()) > 2:
+    if date_str:
         try:
-            night, date = night.split(",")[:2]
+            date = datetime.strptime(date_str, day_month).date().strftime(month_day)
         except ValueError:
-            return night
-
-    return "_".join([''.join(night.split()), ''.join(date.split())])\
-        if date != '' else ''.join(night.split())
+            try:
+                date = datetime.strptime(date_str, month_day).date().strftime(month_day)
+            except ValueError:
+                date = None
+    if night:
+        return f"night {night} - {date}" if date else f"night {night}"
+    return night_name
 
 
 def parse_line(parts: str) -> str:

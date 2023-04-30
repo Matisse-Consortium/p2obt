@@ -69,34 +69,37 @@ Additionally, if the run name has a certain shape/format, then the `create_obs` 
 can automatically determine the following things about the run:<br>
 * The **array configuration** (*UTs, small, medium, large, extended*)
 * The **operational mode** (*MATISSE, GRA4MAT or BOTH*)
-* The **resolution** (*LOW, MED or HIGH*)
+* The **resolution** (*LOW/LR, MED/MEDIUM/MR or HIGH/HR*)
 * The **program id** (and by this the container id on p2)
 
-In order to be properly parsed, one needs to first write the name of the run (e.g., run9)
-then write the program id after it separated by a comma.<br>
-Then the next separator needs to be **NOT** a comma and after that it doesn't matter how
-things are separated.<br>
+For the parsing to work neither the order or capitalization of the above information
+matters.<br>
 Here is a few working examples:<br>
 ```
 run 2, 111.253T.002 - UTs, both, med
-run 3, 109.2313.003 = 0109.C-0413(C), ATs large array
+run 3, 109.2313.003 = 0109.C-0413(C), ATs large array MR
 ```
-For the first example (and generally). The order after the dash,
-or first other thing than a comma does not really matter anymore
-(neither does the capitalization). This would upload both the
-MATISSE standalone as well as the GRA4MAT obs to the run2 (111.253T.002) on p2
-in medium resolution for the UTs array configuration.
+This would upload both the MATISSE standalone as well as the
+GRA4MAT obs to the run2 (111.253T.002) on p2
+in medium resolution for the UTs array configuration.<br><br>
 
 ##### Night Names
 The parser can also identify individual nights that are contained within a run by
 lines starting with **night** that are followed up by some block containing
 science targets and calibrators. This means, there is no need to avoid the word night
 to, for instance, give a more detailed description in the night plan for the observers.<br>
+Here are a few examples that are parsed properly:
+```
+obs-night 1 (27 dec): twilight + 0.5bn
+Night 1 - 27 December
+night 1:  1.6h1, formal duration our slot = 08:53 - 16:57 LST  =  23:38 - 07:42 UTC  =  01:38 - 09:42 CEST
+night 2, June 6:
+```
 
 ##### Block Identifiers
 
 ##### Example
-Here is an example of such a `night_plan`:
+Here is an example of a full `night_plan`:
 ```
 run 3, 109.2313.003 = 0109.C-0413(C), ATs large array
 

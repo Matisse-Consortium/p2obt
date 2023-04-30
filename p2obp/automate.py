@@ -12,6 +12,7 @@ from .backend.upload import login, get_remote_run,\
     create_remote_container, upload_ob
 
 
+# TODO: Make this shorter? Or into an option even?
 OPERATIONAL_MODES = {"both": ["standalone", "GRA4MAT"],
                      "st": ["standalone"], "gr": ["GRA4MAT"],
                      "matisse": ["standalone"], "gra4mat": ["GRA4MAT"]}
