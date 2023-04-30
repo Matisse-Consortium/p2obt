@@ -13,21 +13,29 @@ _Under maintenance/In development_
 The Phase 2 OB Pipeline (p2obp) has been made to streamline/automate
 the process of MATISSE observation preparation on p2.
 
-* For more infomration on the inner workings see [Features](#features).
+* For more information on the inner workings see [Features](#features).
 * For upcoming features or to report bugs see the **issues**.
 * To get started see [Installation](#installation) and [Usage](#usage).
+
+## Table of Content
+* [Installation](#installation)
+* [Features](#features)
+* [Usage](#usage)
+* [Resources](#resources)
+* [License](#license)
+* [Credit](#credit)
 
 <!-- Getting Started -->
 ## Installation
 To install `p2obp` simple use the commands
 ```
-git clone 
+git clone git@github.com:MBSck/p2obp.git
 cd p2obp
 pip install .
 ```
 or
 ```
-pip install git+
+pip install git+https://github.com/MBSck/p2obp.git
 ```
 
 ### Optional
@@ -155,20 +163,20 @@ For examples of the above scripts' usage, see the `examples/`-directory.<br>
 * [User-contributed software ESO](https://www.eso.org/sci/observing/phase2/p2intro/Phase2API/ApiContributedSoftware.html)
 
 <!-- License -->
-# License
+## License
 Distributed under the MIT License. See LICENSE for more information.
 
 <!-- Credit -->
-# Credit
-## Used Code by
+## Credit
+### Used Code by
 * T. Bierwirth (`p2api`)
 * R. van Boekel (`calibrator_find.pro`, not included in this repo and optional)
 
-## Inspiration
+### Inspiration
 * M. Pruemm whose `loadobxy` script inspired the
 `p2obp.backend.upload` andj `p2obp.backend.compose` scripts.
 * J. Varga whose `MATISSE_create_OB_2.py` and `query_CDS.py` scripts inspired
 the `p2obp.backend.query` and `p2obp.backend.compose` scripts.
 
-## Contributors
+### Contributors
 * [M. B. Scheuck](https://www.github.com/MBSck/)
