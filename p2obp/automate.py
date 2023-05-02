@@ -211,6 +211,13 @@ def create_obs_from_lists(targets: List[str],
 
         for target, calibrator, order, tag \
                 in zip(targets, calibrators, orders, tags):
+            if mode_out_dir is not None:
+                target_dir = mode_out_dir / target
+                if not target_dir.exists():
+                    target_dir.mkdir(parents=True, exist_ok=True)
+            else:
+                target_dir = mode_out_dir
+
             if observational_type == "vm":
                 if mode_id is not None:
                     target_id = create_remote_container(connection, target,
@@ -231,7 +238,7 @@ def create_obs_from_lists(targets: List[str],
                 sci_name = target if sci_cal_flag == "cal" else None
                 create_ob(name, sci_cal_flag, array_configuration,
                           operational_mode, sci_name, tag, res,
-                          connection, target_id, output_dir)
+                          connection, target_id, output_dir=target_dir)
 
 
 # TODO: Write down how the runs need to be written down in the observing plan -> Make
@@ -242,6 +249,7 @@ def create_obs_from_dict(night_plan: Dict,
                          operational_mode: str,
                          observational_mode: str,
                          resolution: str,
+                         container_id: str,
                          username: str,
                          password: str,
                          server: str,
@@ -288,8 +296,11 @@ def create_obs_from_dict(night_plan: Dict,
         # Maybe make this parsing more robust?
         # TODO: Avoid program stoppage caused by this parsing errors and
         # just give user that information.
-        run_prog_id = parse_run_prog_id(run_key)
-        run_id = get_remote_run(connection, run_prog_id)
+        if container_id is None:
+            run_prog_id = parse_run_prog_id(run_key)
+            run_id = get_remote_run(connection, run_prog_id)
+        else:
+            run_id = container_id
         array_config = parse_array_config(run_key)
         operational_mode = parse_operational_mode(run_key)
         # TODO: Make this so it automatically sets the option
@@ -415,7 +426,7 @@ def create_obs(night_plan: Optional[Path] = None,
     elif night_plan is not None:
         night_plan = parse_night_plan(night_plan)
         create_obs_from_dict(night_plan, operational_mode,
-                             observational_mode, resolution,
+                             observational_mode, resolution, container_id,
                              username, password, server, output_dir)
     else:
         raise IOError("Neither manul input list or input"
@@ -424,7 +435,7 @@ def create_obs(night_plan: Optional[Path] = None,
 
 if __name__ == "__main__":
     outdir = Path("/Users/scheuck/Data/observations/obs/")
-    night_plan = Path("/Users/scheuck/Data/observations/P110/may2023/obsplan.txt")
+    night_plan = Path("/Users/scheuck/Data/observations/CIAO/observing_plan.txt")
 
     sci_lst = ["Beta Leo", "HD 100453"]
     cal_lst = ["HD100920", "HD102964"]
@@ -433,5 +444,5 @@ if __name__ == "__main__":
 
     res_dict = {"Beta Leo": "med"}
 
-    create_obs(night_plan=night_plan, operational_mode="both",
-               resolution=res_dict, username="MbS", server="production")
+    create_obs(night_plan=night_plan, operational_mode="st",
+               container_id=3632237, username="MATISSETeam", server="production")
