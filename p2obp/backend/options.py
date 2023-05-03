@@ -2,8 +2,10 @@ options = {}
 
 # NOTE: The settings for the `create_obs` and `create_ob`-scripts.
 # NOTE: Sets the standard resolution.
-options["resolution"] = "low"
 options["central_wl"] = 4.1
+options["resolution"] = "low"
+options["resolution.overwrite"] = False
+options["resolution.targets"] = {}
 
 # NOTE: Set the integration times for the standalone.
 options["dit.matisse.ats.low"] = 0.111
@@ -26,6 +28,11 @@ options["dit.gra4mat.uts.high"] = 0.6
 # NOTE: The settings for the `query`-script.
 options["catalogs"] = ["gaia", "tycho", "nomad",
                        "2mass", "wise", "mdfc", "simbad"]
+
+# TODO: Implement the backup target source?
+# NOTE: The local catalogs/databases
+options["catalogs.local.standard"] = 
+options["catalogs.local.ciao"] = 
 
 # NOTE: Set the catalogs accessed.
 options["catalogs.gaia.catalog"] = "I/345/gaia2"

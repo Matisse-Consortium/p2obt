@@ -10,56 +10,8 @@ from .query import query
 from .options import options
 from .utils import convert_proper_motions
 
-# TODO: Include file overwrite with online files and comments for
-# Calibrator stars and better values. Such as where flux is missing and such
-# Make functions for that that check if that is the case -> Maybe even after query?
-
-
-# TODO: Implement this via the sheets written
-# Off-axis Coude guide star not implemented
-# else:
-#     COU_AG_ALPHA = dd2dms(['guide_star_RA'][i]/15.0) #<---
-#     COU_AG_DELTA = dd2dms(['guide_star_dec'][i]) #<---
-#     COU_AG_EPOCH = 2000.0
-#     COU_AG_EQUINOX = 2000.0
-#     COU_AG_GSSOURCE = "SETUPFILE"
-#     COU_AG_PMA = dfs['GS_pm_RA'][i]/1000.0 #<---
-#     COU_AG_PMD = dfs['GS_pm_dec'][i]/1000.0 #<---
-#     COU_AG_TYPE = "DEFAULT"
-#     COU_GS_MAG = dfs['GS_V_mag'][i] #V mag of guide star from input table
-# if math.isnan(sdic['Hmag']):
-#     sdic['Hmag'] = sdic['FLUX_H']
-# if math.isnan(sdic['Kmag']):
-#     sdic['Kmag'] = sdic['FLUX_K']
-#
-# if 'SEQ.TARG.MAG.H' in acq_tpl:
-#     acq_tpl['SEQ.TARG.MAG.H'] = sdic['Hmag']
-# acq_tpl['SEQ.TARG.MAG.K'] = sdic['Kmag']
-
-# def print_content():
-#     if print_info:
-#         print("%-3s %-17s %12s  %13s %5.1f  %7.1f  %4.1f  %4.1f " %
-#               (object_type, target_name, sdic['ra_hms'], sdic['dec_dms'],
-#                Lflux, Nflux, sdic['Kmag'], sdic['Vmag']), end='')
-#         if object_type == 'CAL':
-#             print('%11s ' % (sdic['SP_TYPE']), end='')  # .decode("utf-8"))
-#         else:
-#             print('%11s ' % (''), end='')
-#
-#         try:
-#             sdic['LDD'] = sdic['LDD-est']
-#         except (TypeError, KeyError) as e:
-#             # print('Object not found in JSDC: '+name)
-#             sdic['LDD'] = np.nan
-#         if object_type == 'CAL' and not math.isnan(sdic['LDD']):
-#             print('%5.1f' % (sdic['LDD']))
-#         else:
-#             print('')
-#
-#
-
 # TODO: Include log message if nan has been replaced
-
+# TODO: Exchange, possibly slow function?
 TEMPLATE_FILE = Path(pkg_resources.resource_filename("p2obp", "data/templates.toml"))
 
 
@@ -199,7 +151,9 @@ def format_fluxes(target: Dict) -> Tuple[float, float]:
             flux_nband = target[nband_key]
             if "mag" in nband_key:
                 flux_nband = 31.674 * 10.0**(-flux_nband/2.5)
-    return round(flux_lband, 2), round(flux_nband, 2)
+    flux_lband = round(flux_lband, 2) if flux_lband is not None else flux_lband
+    flux_nband = round(flux_nband, 2) if flux_nband is not None else flux_nband
+    return flux_lband, flux_nband
 
 
 def fill_header(target: Dict,
@@ -271,7 +225,9 @@ def fill_acquisition(target: Dict,
                                 operational_mode=operational_mode)
     flux_lband, flux_nband = format_fluxes(target)
 
-    if "Vmag" in target:
+    if "GSmag" in target:
+        acquisition["COU.GS.MAG"] = target["GSmag"]
+    elif "Vmag" in target:
         acquisition["COU.GS.MAG"] = target["Vmag"]
     elif "FLUX_V" in target:
         acquisition['COU.GS.MAG'] = target["FLUX_V"]
@@ -280,8 +236,13 @@ def fill_acquisition(target: Dict,
         array_configuration = "UTs"
 
     acquisition["ISS.BASELINE"] = array_configuration
-    acquisition['SEQ.TARG.FLUX.L'] = flux_lband
-    acquisition['SEQ.TARG.FLUX.N'] = flux_nband
+
+    # TODO: Make logger here
+    if flux_lband is not None:
+        acquisition['SEQ.TARG.FLUX.L'] = flux_lband
+    if flux_nband is not None:
+        acquisition['SEQ.TARG.FLUX.N'] = flux_nband
+
     acquisition["SEQ.TARG.MAG.K"] = round(target["Kmag"], 2)
 
     if operational_mode == "gra4mat":
@@ -375,6 +336,7 @@ def compose_ob(target_name: str,
     target = query(target_name)
     header = fill_header(target, observational_type,
                          array_configuration, sci_name, tag)
+
     acquisition = fill_acquisition(target,
                                    operational_mode,
                                    array_configuration)
