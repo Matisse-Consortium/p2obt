@@ -39,6 +39,7 @@ def parse_operational_mode(run_name: str) -> str:
         return "both"
     return prompt_user("instrument", operational_modes)
 
+
 # TODO: Maybe substitute with match and cases?
 def parse_array_config(run_name: Optional[str] = None) -> str:
     """Parses the array configuration from string containing it.

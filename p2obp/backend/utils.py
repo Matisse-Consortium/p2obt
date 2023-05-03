@@ -142,7 +142,7 @@ def calculate_twilight(date: Union[str, datetime],
                         f"{sunset_cet.date()} {sunset_cet.time()}")
     sunrise = TimesTuple(str(sunrise_utc),
                          str(sunrise_lst),
-                         f"{sunrise_cet.date()} {sunset_cet.time()}")
+                         f"{sunrise_cet.date()} {sunrise_cet.time()}")
     return sunset, sunrise
 
 
@@ -186,7 +186,8 @@ def calculate_night_lengths(date: Union[str, datetime],
     -------
     night_duration : namedtuple
     """
-    NightDuration = namedtuple("NightDuration", ["duration", "observation"])
+    NightDuration = namedtuple("NightDuration", ["duration", "start", "end",
+                                                 "observation"])
     Observation = namedtuple("Observation", ["type", "start", "end",
                                              "duration", "minutes"])
     sunset, sunrise = calculate_twilight(date, site, latitude,
@@ -216,10 +217,10 @@ def calculate_night_lengths(date: Union[str, datetime],
     observation = Observation(observation_slot, str(observation_start),
                               str(observation_end), str(observation_duration),
                               observation_minutes)
-    return NightDuration(str(total_duration), observation)
+    return NightDuration(str(total_duration), sunset.lst, sunrise.lst, observation)
 
 
 if __name__ == "__main__":
     date = datetime.date(2023, 5, 4)
-    night = calculate_night_lengths(date, "1h1")
+    sunset, sunrise = calculate_twilight(date)
     breakpoint()
