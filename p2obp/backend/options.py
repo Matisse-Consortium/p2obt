@@ -31,8 +31,9 @@ options["catalogs"] = ["gaia", "tycho", "nomad",
 
 # TODO: Implement the backup target source?
 # NOTE: The local catalogs/databases
-options["catalogs.local.standard"] = 
-options["catalogs.local.ciao"] = 
+options["catalogs.local.standard"] = "Targets"
+options["catalogs.local.ciao"] = "CIAO Offaxis Targets"
+options["catalogs.local.active"] = "standard"
 
 # NOTE: Set the catalogs accessed.
 options["catalogs.gaia.catalog"] = "I/345/gaia2"
