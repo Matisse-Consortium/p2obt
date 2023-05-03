@@ -2,6 +2,7 @@ from typing import Optional, Dict, List
 from pathlib import Path
 
 import astropy.units as u
+import pandas as pd
 import pkg_resources
 from astropy.table import Table
 from astroquery.simbad import Simbad
@@ -9,84 +10,58 @@ from astroquery.vizier import Vizier
 
 from .options import options
 
-TARGET_INFO_FILE = Path(pkg_resources.resource_filename("p2obp", "data/target_information.csv"))
-
-
-# TODO: Add all these fields to the query as a standard (not all but some) xD
-# TODO: Make option called resolution dict, that takes the resolution into account
-# for all targets where it is known.
-TARGET_INFO_MAPPING = {"name": "Target Name",
-                       "RA": "RA [hms]",
-                       "DEC": "DEC [dms]",
-                       "propRA": "PMA [arcsec/yr]",
-                       "propDEC": "PMD [arcsec/yr]",
+TARGET_INFO_FILE = Path(pkg_resources.resource_filename("p2obp", "data/Extensive Target Information.xlsx"))
+TARGET_INFO_MAPPING = {"local.RA": "RA [hms]",
+                       "local.DEC": "DEC [dms]",
+                       "local.propRa": "PMA [arcsec/yr]",
+                       "local.propDec": "PMD [arcsec/yr]",
                        "Lflux": "Flux L-band [Jy]",
                        "Nflux": "Flux N-band [Jy]",
                        "Hmag": "H mag",
                        "Kmag": "K mag",
                        "GSname": "GS Name",
-                       "GSRA": "GS RA [hms]",
-                       "GSDEC": "GS DEC [hms]",
-                       "GSpropRA": "GS Off-axis Coude PMA [arcsec/yr]",
-                       "GSpropDEC": "GS Off-axis Coude PMD [arcsec/yr]",
+                       "GSRa": "GS RA [hms]",
+                       "GSDec": "GS DEC [dms]",
+                       "GSpropRa": "GS Off-axis Coude PMA [arcsec/yr]",
+                       "GSpropDec": "GS Off-axis Coude PMD [arcsec/yr]",
                        "GSmag": "GS mag",
                        "LResAT": "L-Resolution (AT)",
                        "LResUT": "L-Resolution (UT)"}
 
-# TODO: Include file overwrite with online files and comments for
-# Calibrator stars and better values. Such as where flux is missing and such
-# Make functions for that that check if that is the case -> Maybe even after query?
 
-# GSmag is key for guiding star magnitude
+# TODO: Implement match statement here
+def query_local_catalog(name: str):
+    """
 
-# TODO: Implement this via the sheets written
-# Off-axis Coude guide star not implemented
-# else:
-#     COU_AG_ALPHA = dd2dms(['guide_star_RA'][i]/15.0) #<---
-#     COU_AG_DELTA = dd2dms(['guide_star_dec'][i]) #<---
-#     COU_AG_EPOCH = 2000.0
-#     COU_AG_EQUINOX = 2000.0
-#     COU_AG_GSSOURCE = "SETUPFILE"
-#     COU_AG_PMA = dfs['GS_pm_RA'][i]/1000.0 #<---
-#     COU_AG_PMD = dfs['GS_pm_dec'][i]/1000.0 #<---
-#     COU_AG_TYPE = "DEFAULT"
-#     COU_GS_MAG = dfs['GS_V_mag'][i] #V mag of guide star from input table
-# if math.isnan(sdic['Hmag']):
-#     sdic['Hmag'] = sdic['FLUX_H']
-# if math.isnan(sdic['Kmag']):
-#     sdic['Kmag'] = sdic['FLUX_K']
-#
-# if 'SEQ.TARG.MAG.H' in acq_tpl:
-#     acq_tpl['SEQ.TARG.MAG.H'] = sdic['Hmag']
-# acq_tpl['SEQ.TARG.MAG.K'] = sdic['Kmag']
+    Parameters
+    ----------
+    name : str
+        The target's name.
 
-# def print_content():
-#     if print_info:
-#         print("%-3s %-17s %12s  %13s %5.1f  %7.1f  %4.1f  %4.1f " %
-#               (object_type, target_name, sdic['ra_hms'], sdic['dec_dms'],
-#                Lflux, Nflux, sdic['Kmag'], sdic['Vmag']), end='')
-#         if object_type == 'CAL':
-#             print('%11s ' % (sdic['SP_TYPE']), end='')  # .decode("utf-8"))
-#         else:
-#             print('%11s ' % (''), end='')
-#
-#         try:
-#             sdic['LDD'] = sdic['LDD-est']
-#         except (TypeError, KeyError) as e:
-#             # print('Object not found in JSDC: '+name)
-#             sdic['LDD'] = np.nan
-#         if object_type == 'CAL' and not math.isnan(sdic['LDD']):
-#             print('%5.1f' % (sdic['LDD']))
-#         else:
-#             print('')
-#
-#
+    Returns
+    -------
+    target : Dict
+    """
+    if options["catalogs.local.active"] == "standard":
+        sheet_name = options["catalogs.local.standard"]
+    elif options["catalogs.local.active"] == "ciao":
+        sheet_name = options["catalogs.local.ciao"]
 
+    catalog = pd.read_excel(TARGET_INFO_FILE, sheet_name=sheet_name)
+    catalog = Table.from_pandas(catalog)
+    if not any(name in catalog[column_name]
+               for column_name in ["Target Name", "Other Names"]):
+        return {}
 
+    if name in catalog["Target Name"]:
+        row = catalog[catalog["Target Name"] == name]
+    elif name in catalog["Other Names"]:
+        row = catalog[catalog["Other Names"] == name]
 
-def name_yet_to_find():
-    import pandas as pd
-    print(pd.read_csv(GS_FILE).columns)
+    target = {}
+    for query_key, query_mapping in TARGET_INFO_MAPPING.items():
+        target[query_key] = row[query_mapping].data.tolist()[0]
+    return {key: value for key, value in target.items() if value is not None}
 
 
 def get_best_match(target: Dict, catalog: str,
@@ -177,7 +152,7 @@ def get_catalog(name: str, catalog: str,
 
 
 # TODO: Make a pretty print built in functionality for the dictionary.
-def query(name: str,
+def query(target_name: str,
           catalogs: Optional[List] = None,
           exclude_catalogs: Optional[List] = None,
           match_radius: Optional[float] = 5.) -> Dict:
@@ -186,41 +161,44 @@ def query(name: str,
 
     Parameters
     ----------
-    name : str
+    target_name : str
         The target's name.
     catalogs : list of str, optional
         The catalogs to query. By default the catalogs "gaia",
         "tycho", "nomad", "2mass", "wise", "mdfc" and "simbad"
-        are included.
+        as well as local catalogs (with "local") are included.
     exclude_catalogs : list of str
-        A list of catalog to be excluded.
+        A list of catalog to be excluded. Can be any of the catalogs
+        listed as default for the catalogs parameter.
     match_radius : float, optional
-        The radius in which is queried.
-        Default is 5.
+        The radius in which the target queried. Default is 5.
 
     Returns
     -------
     target : dict
         The target's queried information.
     """
-    target = {"name": name}
+    target = {"name": target_name}
     if catalogs is None:
-        catalogs = options["catalogs"]
+        catalogs = options["catalogs"][:]
 
     if exclude_catalogs is not None:
         catalogs = [catalog for catalog in catalogs
                     if catalog not in exclude_catalogs]
+    if "local" in catalogs:
+        local_target = query_local_catalog(target_name)
+        catalogs.remove("local")
+    else:
+        local_target = {}
 
     for catalog in catalogs:
-        catalog_table = get_catalog(name, catalog, match_radius)
+        catalog_table = get_catalog(target_name, catalog, match_radius)
         best_matches = get_best_match(target, catalog, catalog_table)
         target = {**target, **best_matches}
-    return target
+    return {**target, **local_target}
 
 
 if __name__ == "__main__":
-    from pprint import pprint
-    q = query("HD169022")
-    from .compose import format_fluxes
-    pprint(q)
-    print(format_fluxes(q))
+    options["catalogs.local.active"] = "ciao"
+    dic = query("IRAS 11507-6213")
+    breakpoint()

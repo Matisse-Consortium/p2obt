@@ -172,12 +172,13 @@ def create_obs_from_lists(targets: List[str],
         Can either be "vm" for Visitor Mode (VM) or "sm" for Service
         Mode (SM). Default is "vm".
     array_configuration : str
-    resolution : dict, optional
+    resolution: dict, optional
         The default spectral resolutions for the obs in L-band. This is
         a dictionary containing as keys the individual science targets
         (the calibrators will be matched) and as values the resolution
         of the specific target. The values have to be either "low", "med"
-        or "high".
+        or "high". Default resolution is "low" and can be set via
+        options["resolution"].
     connection : p2api
         The P2 python api.
     container_id : int
@@ -228,7 +229,7 @@ def create_obs_from_lists(targets: List[str],
                 else:
                     target_id = None
 
-            if resolution is not None and target in resolution:
+            if target in resolution:
                 res = resolution[target]
             else:
                 res = options["resolution"]
@@ -248,7 +249,7 @@ def create_obs_from_lists(targets: List[str],
 def create_obs_from_dict(night_plan: Dict,
                          operational_mode: str,
                          observational_mode: str,
-                         resolution: str,
+                         resolution: Dict,
                          container_id: str,
                          username: str,
                          password: str,
@@ -273,14 +274,14 @@ def create_obs_from_dict(night_plan: Dict,
     observational_mode : str, optional
         Can either be "vm" for Visitor Mode (VM) or "sm" for Service
         Mode (SM). Default is "vm".
-    resolution : list, optional
-        The default spectral resolutions for the obs in L-band. This can
-        either be a string of ("low", "med", "high") or a dictionary containing
-        as entries individual science targets (the calibrators will be
-        matched).
-        In case of a dictionary one can set a key called "standard" to set
-        a standard resolution for all not listed science targets, if not this
-        will default to "low".
+    resolution: dict, optional
+        The default spectral resolutions for the obs in L-band. This is
+        a dictionary containing as keys the individual science targets
+        (the calibrators will be matched) and as values the resolution
+        of the specific target. The values have to be either "low", "med"
+        or "high". Default resolution is "low" and can be set via
+        options["resolution"].
+    container_id : int
     username : str
         The p2 user name.
     password : str
@@ -418,10 +419,9 @@ def create_obs(night_plan: Optional[Path] = None,
             connection = login(username, password, server)
         else:
             connection = None
-        create_obs_from_lists(targets, calibrators, orders,
-                              tags, operational_mode, observational_mode,
-                              array_config, resolution,
-                              connection, container_id, output_dir)
+        create_obs_from_lists(targets, calibrators, orders, tags,
+                              operational_mode, observational_mode, array_config,
+                              resolution, connection, container_id, output_dir)
 
     elif night_plan is not None:
         night_plan = parse_night_plan(night_plan)
@@ -442,7 +442,8 @@ if __name__ == "__main__":
     order_lst, tag_lst = ["b", "a"], []
     manual_lst = [sci_lst, cal_lst, order_lst, tag_lst]
 
-    res_dict = {"Beta Leo": "med"}
+    res_dict = {"Elias 2-24": "med"}
 
-    create_obs(night_plan=night_plan, operational_mode="st",
-               container_id=3632237, username="MATISSETeam", server="production")
+    options["catalogs.local.active"] = "ciao"
+    create_obs(night_plan=night_plan, operational_mode="st", resolution=res_dict,
+               container_id=3632615, username="MATISSETeam", server="production")

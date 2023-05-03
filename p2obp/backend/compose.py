@@ -63,7 +63,6 @@ def write_ob(ob: Dict, ob_name: str, output_dir: Path) -> None:
             else:
                 write_dict(obx_file, dictionary)
                 obx_file.write("\n\n")
-    # TODO: Make this a better message or a function
     print(f"Created OB: '{ob_name}'.")
 
 
@@ -97,13 +96,15 @@ def set_ob_name(target: Union[Dict, str],
     return ob_name if tag is None else f"{ob_name}_{tag}"
 
 
-def set_resolution_and_dit(resolution: str,
+def set_resolution_and_dit(target: Dict,
+                           resolution: str,
                            operational_mode: str,
                            array_configuration: str) -> Tuple[str, float]:
     """
 
     Parameters
     ----------
+    target : dict
     resolution : str
     operational_mode : str
     array_configuration : str
@@ -115,17 +116,31 @@ def set_resolution_and_dit(resolution: str,
     """
     array = "uts" if "ut" in array_configuration else "ats"
     key = f"dit.{operational_mode}.{array}.{resolution}"
+    if not options["resolution.overwrite"]:
+        if array == "uts" and "LResUT" in target:
+            resolution = target["LResUT"]\
+                    if target["LResUT"] != "TBD" else resolution
+        elif array == "ats" and "LResAT" in target:
+            resolution = target["LResAT"]\
+                    if target["LResAT"] != "TBD" else resolution
     return resolution.upper(), options[key]
 
 
 def format_proper_motions(target: Dict) -> Tuple[float, float]:
     """Correctly formats the right ascension's and declination's
     proper motions."""
-    return convert_proper_motions(target["PMRA"], target["PMDEC"])
+    if "local.propRA" in target:
+        propRa = target["local.propRa"]
+    if "local.propDec" in target:
+        propDec = target["local.propDec"]
+    propRa, propDec = convert_proper_motions(target["PMRA"], target["PMDEC"])
+    return propRa, propDec
 
 
 def format_ra_and_dec(target: Dict) -> Tuple[str, str]:
     """Correclty formats the right ascension and declination."""
+    if "local.RA" in target:
+        return target["local.RA"], target["local.DEC"]
     coordinates = SkyCoord(f"{target['RA']} {target['DEC']}",
                            unit=(u.hourangle, u.deg))
     ra_hms = coordinates.ra.to_string(unit=u.hourangle, sep=":",
@@ -139,7 +154,8 @@ def format_ra_and_dec(target: Dict) -> Tuple[str, str]:
 def format_fluxes(target: Dict) -> Tuple[float, float]:
     """Correctly gets and formats the fluxes from the queried data."""
     flux_lband, flux_nband = None, None
-    lband_keys, nband_keys = ["med-Lflux", "W1mag"], ["med-Nflux", "W3mag"]
+    lband_keys, nband_keys = ["Lflux", "med-Lflux", "W1mag"],\
+                             ["Nflux", "med-Nflux", "W3mag"]
 
     for lband_key, nband_key in zip(lband_keys, nband_keys):
         if lband_key in target and flux_lband is None:
@@ -151,9 +167,8 @@ def format_fluxes(target: Dict) -> Tuple[float, float]:
             flux_nband = target[nband_key]
             if "mag" in nband_key:
                 flux_nband = 31.674 * 10.0**(-flux_nband/2.5)
-    flux_lband = round(flux_lband, 2) if flux_lband is not None else flux_lband
-    flux_nband = round(flux_nband, 2) if flux_nband is not None else flux_nband
-    return flux_lband, flux_nband
+    return round(flux_lband, 2) if flux_lband is not None else 0.,\
+        round(flux_nband, 2) if flux_nband is not None else 0.
 
 
 def fill_header(target: Dict,
@@ -192,12 +207,9 @@ def fill_header(target: Dict,
     header_target["TARGET.NAME"] = target["name"].replace(' ', '_')
     header_target["ra"], header_target["dec"] = ra_hms, dec_dms
     header_target["propRA"], header_target["propDec"] = prop_ra, prop_dec
-
+    header_observation["OBSERVATION.DESCRIPTION.NAME"] = ob_name
     if "ut" in array_configuration:
         header_constraints["moon_angular_distance"] = 10
-
-    header_observation["OBSERVATION.DESCRIPTION.NAME"] = ob_name
-
     header["user"] = header_user
     header["target"] = header_target
     header["constraints"] = header_constraints
@@ -223,7 +235,18 @@ def fill_acquisition(target: Dict,
     """
     acquisition = load_template(TEMPLATE_FILE, "acquisition",
                                 operational_mode=operational_mode)
+
     flux_lband, flux_nband = format_fluxes(target)
+
+    if "GSRa" in target:
+        acquisition["COU.AG.ALPHA"] = target["GSRa"]
+        acquisition["COU.AG.DELTA"] = target["GSDec"]
+        acquisition["COU.AG.GSSOURCE"] = "SETUPFILE"
+
+    if "GSpropRa" in target:
+        acquisition["COU.AG.PMA"] = target["GSpropRa"]
+    if "GSpropDec" in target:
+        acquisition["COU.AG.PMD"] = target["GSpropDec"]
 
     if "GSmag" in target:
         acquisition["COU.GS.MAG"] = target["GSmag"]
@@ -243,14 +266,16 @@ def fill_acquisition(target: Dict,
     if flux_nband is not None:
         acquisition['SEQ.TARG.FLUX.N'] = flux_nband
 
-    acquisition["SEQ.TARG.MAG.K"] = round(target["Kmag"], 2)
+    if "Kmag" in target:
+        acquisition["SEQ.TARG.MAG.K"] = round(target["Kmag"], 2)
 
-    if operational_mode == "gra4mat":
+    if operational_mode == "gra4mat" and "Hmag" in target:
         acquisition["SEQ.TARG.MAG.H"] = round(target["Hmag"], 2)
     return acquisition
 
 
-def fill_observation(resolution: str,
+def fill_observation(target: Dict,
+                     resolution: str,
                      observation_type: str,
                      operational_mode: str,
                      array_configuration: str) -> Dict:
@@ -259,6 +284,7 @@ def fill_observation(resolution: str,
 
     Parameters
     ----------
+    target : dict
     resolution : str
     observation_type : str
     operational_mode : str
@@ -270,8 +296,8 @@ def fill_observation(resolution: str,
     """
     observation = load_template(TEMPLATE_FILE, "observation",
                                 operational_mode=operational_mode)
-    resolution, dit = set_resolution_and_dit(resolution, operational_mode,
-                                             array_configuration)
+    resolution, dit = set_resolution_and_dit(target, resolution,
+                                             operational_mode, array_configuration)
     observation_type = "SCIENCE" if observation_type == "sci" else "CALIB"
     observation["DPR.CATG"] = observation_type
     observation["INS.DIL.NAME"] = resolution
@@ -280,20 +306,19 @@ def fill_observation(resolution: str,
     return observation
 
 
-# TODO: Move the output dir to create_ob
 def compose_ob(target_name: str,
                observational_type: str,
                array_configuration: str,
                operational_mode: Optional[str] = "st",
                sci_name: Optional[str] = None,
                tag: Optional[str] = None,
-               resolution: Optional[str] = "low",
-               ):
+               resolution: Optional[str] = "low") -> Dict:
     """Composes the dictionary
 
     Parameters
     ----------
     target_name : str
+        The target's name.
     observational_type : str
     array_configuration : str
         Determines the array configuration. Possible values are "UTs",
@@ -305,6 +330,12 @@ def compose_ob(target_name: str,
     sci_name : str, optional
     tag : str, optional
     resolution : str, optional
+        The target's resolution.
+
+    Returns
+    -------
+    target : dict
+        A dictionary containg all the target's information.
     """
     array_configuration = array_configuration.lower()
     if array_configuration not in ["uts", "small", "medium", "large", "extended"]:
@@ -337,12 +368,10 @@ def compose_ob(target_name: str,
     header = fill_header(target, observational_type,
                          array_configuration, sci_name, tag)
 
-    acquisition = fill_acquisition(target,
-                                   operational_mode,
+    acquisition = fill_acquisition(target, operational_mode,
                                    array_configuration)
 
-    observation = fill_observation(resolution, observational_type,
+    observation = fill_observation(target, resolution, observational_type,
                                    operational_mode, array_configuration)
-
     return {"header": header,
             "acquisition": acquisition, "observation": observation}
