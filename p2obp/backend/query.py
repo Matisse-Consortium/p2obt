@@ -11,6 +11,7 @@ from astroquery.vizier import Vizier
 from .options import options
 from .utils import add_space
 
+
 TARGET_INFO_FILE = Path(pkg_resources.resource_filename("p2obp", "data/Extensive Target Information.xlsx"))
 TARGET_INFO_MAPPING = {"local.RA": "RA [hms]",
                        "local.DEC": "DEC [dms]",

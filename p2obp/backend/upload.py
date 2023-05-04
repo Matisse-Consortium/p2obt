@@ -1,12 +1,14 @@
-import sys
 import getpass
+import logging
+import sys
 from typing import Optional, Dict
 
 import numpy as np
 import p2api
 
+from .options import options
 
-# TODO: Credit the guy for loadobx.py
+
 TARGET_MAPPING = {"TARGET.NAME": "name",
                   "ra": "ra",
                   "dec": "dec",
@@ -82,7 +84,7 @@ def apply_mapping(content: Dict, mapping: Dict) -> None:
             elif mapping[key] == str:
                 value = str(value)
             elif mapping[key] == bool:
-                value = True if value == "T" else False
+                value = value == "T"
         content[key] = value
 
 
@@ -193,7 +195,6 @@ def create_remote_container(connection: p2api,
     return container["containerId"]
 
 
-# TODO: Make logger here
 def create_ob(connection: p2api, container_id: int, header: Dict) -> int:
     """
 
@@ -269,4 +270,5 @@ def upload_ob(connection: p2api,
         add_template(connection, ob_id, ob, "acquisition")
         add_template(connection, ob_id, ob, "observation")
     except p2api.P2Error:
-        print(f"[ERROR]: Failed uploading OB '{ob_name}'!")
+        print(f"[ERROR]: Failed uploading OB '{ob_name}'! See 'p2obp.log'.")
+        logging.error(f"[ERROR]: Failed uploading OB '{ob_name}'!", exc_info=True)

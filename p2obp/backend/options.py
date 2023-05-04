@@ -1,4 +1,21 @@
+import logging
+from pathlib import Path
+
 options = {}
+
+
+# NOTE: General settings for the `p2obp`.
+options["logging.path"] = Path(__file__).parent.parent / "logs"
+options["logging.level"] = logging.DEBUG
+options["logging.format"] = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+if not options["logging.path"].exists():
+    options["logging.path"].mkdir(parents=True, exist_ok=True)
+
+logging.basicConfig(filename=options["logging.path"] / "p2obp.log",
+                    filemode="w", level=options["logging.level"],
+                    format=options["logging.format"])
+
 
 # NOTE: The settings for the `create_obs` and `create_ob`-scripts.
 # NOTE: Sets the standard resolution.

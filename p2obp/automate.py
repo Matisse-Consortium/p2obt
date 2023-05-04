@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 from typing import Union, Optional, Any, Dict, List, Tuple
 
@@ -16,7 +17,6 @@ from .backend.upload import login, get_remote_run,\
 OPERATIONAL_MODES = {"both": ["standalone", "GRA4MAT"],
                      "st": ["standalone"], "gr": ["GRA4MAT"],
                      "matisse": ["standalone"], "gra4mat": ["GRA4MAT"]}
-
 
 # TOOD: Add night astronomer comments to template
 # TODO: Find way to switch of photometry of template
@@ -140,9 +140,9 @@ def create_ob(target: str,
         if output_dir is not None:
             ob_name = set_ob_name(target, observational_type, sci_name, tag)
             write_ob(ob, ob_name, output_dir)
-    # TODO Make this e into logging and catch the exception better
-    except KeyError:
-        print(f"[Error]: Failed creating OB '{target}'!")
+    except KeyError as e:
+        print(f"[Error]: Failed creating OB '{target}'! See 'p2obp.log'.")
+        logging.error("[Error]: Failed creating OB '{target}'!", exc_info=True)
 
 
 def create_obs_from_lists(targets: List[str],
@@ -193,7 +193,7 @@ def create_obs_from_lists(targets: List[str],
         print(f"{'':-^50}")
 
         if not calibrators:
-            calibrators = copy_list_and_replace_values(calibrators, "")
+            calibrators = copy_list_and_replace_values(targets, "")
         if not tags:
             tags = copy_list_and_replace_values(calibrators, "LN")
         if not orders:
@@ -232,7 +232,7 @@ def create_obs_from_lists(targets: List[str],
                 else:
                     target_id = None
 
-            if target in resolution:
+            if resolution is not None and target in resolution:
                 res = resolution[target]
             else:
                 res = options["resolution"]
