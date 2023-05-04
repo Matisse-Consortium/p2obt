@@ -10,10 +10,12 @@ from astropy.time import Time
 from astropy.coordinates import EarthLocation
 
 
-def add_space(string: str):
+def add_space(input_str: str):
     """Adds a space to the "HD xxxxxx" targets,
     between the HD and the rest. """
-    return re.sub(r'(h|H)d(?!\s)(\d+)', r'HD \2', string)
+    if re.match(r'^HD\s*\d+', input_str, flags=re.IGNORECASE):
+        return re.sub(r'^HD', 'HD ', input_str, flags=re.IGNORECASE)
+    return input_str
 
 
 def prompt_user(message: str, selections: List[str]) -> str:

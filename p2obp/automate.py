@@ -141,8 +141,8 @@ def create_ob(target: str,
             ob_name = set_ob_name(target, observational_type, sci_name, tag)
             write_ob(ob, ob_name, output_dir)
     except KeyError as e:
-        print(f"[Error]: Failed creating OB '{target}'! See 'p2obp.log'.")
-        logging.error("[Error]: Failed creating OB '{target}'!", exc_info=True)
+        print(f"[ERROR]: Failed creating OB '{target}'! See 'p2obp.log'.")
+        logging.error("[ERROR]: Failed creating OB '{target}'!", exc_info=True)
 
 
 def create_obs_from_lists(targets: List[str],
@@ -440,14 +440,14 @@ def create_obs(night_plan: Optional[Path] = None,
 
 if __name__ == "__main__":
     outdir = Path("/Users/scheuck/Data/observations/obs/")
-    night_plan = Path("/Users/scheuck/Data/observations/CIAO/observing_plan.txt")
+    night_plan = Path("/Users/scheuck/Data/observations/CIAO/MATISSE_CIAO_UTs_plan_v2.txt")
 
     sci_lst = ["YLW 16A"]
     cal_lst = []
     order_lst, tag_lst = [], []
     manual_lst = [sci_lst, cal_lst, order_lst, tag_lst]
 
-    res_dict = {"Elias 2-24": "med"}
+    res_dict = {}
 
     options["catalogs.local.active"] = "ciao"
-    create_obs(manual_input=manual_lst, operational_mode="st", output_dir=outdir)
+    create_obs(night_plan=night_plan, container_id=3634531, username="MATISSETeam")
