@@ -204,6 +204,13 @@ def fill_header(target: Dict,
     prop_ra, prop_dec = format_proper_motions(target)
 
     header_user["name"] = ob_name
+    user_comments = []
+    if "GSname" in target:
+        user_comments.append(f"GS: {target['GSname']}")
+    if "GSdist" in target:
+        gs_distance = float(target["GSdist"])
+        user_comments.append(f'GS Distance: {gs_distance:.2f}"')
+    header_user["userComments"] = ". ".join(user_comments)
     header_target["TARGET.NAME"] = target["name"].replace(' ', '_')
     header_target["ra"], header_target["dec"] = ra_hms, dec_dms
     header_target["propRA"], header_target["propDec"] = prop_ra, prop_dec
@@ -300,6 +307,7 @@ def fill_observation(target: Dict,
                                              operational_mode, array_configuration)
     observation_type = "SCIENCE" if observation_type == "sci" else "CALIB"
     observation["DPR.CATG"] = observation_type
+     # TODO: Finish this
     observation["INS.DIL.NAME"] = resolution
     observation["DET1.DIT"] = dit
     observation["SEQ.DIL.WL0"] = options["central_wl"]

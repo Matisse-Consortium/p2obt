@@ -1,5 +1,5 @@
-from typing import Optional, Dict, List
 from pathlib import Path
+from typing import Optional, Dict, List
 
 import astropy.units as u
 import pandas as pd
@@ -9,6 +9,7 @@ from astroquery.simbad import Simbad
 from astroquery.vizier import Vizier
 
 from .options import options
+from .utils import add_space
 
 TARGET_INFO_FILE = Path(pkg_resources.resource_filename("p2obp", "data/Extensive Target Information.xlsx"))
 TARGET_INFO_MAPPING = {"local.RA": "RA [hms]",
@@ -20,6 +21,7 @@ TARGET_INFO_MAPPING = {"local.RA": "RA [hms]",
                        "Hmag": "H mag",
                        "Kmag": "K mag",
                        "GSname": "GS Name",
+                       "GSdist": 'GS Distance (")',
                        "GSRa": "GS RA [hms]",
                        "GSDec": "GS DEC [dms]",
                        "GSpropRa": "GS Off-axis Coude PMA [arcsec/yr]",
@@ -178,6 +180,7 @@ def query(target_name: str,
     target : dict
         The target's queried information.
     """
+    target_name = add_space(target_name)
     target = {"name": target_name}
     if catalogs is None:
         catalogs = options["catalogs"][:]
@@ -200,5 +203,5 @@ def query(target_name: str,
 
 if __name__ == "__main__":
     options["catalogs.local.active"] = "ciao"
-    dic = query("IRAS 11507-6213")
+    dic = query("HD 100713")
     breakpoint()
