@@ -2,22 +2,19 @@
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
-
 [project]
 name = "p2obp"
-version = "1.0.6"
+version = "1.1.1"
 description = "The Phase 2 OB Pipeline (p2obp) an automation tool for the MATISSE observation preparation."
 requires-python = ">=3.9"
 readme = "README.md"
 license = {file = "LICENSE"}
-
 keywords = ["astronomy", "observations", "observation-preparation"]
 authors = [
 	{name = "Marten Scheuck", email = "martenscheuck@gmail.com"}
 ]
-
 classifiers = [
-  "Development Status :: 4 - Beta",
+  "Development Status :: 5 - Production/Stable",
 	"Framework :: Pytest",
 	"Framework :: Sphinx",
 	"License :: OSI Approved :: MIT License",
@@ -39,6 +36,8 @@ dependencies = [
   "pytest >= 7.2.0",
   "toml >= 0.10.2",
   "p2api >= 1.0.5",
+  "openpyxl >= 3.1.2",
+  "pandas >= 2.0.1"
 ]
 
 [options.extras_require]
@@ -55,7 +54,6 @@ dev = [
 [tool.setuptools]
 py-modules = [] # Removes the top-level package bug
 include-package-data = true
-
 
 [project.urls]
 repository = "https://github.com/MBSck/p2obp"

@@ -2,11 +2,11 @@
 
 <!-- Project Shields -->
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
-![Lifecycle: development](https://img.shields.io/badge/lifecycle-development-blue.svg)
+![Lifecycle: production](https://img.shields.io/badge/lifecycle-production-orange.svg)
 
 <!-- Project Status -->
 ## Project Status
-_Under maintenance/In development_
+_Under maintenance_
 
 <!-- About The Project -->
 ## About the Project

@@ -10,6 +10,12 @@ from astropy.time import Time
 from astropy.coordinates import EarthLocation
 
 
+def add_space(string: str):
+    """Adds a space to the "HD xxxxxx" targets,
+    between the HD and the rest. """
+    return re.sub(r'HD(?!\s)(\d+)', r'HD \1', string)
+
+
 def prompt_user(message: str, selections: List[str]) -> str:
     """Prompts the user for a numerical input and returns
     the associated value from the selection list.
