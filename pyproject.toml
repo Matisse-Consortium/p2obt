@@ -40,7 +40,7 @@ dependencies = [
   "pandas >= 2.0.1"
 ]
 
-[options.extras_require]
+[options.optional-dependencies]
 dev = [
     "ipython",
     "pytest >= 7.2.1",

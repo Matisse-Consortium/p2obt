@@ -3,6 +3,7 @@ __pycache__/
 .pytest_cache/
 logs/
 *egg-info*/
+dist/
 
 # General files to ignore
 .DS_Store
