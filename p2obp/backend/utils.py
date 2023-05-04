@@ -13,7 +13,7 @@ from astropy.coordinates import EarthLocation
 def add_space(string: str):
     """Adds a space to the "HD xxxxxx" targets,
     between the HD and the rest. """
-    return re.sub(r'HD(?!\s)(\d+)', r'HD \1', string)
+    return re.sub(r'(h|H)d(?!\s)(\d+)', r'HD \2', string)
 
 
 def prompt_user(message: str, selections: List[str]) -> str:

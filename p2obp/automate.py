@@ -192,6 +192,8 @@ def create_obs_from_lists(targets: List[str],
         print(f"Creating OBs for {mode}-mode...")
         print(f"{'':-^50}")
 
+        if not calibrators:
+            calibrators = copy_list_and_replace_values(calibrators, "")
         if not tags:
             tags = copy_list_and_replace_values(calibrators, "LN")
         if not orders:
@@ -203,6 +205,7 @@ def create_obs_from_lists(targets: List[str],
                 mode_out_dir.mkdir(parents=True, exist_ok=True)
         else:
             mode_out_dir = output_dir
+
 
         if observational_type == "vm" and container_id is not None:
             mode_id = create_remote_container(connection, mode,
@@ -237,6 +240,8 @@ def create_obs_from_lists(targets: List[str],
             unwrapped_lists = unwrap_lists(target, calibrator, order, tag)
             for (name, sci_cal_flag, tag) in unwrapped_lists:
                 sci_name = target if sci_cal_flag == "cal" else None
+                if not name:
+                    continue
                 create_ob(name, sci_cal_flag, array_configuration,
                           operational_mode, sci_name, tag, res,
                           connection, target_id, output_dir=target_dir)
@@ -419,6 +424,7 @@ def create_obs(night_plan: Optional[Path] = None,
             connection = login(username, password, server)
         else:
             connection = None
+
         create_obs_from_lists(targets, calibrators, orders, tags,
                               operational_mode, observational_mode, array_config,
                               resolution, connection, container_id, output_dir)
@@ -437,13 +443,12 @@ if __name__ == "__main__":
     outdir = Path("/Users/scheuck/Data/observations/obs/")
     night_plan = Path("/Users/scheuck/Data/observations/CIAO/observing_plan.txt")
 
-    sci_lst = ["Beta Leo", "HD 100453"]
-    cal_lst = ["HD100920", "HD102964"]
-    order_lst, tag_lst = ["b", "a"], []
+    sci_lst = ["YLW 16A"]
+    cal_lst = []
+    order_lst, tag_lst = [], []
     manual_lst = [sci_lst, cal_lst, order_lst, tag_lst]
 
     res_dict = {"Elias 2-24": "med"}
 
     options["catalogs.local.active"] = "ciao"
-    create_obs(night_plan=night_plan, operational_mode="st", resolution=res_dict,
-               container_id=3632615, username="MATISSETeam", server="production")
+    create_obs(manual_input=manual_lst, operational_mode="st", output_dir=outdir)

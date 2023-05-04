@@ -62,7 +62,8 @@ def query_local_catalog(name: str):
 
     target = {}
     for query_key, query_mapping in TARGET_INFO_MAPPING.items():
-        target[query_key] = row[query_mapping].data.tolist()[0]
+        if query_mapping in row.columns:
+            target[query_key] = row[query_mapping].data.tolist()[0]
     return {key: value for key, value in target.items() if value is not None}
 
 
@@ -203,5 +204,6 @@ def query(target_name: str,
 
 if __name__ == "__main__":
     options["catalogs.local.active"] = "ciao"
-    dic = query("HD 100713")
-    breakpoint()
+    dic = query("hd142666")
+    from pprint import pprint
+    pprint(dic)
