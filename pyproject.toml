@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "p2obp"
-version = "1.2.1"
+version = "1.2.2"
 description = "The Phase 2 OB Pipeline (p2obp) an automation tool for the MATISSE observation preparation."
 requires-python = ">=3.9"
 readme = "README.md"

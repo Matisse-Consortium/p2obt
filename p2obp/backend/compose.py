@@ -255,6 +255,11 @@ def fill_acquisition(target: Dict,
     if "GSpropDec" in target:
         acquisition["COU.AG.PMD"] = target["GSpropDec"]
 
+    if "GSepoch" in target:
+        acquisition["COU.AG.EPOCH"] = target["GSepoch"]
+    if "GSequinox" in target:
+        acquisition["COU.AG.EQUINOX"] = target["GSequinox"]
+
     if "GSmag" in target:
         acquisition["COU.GS.MAG"] = target["GSmag"]
     elif "Vmag" in target:

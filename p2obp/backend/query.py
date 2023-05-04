@@ -27,6 +27,8 @@ TARGET_INFO_MAPPING = {"local.RA": "RA [hms]",
                        "GSDec": "GS DEC [dms]",
                        "GSpropRa": "GS Off-axis Coude PMA [arcsec/yr]",
                        "GSpropDec": "GS Off-axis Coude PMD [arcsec/yr]",
+                       "GSepoch": "GS Epoch",
+                       "GSequinox": "GS Equinox",
                        "GSmag": "GS mag",
                        "LResAT": "L-Resolution (AT)",
                        "LResUT": "L-Resolution (UT)"}
