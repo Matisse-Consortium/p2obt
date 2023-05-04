@@ -209,7 +209,7 @@ def fill_header(target: Dict,
         user_comments.append(f"GS: {target['GSname']}")
     if "GSdist" in target:
         gs_distance = float(target["GSdist"])
-        user_comments.append(f'GS Distance: {gs_distance:.2f}"')
+        user_comments.append(f"GS Distance: {gs_distance:.2f} arcsec")
     header_user["userComments"] = ". ".join(user_comments)
     header_target["TARGET.NAME"] = target["name"].replace(' ', '_')
     header_target["ra"], header_target["dec"] = ra_hms, dec_dms

@@ -206,7 +206,6 @@ def create_obs_from_lists(targets: List[str],
         else:
             mode_out_dir = output_dir
 
-
         if observational_type == "vm" and container_id is not None:
             mode_id = create_remote_container(connection, mode,
                                               container_id, observational_type)
