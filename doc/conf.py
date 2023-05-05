@@ -8,10 +8,12 @@
 import os
 import sys
 
-project = 'p2obp'
-copyright = '2023, Marten Scheuck'
-author = 'Marten Scheuck'
-release = '1.2.3'
+import p2obp
+
+project = "P2OBP"
+copyright = "2023, Marten Scheuck"
+author = "Marten Scheuck"
+release = p2obp.__version__
 
 # -- General configuration ---------------------------------------------------
 
@@ -23,7 +25,10 @@ extensions = [
               "sphinx.ext.napoleon",
               "sphinx.ext.autodoc",
               "sphinx.ext.autosummary",
-              "sphinx_gallery.gen_gallery"
+              "sphinx.ext.viewcode",
+              "sphinx.ext.todo",
+              "sphinx.ext.autosectionlabel",
+              "numpydoc"
 ]
 
 intersphinx_mapping = {
@@ -31,8 +36,12 @@ intersphinx_mapping = {
 }
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
-exclude_patterns = []
+templates_path = ["_templates"]
+
+# List of patterns, relative to source directory, that match files and
+# directories to ignore when looking for source files.
+# This pattern also affects html_static_path and html_extra_path.
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "**.ipynb_checkpoints"]
 
 # The suffix(es) of source filenames.
 # Note: important to list ipynb before md here: we have both md and ipynb
@@ -53,6 +62,7 @@ language = 'en'
 
 autosummary_generate = True
 napolean_use_rtype = False
+napoleon_google_docstring = False
 
 sphinx_gallery_conf = {
      'examples_dirs': '../examples',   # path to your example scripts
@@ -65,7 +75,7 @@ sphinx_gallery_conf = {
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_book_theme'
+html_theme = "pydata_sphinx_theme"
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
@@ -76,8 +86,4 @@ html_favicon = ''
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
-
-html_css_files = [
-    'style.css',
-]
+html_static_path = ["_static"]
