@@ -1,5 +1,5 @@
 """
-
+Automatic ob creation pipeline
 =========================
 
 This is meant to give an example on how to use the
