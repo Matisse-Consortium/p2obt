@@ -3,27 +3,14 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 ![Lifecycle: production](https://img.shields.io/badge/lifecycle-production-orange.svg)
 
-<!-- Project Status -->
-## Project Status
-_Stable/Under maintenance_
-
-<!-- About The Project -->
-## About the Project
 The Phase 2 OB Pipeline (p2obp) has been made to streamline/automate
 the process of MATISSE observation preparation on p2.
 
-* For more information on the inner workings see [Features](#features).
-* For upcoming features or to report bugs see the **issues**.
-* To get started see [Installation](#installation) and [Usage](#usage).
-* To add new local query targets add it to the `data/Extensive Target Information` excel sheet.
-
-## Table of Content
-* [Installation](#installation)
-* [Features](#features)
-* [Usage](#usage)
-* [Resources](#resources)
-* [License](#license)
-* [Credit](#credit)
+* **Documentation**: _Soon to come!_ (Right now see [Features](#features))
+* **Installation**: [Installation](#installation)
+* **Usage**: [Usage](#usage) and the scripts in the `example/` directory.
+* **Bug Reports**: [https://github.com/MBSck/p2obp/issues](https://github.com/MBSck/p2obp/issues)
+* **Contact**: [Contributors](#contributors)
 
 <!-- Getting Started -->
 ## Installation
@@ -49,7 +36,6 @@ The full pipeline can cover the following:<br>
 
 * [Night Plan Parsing](#night-plan-parsing)
 * [OB-Creation](#ob-creation)
-* [Upload](#upload)
 
 ### Night-Plan Parsing
 Night/observation plans ((.txt)-files) created with `calibrator_find.pro` by R. van Boekel (optional)
@@ -75,9 +61,9 @@ If none of them are detected then the whole file will be identified as one run a
 attributed as **full_run**.<br>
 Additionally, if the run name has a certain shape/format, then the `create_obs` script
 can automatically determine the following things about the run:<br>
-* The **array configuration** (*UTs, small, medium, large, extended*)
-* The **operational mode** (*MATISSE, GRA4MAT or BOTH*)
-* The **resolution** (*LOW/LR, MED/MEDIUM/MR or HIGH/HR*)
+* The **array configuration** (_UTs, small, medium, large, extended_)
+* The **operational mode** (_MATISSE, GRA4MAT or BOTH_)
+* The **resolution** (_LOW/LR, MED/MEDIUM/MR or HIGH/HR_)
 * The **program id** (and by this the container id on p2)
 
 For the parsing to work neither the order or capitalization of the above information
@@ -143,10 +129,14 @@ calibrator_find,zoom=3,duration=30,delay='large',max_d_am=0.2,max_d_az=90,minF10
 ```
 
 ### OB-Creation
-The ob-creation scripts (for multiple obs `create_obs` or for singular obs `create_ob`)
-* Sorts them into folders in the order given (either CAL-SCI or SCI-CAL or CAL-SCI-CAL)<br>
+The ob-creation scripts (for multiple obs `create_obs` or for singular obs `create_ob`).<br>
+These either...<br>
+* queries different catalogs (_simbad, gaia, tycho, 2mass, mdfc, and the local catalogs_).
+* sort them into folders in the order given (either CAL-SCI or SCI-CAL or CAL-SCI-CAL) locally.
+* sort them into containers during the upload, directly to P2.
 
-### Upload
+For more details see the documentation or scripts in the `examples/` directory.<br>
+To add new local query targets add them to the `data/Extensive Target Information` excel sheet.
 
 <!-- USAGE EXAMPLES -->
 ## Usage
