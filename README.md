@@ -1,12 +1,11 @@
 # P2obp
-
 <!-- Project Shields -->
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 ![Lifecycle: production](https://img.shields.io/badge/lifecycle-production-orange.svg)
 
 <!-- Project Status -->
 ## Project Status
-_Under maintenance_
+_Stable/Under maintenance_
 
 <!-- About The Project -->
 ## About the Project
@@ -16,6 +15,7 @@ the process of MATISSE observation preparation on p2.
 * For more information on the inner workings see [Features](#features).
 * For upcoming features or to report bugs see the **issues**.
 * To get started see [Installation](#installation) and [Usage](#usage).
+* To add new local query targets add it to the `data/Extensive Target Information` excel sheet.
 
 ## Table of Content
 * [Installation](#installation)
