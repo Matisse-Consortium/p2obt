@@ -169,12 +169,13 @@ Distributed under the MIT License. See LICENSE for more information.
 <!-- Credit -->
 ## Credit
 ### Used Code by
-* T. Bierwirth (`p2api`)
-* R. van Boekel (`calibrator_find.pro`, not included in this repo and optional)
+* T. Bierwirth `p2api`
+* R. van Boekel `calibrator_find.pro`, not included in this repo and optional
 
 ### Inspiration
+Thanks to...
 * M. Pruemm whose `loadobxy` script inspired the
-`p2obp.backend.upload` andj `p2obp.backend.compose` scripts.
+`p2obp.backend.upload` and `p2obp.backend.compose` scripts.
 * J. Varga whose `MATISSE_create_OB_2.py` and `query_CDS.py` scripts inspired
 the `p2obp.backend.query` and `p2obp.backend.compose` scripts.
 
