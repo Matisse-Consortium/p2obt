@@ -1,4 +1,8 @@
-"""This script is meant to give an example on how to use the
+"""
+
+=========================
+
+This is meant to give an example on how to use the
 fully automated pipeline of p2obp for ob-creation, namely the script
 "create_obs".
 """
