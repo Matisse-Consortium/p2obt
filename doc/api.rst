@@ -1,5 +1,6 @@
+===
 API
-=============
+===
 
 p2obp.automate
 ==============
@@ -11,10 +12,6 @@ p2obp.automate
 
 .. toctree::
    :hidden:
-   automate
-
-.. toctree::
-   :hidden:
    :maxdepth: 4
    :caption: Backend
    
@@ -22,4 +19,5 @@ p2obp.automate
    modules/options
    modules/parse
    modules/query
+   modules/upload
    modules/utils

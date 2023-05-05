@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 P2OBP: Automated Observation Preparation
-====================================================
+========================================
 
 The Phase 2 OB Pipeline (p2obp) as a software has been made to streamline/automate
 the process of MATISSE observation preparation on p2.
@@ -31,8 +31,6 @@ For more information on the specific capabilities of this software see :ref:`Fea
 
 
    For more information see :ref:`Getting Started <getting_started>`
-
-
 
 .. toctree::
    :hidden:

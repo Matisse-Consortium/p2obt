@@ -1,5 +1,8 @@
 .. _options:
 
+.. role:: python(code)
+   :language: python
+
 =====================
 p2obp.backend.options
 =====================
@@ -19,9 +22,9 @@ p2obp.backend.options
    modules/query
    modules/utils
 
-The global settings for :mod:`p2obp` are contained in a dictionary and can be
+The global settings for :python:`p2obp` are contained in a dictionary and can be
 changed by the user. Hereafter follows a list of all the availabe options 
-that can be changed and their default values as seen in the script :mod:`options`.
+that can be changed and their default values as seen in the script :python:`options`.
 
 Logger Settings
 ===============
@@ -118,6 +121,14 @@ The local catalogs/databases queried.
 
    options["catalogs.local.standard"] = "Targets"
    options["catalogs.local.ciao"] = "CIAO Offaxis Targets"
+
+Setting the following option to either :python:`ciao` or :python:`standard` will query one of
+the above catalogs. If the options is set to :python:`none`, no local catalog will be queried.
+But this can be easier done with the :func:`query <p2obp.backend.query.query>` function by excluding
+the :python:`local` catalog.
+
+.. code-block:: python
+
    options["catalogs.local.active"] = "standard"
 
 The online catalogs queried.
