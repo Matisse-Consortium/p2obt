@@ -8,9 +8,7 @@
 import os
 import sys
 
-import p2obp
-
-project = "P2OBP"
+project = "p2obp"
 copyright = "2023, Marten Scheuck"
 author = "Marten Scheuck"
 release = "1.3.0"
