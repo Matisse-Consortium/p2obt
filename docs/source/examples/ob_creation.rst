@@ -1,3 +1,8 @@
+.. _examples_ob_creation:
+
+.. role:: bash(code)
+   :language: bash
+
 .. role:: python(code)
    :language: python
 
@@ -5,23 +10,32 @@
 OB Creation
 ===========
 
+:bash:`p2obp` supports various ways of local or online (on P2) ob creation.
+In addition to a single ob creating script (:ref:`Single OB Creation`), there is a fully automated pipeline
+that can make multiple obs at once (:ref:`OB Creation Pipeline`).
+
 ------------------
 Single OB Creation
 ------------------
 
-This is meant to give an example on how to use the
-:func:`create_ob <p2obp.automate.create_ob>` for singular ob creation
-The full example script can be found in `examples/create_ob <https://github.com/MBSck/p2obp/blob/main/examples/create_ob.py>`_.
+This is meant to give some examples on how to use the
+:func:`create_ob <p2obp.automate.create_ob>` for singular ob creation.
+
+A full example script can be found in `examples/create_ob <https://github.com/MBSck/p2obp/blob/main/examples/create_single_ob.py>`_.
 
 One can either locally create an (.obx)-file (see :ref:`Local Creation`) or
 directly upload the content of a dictionary to the P2 environment (see :ref:`Direct Upload`).
 
 Local Creation
---------------
+==============
 
-To locally create a science target (.obx)-file pass a :python:`Path` or :python:`str`
-as the :python:`ouput_dir` keyword. In the following an an (.obx)-file
-for a science target for GRA4MAT setting will be created for the UTs.
+.. note::
+
+  To locally create a science target (.obx)-file a :python:`Path` or :python:`str`
+  must be provided for the :python:`ouput_dir` keyword. 
+
+In the following an an (.obx)-file for a science target for
+GRA4MAT setting will be created for the UTs.
 
 .. code-block:: python
 
@@ -30,8 +44,8 @@ for a science target for GRA4MAT setting will be created for the UTs.
 
 
 Similarly, for a calibrator an (.obx)-file for the UT-array configuration
-for the science target HD 142666 and for GRA4MAT, tagged as an L band calibrator
-can be created like this:
+for the science target :python:`"HD 142666"` and for GRA4MAT,
+tagged as an L band calibrator can be created like this.
 
 .. code-block:: python
 
@@ -53,23 +67,26 @@ can be created like this:
   .. warning::
 
      The global resolution will be overwritten if a local catalog 
-     (see :ref:`options <p2obp.backend.options>`) is activated/queried and contains
-     the target and the overwrite option :python:`options["resolution.overwrite"]`
-     is set to :python:`False` (standard setting).
+     is activated/queried and contains the target.
+
+     To avoid this set the overwrite option :python:`options["resolution.overwrite"]`
+     to :python:`True`.
 
 
 Direct Upload
--------------
+=============
 
-There is also functionality for a direct upload to the P2 environment.
-If the :python:`container_id` keyword is passed then the dictionary created 
-will be directly uploaded and if the :python:`connection`-keyword is `:python:`None`
-it will ask for your login data.
+A direct upload to the P2 environment is also possible.
 
-.. note::
-  For this example the ob will be uploaded to ESO's demo environment
-  (https://www.eso.org/p2demo/home) to the subfolder :python:`p2obp` of the
-  run :python:`60.A-9252(N) MATISSE`.
+.. note:: 
+
+  For this the :python:`container_id` keyword must be provided.
+
+  Then the dictionary created will be directly uploaded and if the :python:`connection`-keyword
+  is `:python:`None` it will ask for your login data otherwise it will directly connect.
+
+Now an ob for the target :python:`"HD 100920"` as a calibrator for the science target
+:python:`"HD 142666` will be directly created on the P2.
 
 .. code-block:: python
 
@@ -77,8 +94,13 @@ it will ask for your login data.
             sci_name="HD 142666", operational_mode="gr",
             container_id=3001786, server="demo", password="52052")
 
+.. note::
+  For this example the ob will be uploaded to ESO's demo environment
+  (https://www.eso.org/p2demo/home) to the subfolder :bash:`p2obp` of the
+  run :bash:`60.A-9252(N) MATISSE`.
+
 --------------------
-OB creation pipeline
+OB Creation Pipeline
 --------------------
 
 This is meant to give an example on how to use the
@@ -86,7 +108,7 @@ fully automated pipeline, :func:`create_obs <p2obp.automate.create_obs>`, of p2o
 The full example script can be found in `examples/create_obs <https://github.com/MBSck/p2obp/blob/main/examples/create_obs.py>`_.
 
 Manual Creation
----------------
+===============
 
 Now follows a step-by step guide for the usage of the script with manual input.
 
@@ -100,38 +122,48 @@ one level nested list).
   science_targets = ["Beta Leo", "HD 100453"]
   calibrators = [["HD100920", "HD173460"], "HD102964"]
 
-There are two additional lists that can be specified. 
-The :python:`orders` lists specifies the order of the targets after upload, where "b" stands
-for before and "a" for after the science target. This results in either `SCI-CAL`, `CAL-SCI-CAL` or any combination.
-The last list that can be given is the :python:`tags` list, that specifies the calibrators' tags.
-The tags are 'L' for an L-band calibrator, 'N' for an N-band calibrator and "LN" for both bands.
-The default is "LN" for both.
-If the :python:`orders` and :python:`tags` lists are not provided by the user, they will be autofilled to have the same shape
-as the :python:`calibrators` list.
+.. note::
+   
+  There are two additional lists that can be specified. 
+  The :python:`orders` lists specifies the order of the targets after upload, where :python:`"b"` stands
+  for before and :python:`"a"` for after the science target. This results in either :bash:`SCI-CAL`, :bash:`CAL-SCI-CAL` or any combination.
 
-.. code-block:: python
+  The other list that can be given is the :python:`tags` list, that specifies the calibrators' tags.
+  The tags are 'L' for an L-band calibrator, 'N' for an N-band calibrator and "LN" for both bands.
+  The default is "LN" for both.
 
-  orders = [["b", "a"], "a"]
-  tags = [["L", "LN"], "N"]
+  If the :python:`orders` and :python:`tags` lists are not provided by the user, they will be autofilled to have the same shape
+  as the :python:`calibrators` list.
 
-These lists then need to be passes as a combined list :python:`manual_input` to the function:
+  .. code-block:: python
+
+    orders = [["b", "a"], "a"]
+    tags = [["L", "LN"], "N"]
+
+These lists then need to be passed as a combined list :python:`manual_input` to the function:
 
 .. code-block:: python
 
   manual_input = [sci_lst, cal_lst, tag_lst, order_lst]
 
-With the :python:`resolutions` dictionary, one can manually set the resolution
-for specific targets as keys, with the resolution as values (either *low, med or high*).
+.. note::
 
-.. code-block:: python
+  With the :python:`resolutions` dictionary, one can manually set the resolution
+  for specific targets as keys, with the resolution as values (either *low, med or high*).
 
-  resolutions = {"Beta Leo": "med"}
+  .. code-block:: python
 
-.. warning::
+    resolution = {"Beta Leo": "med"}
 
-   The :python:`resolution`-dictionary can and will be overwritten by any query results from
-   a local catalog (see :ref:`options <p2obp.backend.options>`) if one is activated or the overwrite option
-   :python:`options["resolution.overwrite"]` is set to :python:`False` (standard setting).
+  .. warning::
+
+     The global resolution as well as the :python:`resolution` dictionary 
+     will be overwritten if a local catalog is activated/queried and contains the target.
+     
+     To avoid this set the overwrite option :python:`options["resolution.overwrite"]`
+     to :python:`True`.
+
+     For more information see :ref:`options <p2obp.backend.options>`
 
 The operational mode (either :python:`"gr"` for GRA4MAT or
 :python:`"st"` for MATISSE-standalone specifies the obs' settings).
@@ -141,7 +173,7 @@ This will either upload the obs to a the specified container (keyword
 .. code-block:: python
 
   ob_creation(manual_lst=manual_lst, operational_mode="both",
-              resolution=resolutions, container_id=3001786,
+              resolution=resolution, container_id=3001786,
               server="demo", password="52052")
 
 or make them locally as (.obx)-files, if an :python:`output_dir` is specified.
@@ -151,11 +183,52 @@ or make them locally as (.obx)-files, if an :python:`output_dir` is specified.
   ob_creation(manual_lst=manual_lst, operational_mode="both",
               resolution=res_dict, output_dir=output_dir)
 
-For this example the ob will be uploaded to ESO's demo environment
-(https://www.eso.org/p2demo/home) to the subfolder :python:`p2obp/` of the
-run `60.A-9252(N) MATISSE`.
+.. note::
+
+  For this example the ob will be uploaded to ESO's demo environment
+  (https://www.eso.org/p2demo/home) to the subfolder :bash:`p2obp/` of the
+  run :bash:`60.A-9252(N) MATISSE`.
 
 
-Night Plan based Creation
--------------------------
+Night Plan Based Creation
+=========================
 
+In addition to the manual creation, there is also a more automated way - The
+core aspect of :bash:`p2obp` - the night plan parsing, automatic ob creation and upload.
+
+.. note::
+
+  For the specifics on the parser and examples for night plans
+  see :ref:`Features - Night Plan Parsing <features>`.
+
+After a night plan has been provided, the :func:`parse_night_plan <p2obp.backend.parse.parse_night_plan>`
+function will parse this into chuncks of runs that have subsections for nights and in those
+some sort of science target and calibrator(s) arrangements.
+
+The code to create the (.obx)-files locally, is similar to before
+
+.. code-block:: python
+
+  ob_creation(night_plan=night_plan,
+              resolution=res_dict, output_dir=output_dir)
+
+.. note::
+
+   The parser, if the guidelines in :ref:`Features - Night Plan Parsing <features>` for
+   the night plan are taken care of, can automatically determine the :python:`run_id`, 
+   which is a run's :python:`container_id`, the :python:`array_configuration`, the 
+   standard resolution :python:`options["resolution"]` as well as the :python:`operational_mode`.
+   
+   If any of these cannot be automatically determined, the parser will prompt the user for
+   each detected run and every not detected keyword.
+
+   One can also directly provide a :python:`container_id`, then the automatically created
+   obs will be uploaded to this container instead and possible :python:`run_id`'s will
+   be ignored.
+
+and similarly for uploading the obs directly
+
+.. code-block:: python
+
+  ob_creation(night_plan=night_plan, resolution=resolutions,
+              server="demo", password="52052")

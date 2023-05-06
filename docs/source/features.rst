@@ -1,3 +1,8 @@
+.. _features:
+
+.. role:: bash(code)
+   :language: bash
+
 ========
 Features
 ========
@@ -6,18 +11,22 @@ The full pipeline can cover the following:
 * Night Plan Parsing
 * OB-Creation
 
+.. note::
+
+   For a guide on how to use the here described features and examples see :ref:`Getting Started - OB Creation <examples_ob_creation>`.
+
 ------------------
 Night-Plan Parsing
 ------------------
 
-Night/observation plans ((.txt)-files) created with the idl-tool `calibrator_find.pro` by R. van Boekel (optional)
+Night/observation plans ((.txt)-files) created with the idl-tool :bash:`calibrator_find.pro` by R. van Boekel (optional)
 can be parsed into dictionaries to be used by other parts of the program.
 The parser
 
-* looks for the **runs** and splits them into individual keys/sections.
-* looks for the **nights** and then splits them into keys/sections as well.
-* ignores comments and other things in between the lines.
-* in conjunction with the `create_obs`-function, can autodetect many things (c.f., [Formatting Guidelines](#formatting-guidelines))
+* looks for the **runs** and splits them into individual keys/sections (see :ref:`Run Names`).
+* looks for the **nights** and then splits them into keys/sections as well (see :ref:`Night Names`).
+* ignores comments and other things in between the lines and automatically creates the 
+* in conjunction with the :func:`create_obs <p2obp.automate.create_obs>`-function, can autodetect many things (see :ref:`Formatting Guidelines`).
 
 The **night** sections are ended as soon as a line containing the **cal_find**
 software name is detected.
@@ -26,17 +35,22 @@ Formatting Guidelines
 =====================
 
 In order to even better utilise the parser it is helpful to adhere to some
-guidlines while writting the night/observation plans.<br>
+guidlines while writting the night/observation plans.
 These are outlined in the following:
 
 Run Names
 ---------
 
-The parser will only identify sections of a file as a run, that contain a line
-starting with **run**.
-If none of them are detected then the whole file will be identified as one run and
-attributed as **full_run**.
-Additionally, if the run name has a certain shape/format, then the `create_obs` script
+.. warning::
+
+   The parser will only identify sections of a file as a run, that contain a line
+   starting with **run**.
+
+   If none of them are detected then the whole file will be identified as one run and
+   attributed as **full_run**.
+
+Additionally, if the run name has a certain shape/format, then the 
+:func:`create_obs <p2obp.automate.create_obs>` function
 can automatically determine the following things about the run:
 
 * The **array configuration** (*UTs, small, medium, large, extended*)
@@ -44,10 +58,9 @@ can automatically determine the following things about the run:
 * The **resolution** (*LOW/LR, MED/MEDIUM/MR or HIGH/HR*)
 * The **program id** (and by this the container id on p2)
 
-For the parsing to work neither the order or capitalization of the above information
-matters.
+The parser is insensitive to the order and capitalization of the above settings.
 
-Here is a few working examples:
+Here are some examples
 
 .. admonition:: File Contents
 
@@ -65,9 +78,10 @@ Night Names
 The parser can also identify individual nights that are contained within a run by
 lines starting with **night** that are followed up by some block containing
 science targets and calibrators. This means, there is no need to avoid the word night
-to, for instance, give a more detailed description in the night plan for the observers.<br>
+to, for instance, give a more detailed description in the night plan for the observers
+at other locations.
 
-Here are a few examples that are parsed properly:
+Here are a few examples will be parsed properly:
 
 .. admonition:: File Contents
 
@@ -78,16 +92,19 @@ Here are a few examples that are parsed properly:
       night 1:  1.6h1, formal duration our slot = 08:53 - 16:57 LST  =  23:38 - 07:42 UTC  =  01:38 - 09:42 CEST
       night 2, June 6:
 
-Example
-=======
+.. note::
 
-Here is an example of a full `night_plan`:
+   If the above examples are not directly followed by a science target-calibrator block they may
+   occur anywhere in the file and it will be parsed properly.
+
+Night Plan Example
+==================
 
 .. admonition:: File Contents
 
    .. parsed-literal::
 
-      run 3, 109.2313.003 = 0109.C-0413(C), ATs large array
+      run 3, 109.2313.003 = 0109.C-0413(C), ATs large array, MATISSE, LR
 
       Jun 6, formal night duration:  LST 11:40 - 22:21  =  10:41 h = 641 min
                                    23:21 - 09:59 UTC =  01:21 - 11:59  CEST
@@ -123,12 +140,13 @@ Here is an example of a full `night_plan`:
 OB-Creation
 -----------
 
-The ob-creation scripts (for multiple obs `create_obs` or for singular obs `create_ob`).
-These either...
+The ob-creation scripts (for multiple obs :func:`create_obs <p2obp.automate.create_obs>`
+or for singular obs :func:`create_ob <p2obp.automate.create_ob>`).
+These scripts automatically...
 
 * queries different catalogs (*simbad, gaia, tycho, 2mass, mdfc, and the local catalogs*).
 * sort them into folders in the order given (either CAL-SCI or SCI-CAL or CAL-SCI-CAL) locally.
 * sort them into containers during the upload, directly to P2.
 
-For more details see the documentation or scripts in the `examples/` directory.
-To add new local query targets add them to the `data/Extensive Target Information` excel sheet.
+For more details see the documentation or scripts in the `examples/ <https://github.com/MBSck/p2obp/tree/main/examples>`_ directory.
+To add new local query targets add them to the :bash:`data/Extensive Target Information` excel sheet.

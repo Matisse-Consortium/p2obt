@@ -1,11 +1,11 @@
-.. role:: python(code)
-   :language: python
+.. role:: bash(code)
+   :language: bash
 
 ===
 API
 ===
 
-The in-depth description of :python:`p2obp`'s api.
+The in-depth description of :bash:`p2obp`'s api.
 
 
 .. toctree::

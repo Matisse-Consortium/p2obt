@@ -186,3 +186,21 @@ The queries that are collected from each catalog.
    options["catalogs.mdfc.query"] = ["med-Lflux", "med-Nflux", "Hmag", "Kmag"]
    options["catalogs.simbad.query"] = ["RA", "DEC", "PMRA", "PMDEC",
                                        "FLUX_V", "FLUX_H", "FLUX_K"]
+
+.. note::
+
+   The possible fields for the catalogs are the following
+
+   For :python:`simbad`:
+
+   .. code-block:: python
+
+      'MAIN_ID', 'RA', 'DEC', 'RA_PREC', 'DEC_PREC', 'COO_ERR_MAJA',
+      'COO_ERR_MINA', 'COO_ERR_ANGLE', 'COO_QUAL', 'COO_WAVELENGTH', 'COO_BIBCODE',
+      'MK_ds', 'MK_mss', 'MK_Spectral_type', 'MK_bibcode', 'SP_TYPE', 'SP_TYPE_2',
+      'SP_QUAL', 'SP_BIBCODE', 'Fe_H_Teff', 'Fe_H_log_g', 'Fe_H_Fe_H', 'Fe_H_flag',
+      'Fe_H_CompStar', 'Fe_H_CatNo', 'Fe_H_bibcode', 'PMRA', 'PMDEC', 'PM_ERR_MAJA',
+      'PM_ERR_MINA', 'PM_ERR_ANGLE', 'PLX_VALUE', 'RV_VALUE', 'FLUX_U', 'FLUX_ERROR_U',
+      'FLUX_B', 'FLUX_ERROR_B', 'FLUX_V', 'FLUX_ERROR_V', 'FLUX_R', 'FLUX_ERROR_R',
+      'FLUX_I', 'FLUX_ERROR_I', 'FLUX_J', 'FLUX_ERROR_J', 'FLUX_H', 'FLUX_ERROR_H',
+      'FLUX_K', 'FLUX_ERROR_K'
