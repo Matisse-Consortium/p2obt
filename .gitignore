@@ -5,6 +5,8 @@ logs/
 *egg-info*/
 dist/
 doc/
+docs/html
+docs/build/
 
 # General files to ignore
 .DS_Store
