@@ -11,15 +11,15 @@ import sys
 project = "p2obp"
 copyright = "2023, Marten Scheuck"
 author = "Marten Scheuck"
-release = "1.3.0"
-
-import p2obp
+release = "1.0.3"
+version = "1.3.1"
 
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
+sys.append(os.path.abspath("../../"))
 sys.path.append(os.path.abspath('sphinxext'))
 extensions = [
               "sphinx.ext.napoleon",
