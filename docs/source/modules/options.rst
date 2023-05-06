@@ -9,6 +9,7 @@ p2obp.backend.options
 
 .. toctree::
    :hidden:
+
    modules/automate
 
 .. toctree::
@@ -26,8 +27,9 @@ The global settings for :python:`p2obp` are contained in a dictionary and can be
 changed by the user. Hereafter follows a list of all the availabe options 
 that can be changed and their default values as seen in the script :python:`options`.
 
+---------------
 Logger Settings
-===============
+---------------
 
 The logging settings that are used for logging errors.
 
@@ -38,11 +40,12 @@ The logging settings that are used for logging errors.
    options["logging.level"] = logging.DEBUG
    options["logging.format"] = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 
+-----------
 OB Creation
-===========
+-----------
 
 General
--------
+=======
 
 General settings for the pipeline-function :func:`create_obs <p2obp.automate.create_obs>`.
 
@@ -67,7 +70,7 @@ or any resolution set in an input dictionary for the :func:`create_obs <p2obp.au
    options["resolution.overwrite"] = False
 
 Integration time
-----------------
+================
 
 The integration times for MATISSE-standalone for the ATs.
 
@@ -101,13 +104,14 @@ The integration times for GRA4MAT for the UTs.
    options["dit.gra4mat.uts.med"] = 0.6
    options["dit.gra4mat.uts.high"] = 0.6
 
+-----
 Query
-=====
+-----
 
 The settings used for the :func:`query <p2obp.backend.query.query>` function.
 
 Used Catalogs
--------------
+=============
 
 .. code-block:: python
 
@@ -144,7 +148,7 @@ The online catalogs queried.
 
 
 Catalog fields
---------------
+==============
 
 Set the fields accessed in each catalog.
 
@@ -168,7 +172,7 @@ Set the fields accessed in each catalog.
                                         "flux(K)", "flux_error(K)"]
 
 Catalog queries
----------------
+===============
 
 The queries that are collected from each catalog.
 

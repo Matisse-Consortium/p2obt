@@ -3,6 +3,7 @@ p2obp.backend.upload
 
 .. toctree::
    :hidden:
+
    modules/automate
 
 .. toctree::

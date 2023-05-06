@@ -3,6 +3,7 @@ p2obp.backend.utils
 
 .. toctree::
    :hidden:
+
    modules/automate
 
 .. toctree::

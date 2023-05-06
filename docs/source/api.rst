@@ -1,20 +1,23 @@
+.. role:: python(code)
+   :language: python
+
 ===
 API
 ===
 
-p2obp.automate
-==============
+The in-depth description of :python:`p2obp`'s api.
 
-.. automodule:: p2obp.automate
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 .. toctree::
-   :hidden:
+   :maxdepth: 1
+
+   module/automate
+
+
+.. toctree::
    :maxdepth: 4
    :caption: Backend
-   
+
    modules/compose
    modules/options
    modules/parse

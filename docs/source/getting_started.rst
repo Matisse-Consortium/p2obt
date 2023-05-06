@@ -1,18 +1,23 @@
 .. _getting_started:
 
-==========
+.. role:: python(code)
+   :language: python
+
+===============
 Getting Started
-==========
+===============
 
 .. toctree::
  :hidden:
  :maxdepth: 1
- :caption: Installation
 
  installation
 
+To start out, check the examples below and for the scripts that accompany those,
+to try them out yourself, find the `examples/ <https://github.com/MBSck/p2obp/tree/main/examples>`_ in :python:`p2obp`'s
+repository.
+ 
 .. toctree::
- :hidden:
  :maxdepth: 3
  :caption: Examples
 
@@ -28,9 +33,6 @@ Getting Started
  Phase 2 API <https://www.eso.org/sci/observing/phase2/p2intro/Phase2API.html>
  User-contributed software ESO <https://www.eso.org/sci/observing/phase2/p2intro/Phase2API/ApiContributedSoftware.html>
 
-Here are some informations to get started, some explanation of the functionality
+.. note::
 
-The :python:`p2obp` software contains various functionality
-For the global options that can be set see :ref:`options <options>`.
-
-For examples of the above scripts' usage, see the repository's `examples/ <https://github.com/MBSck/p2obp/tree/main/examples>`_-directory.
+ For the global settings of the `p2obp` package see :ref:`options <options>`.

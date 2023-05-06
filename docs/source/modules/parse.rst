@@ -1,8 +1,10 @@
+===================
 p2obp.backend.parse
 ===================
 
 .. toctree::
    :hidden:
+
    modules/automate
 
 .. toctree::

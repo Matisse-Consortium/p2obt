@@ -1,8 +1,10 @@
+===================
 p2obp.backend.query
 ===================
 
 .. toctree::
    :hidden:
+
    modules/automate
 
 .. toctree::

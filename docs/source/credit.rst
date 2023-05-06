@@ -1,17 +1,19 @@
 .. role:: python(code)
    :language: python
 
+======
 Credit
 ======
 
 Used Code by
-------------
+===========
 
 * T. Bierwirth :python:`p2api`
 * R. van Boekel :python:`calibrator_find.pro`, not included in this repo and optional
 
 Inspiration
------------
+===========
+
 
 Many thanks to...
 
