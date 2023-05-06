@@ -4,7 +4,7 @@ __pycache__/
 logs/
 *egg-info*/
 dist/
-docs/
+docs/*.html
 
 # General files to ignore
 .DS_Store
