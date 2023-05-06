@@ -5,7 +5,8 @@ options = {}
 
 
 # NOTE: General settings for the `p2obp`.
-options["logging.path"] = Path(__file__).parent.parent / "logs"
+options["logging.folder"] = "logs"
+options["logging.path"] = Path(__file__).parent.parent / options["logging.folder"]
 options["logging.level"] = logging.DEBUG
 options["logging.format"] = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 
@@ -79,7 +80,7 @@ options["catalogs.simbad.fields"] = ["mk", "sp", "sptype", "fe_h",
                                      "flux(K)", "flux_error(K)"]
 
 # NOTE: The queries from each catalog.
-options["catalogs.gaia.query"] = ["Gmag"]
+options["catalogs.gaia.query"] = ["Gmag", "pmRA", "pmDE"]
 options["catalogs.tycho.query"] = ["VTmag"]
 options["catalogs.2mass.query"] = ["Jmag", "Hmag", "Kmag"]
 options["catalogs.nomad.query"] = ["Vmag"]
