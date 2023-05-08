@@ -7,21 +7,6 @@
 p2obp.backend.options
 =====================
 
-.. toctree::
-   :hidden:
-
-   modules/automate
-
-.. toctree::
-   :hidden:
-   :maxdepth: 4
-   :caption: Backend
-   
-   modules/compose
-   modules/options
-   modules/parse
-   modules/query
-   modules/utils
 
 The global settings for :python:`p2obp` are contained in a dictionary and can be
 changed by the user. Hereafter follows a list of all the availabe options 

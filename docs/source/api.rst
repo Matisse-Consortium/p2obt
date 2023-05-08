@@ -9,9 +9,10 @@ The in-depth description of :bash:`p2obp`'s api.
 
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 4
+   :caption: Frontend
 
-   module/automate
+   automate
 
 
 .. toctree::
