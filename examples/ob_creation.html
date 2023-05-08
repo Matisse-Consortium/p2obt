@@ -1,0 +1,674 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>OB Creation &#8212; p2obp 1.0.3 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'examples/ob_creation';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Query" href="query.html" />
+    <link rel="prev" title="Installation" href="../installation.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  <div class="navbar-header-items__start">
+    
+      <div class="navbar-item">
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">p2obp 1.0.3 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="../getting_started.html">
+                        Getting Started
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../features.html">
+                        Features
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../api.html">
+                        API
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-external" href="https://github.com/MBSck/p2obp/releases">
+                        Changelog
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../credit.html">
+                        Credit
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+        </div>
+      
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="../getting_started.html">
+                        Getting Started
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../features.html">
+                        Features
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../api.html">
+                        API
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-external" href="https://github.com/MBSck/p2obp/releases">
+                        Changelog
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../credit.html">
+                        Credit
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item"><nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">OB Creation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="query.html">Query</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utils</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://www.eso.org/sci/observing/phase2/p2intro/Phase2API.html">Phase 2 API</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.eso.org/sci/observing/phase2/p2intro/Phase2API/ApiContributedSoftware.html">User-contributed software ESO</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://simbad.cds.unistra.fr/guide/otypes.htx">Simbad Object Types</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumbs">
+  <ul class="bd-breadcrumbs" role="navigation" aria-label="Breadcrumb">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../getting_started.html" class="nav-link">Getting Started</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">OB Creation</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="ob-creation">
+<span id="examples-ob-creation"></span><h1>OB Creation<a class="headerlink" href="#ob-creation" title="Permalink to this heading">#</a></h1>
+<p><code class="code highlight bash docutils literal highlight-bash">p2obp</code> supports various ways of local or online (on P2) ob creation.
+In addition to a single ob creating script (<a class="reference internal" href="#single-ob-creation"><span class="std std-ref">Single OB Creation</span></a>), there is a fully automated pipeline
+that can make multiple obs at once (<a class="reference internal" href="#ob-creation-pipeline"><span class="std std-ref">OB Creation Pipeline</span></a>).</p>
+<section id="single-ob-creation">
+<h2>Single OB Creation<a class="headerlink" href="#single-ob-creation" title="Permalink to this heading">#</a></h2>
+<p>This is meant to give some examples on how to use the
+<a class="reference internal" href="../automate.html#p2obp.automate.create_ob" title="p2obp.automate.create_ob"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_ob</span></code></a> for singular ob creation.</p>
+<p>A full example script can be found in <a class="reference external" href="https://github.com/MBSck/p2obp/blob/main/examples/create_single_ob.py">examples/create_ob</a>.</p>
+<p>One can either locally create an (.obx)-file (see <a class="reference internal" href="#local-creation"><span class="std std-ref">Local Creation</span></a>) or
+directly upload the content of a dictionary to the P2 environment (see <a class="reference internal" href="#direct-upload"><span class="std std-ref">Direct Upload</span></a>).</p>
+<section id="local-creation">
+<h3>Local Creation<a class="headerlink" href="#local-creation" title="Permalink to this heading">#</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To locally create a science target (.obx)-file a <code class="code highlight python docutils literal highlight-python"><span class="n">Path</span></code> or <code class="code highlight python docutils literal highlight-python"><span class="nb">str</span></code>
+must be provided for the <code class="code highlight python docutils literal highlight-python"><span class="n">ouput_dir</span></code> keyword.</p>
+</div>
+<p>In the following an an (.obx)-file for a science target for
+GRA4MAT setting will be created for the UTs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">create_ob</span><span class="p">(</span><span class="s2">&quot;HD 142666&quot;</span><span class="p">,</span> <span class="s2">&quot;sci&quot;</span><span class="p">,</span> <span class="s2">&quot;uts&quot;</span><span class="p">,</span>
+          <span class="n">operational_mode</span><span class="o">=</span><span class="s2">&quot;gr&quot;</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Similarly, for a calibrator an (.obx)-file for the UT-array configuration
+for the science target <code class="code highlight python docutils literal highlight-python"><span class="s2">&quot;HD 142666&quot;</span></code> and for GRA4MAT,
+tagged as an L band calibrator can be created like this.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">create_ob</span><span class="p">(</span><span class="s2">&quot;HD 100920&quot;</span><span class="p">,</span> <span class="s2">&quot;cal&quot;</span><span class="p">,</span> <span class="s2">&quot;uts&quot;</span><span class="p">,</span>
+          <span class="n">sci_name</span><span class="o">=</span><span class="s2">&quot;HD 142666&quot;</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;L&quot;</span><span class="p">,</span>
+          <span class="n">operational_mode</span><span class="o">=</span><span class="s2">&quot;gr&quot;</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The resolution for all other targets will be <code class="code highlight python docutils literal highlight-python"><span class="s2">&quot;low&quot;</span></code>, but can be
+set via the options (see <a class="reference internal" href="../modules/options.html#p2obp-backend-options"><span class="std std-ref">options</span></a> for a more comprehensive listing).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;resolution&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;med&quot;</span>
+</pre></div>
+</div>
+<p>This also applies for the <a class="reference internal" href="#ob-creation-pipeline"><span class="std std-ref">OB Creation Pipeline</span></a> as well.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The global resolution will be overwritten if a local catalog
+is activated/queried and contains the target.</p>
+<p>To avoid this set the overwrite option <code class="code highlight python docutils literal highlight-python"><span class="n">options</span><span class="p">[</span><span class="s2">&quot;resolution.overwrite&quot;</span><span class="p">]</span></code>
+to <code class="code highlight python docutils literal highlight-python"><span class="kc">True</span></code>.</p>
+</div>
+</div>
+</section>
+<section id="direct-upload">
+<h3>Direct Upload<a class="headerlink" href="#direct-upload" title="Permalink to this heading">#</a></h3>
+<p>A direct upload to the P2 environment is also possible.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For this the <code class="code highlight python docutils literal highlight-python"><span class="n">container_id</span></code> keyword must be provided.</p>
+<p>Then the dictionary created will be directly uploaded and if the <code class="code highlight python docutils literal highlight-python"><span class="n">connection</span></code>-keyword
+is <cite>:python:`None</cite> it will ask for your login data otherwise it will directly connect.</p>
+</div>
+<p>Now an ob for the target <code class="code highlight python docutils literal highlight-python"><span class="s2">&quot;HD 100920&quot;</span></code> as a calibrator for the science target
+<code class="code highlight python docutils literal highlight-python"><span class="s2">&quot;HD 142666</span></code> will be directly created on the P2.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">create_ob</span><span class="p">(</span><span class="s2">&quot;HD 100920&quot;</span><span class="p">,</span> <span class="s2">&quot;cal&quot;</span><span class="p">,</span> <span class="s2">&quot;uts&quot;</span><span class="p">,</span>
+          <span class="n">sci_name</span><span class="o">=</span><span class="s2">&quot;HD 142666&quot;</span><span class="p">,</span> <span class="n">operational_mode</span><span class="o">=</span><span class="s2">&quot;gr&quot;</span><span class="p">,</span>
+          <span class="n">container_id</span><span class="o">=</span><span class="mi">3001786</span><span class="p">,</span> <span class="n">server</span><span class="o">=</span><span class="s2">&quot;demo&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;52052&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For this example the ob will be uploaded to ESO’s demo environment
+(<a class="reference external" href="https://www.eso.org/p2demo/home">https://www.eso.org/p2demo/home</a>) to the subfolder <code class="code highlight bash docutils literal highlight-bash">p2obp</code> of the
+run <code class="code highlight bash docutils literal highlight-bash"><span class="m">60</span>.A-9252<span class="o">(</span>N<span class="o">)</span><span class="w"> </span>MATISSE</code>.</p>
+</div>
+</section>
+</section>
+<section id="ob-creation-pipeline">
+<h2>OB Creation Pipeline<a class="headerlink" href="#ob-creation-pipeline" title="Permalink to this heading">#</a></h2>
+<p>This is meant to give an example on how to use the
+fully automated pipeline, <a class="reference internal" href="../automate.html#p2obp.automate.create_obs" title="p2obp.automate.create_obs"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_obs</span></code></a>, of p2obp for ob-creation.
+The full example script can be found in <a class="reference external" href="https://github.com/MBSck/p2obp/blob/main/examples/create_obs.py">examples/create_obs</a>.</p>
+<section id="manual-creation">
+<h3>Manual Creation<a class="headerlink" href="#manual-creation" title="Permalink to this heading">#</a></h3>
+<p>Now follows a step-by step guide for the usage of the script with manual input.</p>
+<p>For the manual input, the user needs to specify multiple lists.
+A <code class="code highlight python docutils literal highlight-python"><span class="n">science_targets</span></code> list is always required and optionally a <code class="code highlight python docutils literal highlight-python"><span class="n">calibrators</span></code> list can be given.
+The science targets will be then assigned to the calibrators and one science target can have multiple calibrators (in a
+one level nested list).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">science_targets</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Beta Leo&quot;</span><span class="p">,</span> <span class="s2">&quot;HD 100453&quot;</span><span class="p">]</span>
+<span class="n">calibrators</span> <span class="o">=</span> <span class="p">[[</span><span class="s2">&quot;HD100920&quot;</span><span class="p">,</span> <span class="s2">&quot;HD173460&quot;</span><span class="p">],</span> <span class="s2">&quot;HD102964&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There are two additional lists that can be specified.
+The <code class="code highlight python docutils literal highlight-python"><span class="n">orders</span></code> lists specifies the order of the targets after upload, where <code class="code highlight python docutils literal highlight-python"><span class="s2">&quot;b&quot;</span></code> stands
+for before and <code class="code highlight python docutils literal highlight-python"><span class="s2">&quot;a&quot;</span></code> for after the science target. This results in either <code class="code highlight bash docutils literal highlight-bash">SCI-CAL</code>, <code class="code highlight bash docutils literal highlight-bash">CAL-SCI-CAL</code> or any combination.</p>
+<p>The other list that can be given is the <code class="code highlight python docutils literal highlight-python"><span class="n">tags</span></code> list, that specifies the calibrators’ tags.
+The tags are ‘L’ for an L-band calibrator, ‘N’ for an N-band calibrator and “LN” for both bands.
+The default is “LN” for both.</p>
+<p>If the <code class="code highlight python docutils literal highlight-python"><span class="n">orders</span></code> and <code class="code highlight python docutils literal highlight-python"><span class="n">tags</span></code> lists are not provided by the user, they will be autofilled to have the same shape
+as the <code class="code highlight python docutils literal highlight-python"><span class="n">calibrators</span></code> list.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">orders</span> <span class="o">=</span> <span class="p">[[</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">],</span> <span class="s2">&quot;a&quot;</span><span class="p">]</span>
+<span class="n">tags</span> <span class="o">=</span> <span class="p">[[</span><span class="s2">&quot;L&quot;</span><span class="p">,</span> <span class="s2">&quot;LN&quot;</span><span class="p">],</span> <span class="s2">&quot;N&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<p>These lists then need to be passed as a combined list <code class="code highlight python docutils literal highlight-python"><span class="n">manual_input</span></code> to the function:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">manual_input</span> <span class="o">=</span> <span class="p">[</span><span class="n">sci_lst</span><span class="p">,</span> <span class="n">cal_lst</span><span class="p">,</span> <span class="n">tag_lst</span><span class="p">,</span> <span class="n">order_lst</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>With the <code class="code highlight python docutils literal highlight-python"><span class="n">resolutions</span></code> dictionary, one can manually set the resolution
+for specific targets as keys, with the resolution as values (either <em>low, med or high</em>).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">resolution</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Beta Leo&quot;</span><span class="p">:</span> <span class="s2">&quot;med&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The global resolution as well as the <code class="code highlight python docutils literal highlight-python"><span class="n">resolution</span></code> dictionary
+will be overwritten if a local catalog is activated/queried and contains the target.</p>
+<p>To avoid this set the overwrite option <code class="code highlight python docutils literal highlight-python"><span class="n">options</span><span class="p">[</span><span class="s2">&quot;resolution.overwrite&quot;</span><span class="p">]</span></code>
+to <code class="code highlight python docutils literal highlight-python"><span class="kc">True</span></code>.</p>
+<p>For more information see <a class="reference internal" href="../modules/options.html#p2obp-backend-options"><span class="std std-ref">options</span></a></p>
+</div>
+</div>
+<p>The operational mode (either <code class="code highlight python docutils literal highlight-python"><span class="s2">&quot;gr&quot;</span></code> for GRA4MAT or
+<code class="code highlight python docutils literal highlight-python"><span class="s2">&quot;st&quot;</span></code> for MATISSE-standalone specifies the obs’ settings).
+This will either upload the obs to a the specified container (keyword
+<code class="code highlight python docutils literal highlight-python"><span class="n">container_id</span></code> on p2)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ob_creation</span><span class="p">(</span><span class="n">manual_lst</span><span class="o">=</span><span class="n">manual_lst</span><span class="p">,</span> <span class="n">operational_mode</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span>
+            <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span> <span class="n">container_id</span><span class="o">=</span><span class="mi">3001786</span><span class="p">,</span>
+            <span class="n">server</span><span class="o">=</span><span class="s2">&quot;demo&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;52052&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or make them locally as (.obx)-files, if an <code class="code highlight python docutils literal highlight-python"><span class="n">output_dir</span></code> is specified.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ob_creation</span><span class="p">(</span><span class="n">manual_lst</span><span class="o">=</span><span class="n">manual_lst</span><span class="p">,</span> <span class="n">operational_mode</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span>
+            <span class="n">resolution</span><span class="o">=</span><span class="n">res_dict</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For this example the ob will be uploaded to ESO’s demo environment
+(<a class="reference external" href="https://www.eso.org/p2demo/home">https://www.eso.org/p2demo/home</a>) to the subfolder <code class="code highlight bash docutils literal highlight-bash">p2obp/</code> of the
+run <code class="code highlight bash docutils literal highlight-bash"><span class="m">60</span>.A-9252<span class="o">(</span>N<span class="o">)</span><span class="w"> </span>MATISSE</code>.</p>
+</div>
+</section>
+<section id="night-plan-based-creation">
+<h3>Night Plan Based Creation<a class="headerlink" href="#night-plan-based-creation" title="Permalink to this heading">#</a></h3>
+<p>In addition to the manual creation, there is also a more automated way - The
+core aspect of <code class="code highlight bash docutils literal highlight-bash">p2obp</code> - the night plan parsing, automatic ob creation and upload.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For the specifics on the parser and examples for night plans
+see <a class="reference internal" href="../features.html#features"><span class="std std-ref">Features - Night Plan Parsing</span></a>.</p>
+</div>
+<p>After a night plan has been provided, the <a class="reference internal" href="../modules/parse.html#p2obp.backend.parse.parse_night_plan" title="p2obp.backend.parse.parse_night_plan"><code class="xref py py-func docutils literal notranslate"><span class="pre">parse_night_plan</span></code></a>
+function will parse this into chuncks of runs that have subsections for nights and in those
+some sort of science target and calibrator(s) arrangements.</p>
+<p>The code to create the (.obx)-files locally, is similar to before</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ob_creation</span><span class="p">(</span><span class="n">night_plan</span><span class="o">=</span><span class="n">night_plan</span><span class="p">,</span>
+            <span class="n">resolution</span><span class="o">=</span><span class="n">res_dict</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The parser, if the guidelines in <a class="reference internal" href="../features.html#features"><span class="std std-ref">Features - Night Plan Parsing</span></a> for
+the night plan are taken care of, can automatically determine the <code class="code highlight python docutils literal highlight-python"><span class="n">run_id</span></code>,
+which is a run’s <code class="code highlight python docutils literal highlight-python"><span class="n">container_id</span></code>, the <code class="code highlight python docutils literal highlight-python"><span class="n">array_configuration</span></code>, the
+standard resolution <code class="code highlight python docutils literal highlight-python"><span class="n">options</span><span class="p">[</span><span class="s2">&quot;resolution&quot;</span><span class="p">]</span></code> as well as the <code class="code highlight python docutils literal highlight-python"><span class="n">operational_mode</span></code>.</p>
+<p>If any of these cannot be automatically determined, the parser will prompt the user for
+each detected run and every not detected keyword.</p>
+<p>One can also directly provide a <code class="code highlight python docutils literal highlight-python"><span class="n">container_id</span></code>, then the automatically created
+obs will be uploaded to this container instead and possible <code class="code highlight python docutils literal highlight-python"><span class="n">run_id</span></code>’s will
+be ignored.</p>
+</div>
+<p>and similarly for uploading the obs directly</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ob_creation</span><span class="p">(</span><span class="n">night_plan</span><span class="o">=</span><span class="n">night_plan</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolutions</span><span class="p">,</span>
+            <span class="n">server</span><span class="o">=</span><span class="s2">&quot;demo&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;52052&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../installation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Installation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="query.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Query</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#single-ob-creation">Single OB Creation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#local-creation">Local Creation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#direct-upload">Direct Upload</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ob-creation-pipeline">OB Creation Pipeline</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#manual-creation">Manual Creation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#night-plan-based-creation">Night Plan Based Creation</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../_sources/examples/ob_creation.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+  <p class="copyright">
+    
+      © Copyright 2023, Marten Scheuck.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item"><p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.3.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,640 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>p2obp.backend.options &#8212; p2obp 1.0.3 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'modules/options';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="p2obp.backend.parse" href="parse.html" />
+    <link rel="prev" title="p2obp.backend.compose" href="compose.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  <div class="navbar-header-items__start">
+    
+      <div class="navbar-item">
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">p2obp 1.0.3 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../getting_started.html">
+                        Getting Started
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../features.html">
+                        Features
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="../api.html">
+                        API
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-external" href="https://github.com/MBSck/p2obp/releases">
+                        Changelog
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../credit.html">
+                        Credit
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+        </div>
+      
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../getting_started.html">
+                        Getting Started
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../features.html">
+                        Features
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="../api.html">
+                        API
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-external" href="https://github.com/MBSck/p2obp/releases">
+                        Changelog
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../credit.html">
+                        Credit
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item"><nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Frontend</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../automate.html">p2obp.automate</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Backend</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="compose.html">p2obp.backend.compose</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">p2obp.backend.options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parse.html">p2obp.backend.parse</a></li>
+<li class="toctree-l1"><a class="reference internal" href="query.html">p2obp.backend.query</a></li>
+<li class="toctree-l1"><a class="reference internal" href="upload.html">p2obp.backend.upload</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">p2obp.backend.utils</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumbs">
+  <ul class="bd-breadcrumbs" role="navigation" aria-label="Breadcrumb">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../api.html" class="nav-link">API</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">p2obp.backend.options</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="p2obp-backend-options">
+<span id="options"></span><h1>p2obp.backend.options<a class="headerlink" href="#p2obp-backend-options" title="Permalink to this heading">#</a></h1>
+<p>The global settings for <code class="code highlight python docutils literal highlight-python"><span class="n">p2obp</span></code> are contained in a dictionary and can be
+changed by the user. Hereafter follows a list of all the availabe options
+that can be changed and their default values as seen in the script <code class="code highlight python docutils literal highlight-python"><span class="n">options</span></code>.</p>
+<section id="logger-settings">
+<h2>Logger Settings<a class="headerlink" href="#logger-settings" title="Permalink to this heading">#</a></h2>
+<p>The logging settings that are used for logging errors.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;logging.folder&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;logs&quot;</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;logging.path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;loggging.folder&quot;</span><span class="p">]</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;logging.level&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;logging.format&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> - </span><span class="si">%(name)s</span><span class="s2"> - </span><span class="si">%(levelname)s</span><span class="s2"> - </span><span class="si">%(message)s</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="ob-creation">
+<h2>OB Creation<a class="headerlink" href="#ob-creation" title="Permalink to this heading">#</a></h2>
+<section id="general">
+<h3>General<a class="headerlink" href="#general" title="Permalink to this heading">#</a></h3>
+<p>General settings for the pipeline-function <a class="reference internal" href="../automate.html#p2obp.automate.create_obs" title="p2obp.automate.create_obs"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_obs</span></code></a>.</p>
+<p>This option sets the central wavelength used for all observation templates.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;central_wl&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">4.1</span>
+</pre></div>
+</div>
+<p>This options sets the standard resolution for all created obs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;resolution&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;low&quot;</span>
+</pre></div>
+</div>
+<p>With this option one can override the resolutions queried from the local catalogs
+(see <a class="reference internal" href="#used-catalogs"><span class="std std-ref">Used Catalogs</span></a>), which, as a standard, would overwrite the standard resolution
+or any resolution set in an input dictionary for the <a class="reference internal" href="../automate.html#p2obp.automate.create_obs" title="p2obp.automate.create_obs"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_obs</span></code></a> function.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;resolution.overwrite&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+</div>
+</section>
+<section id="integration-time">
+<h3>Integration time<a class="headerlink" href="#integration-time" title="Permalink to this heading">#</a></h3>
+<p>The integration times for MATISSE-standalone for the ATs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.matisse.ats.low&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.111</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.matisse.ats.med&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.111</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.matisse.ats.high&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.111</span>
+</pre></div>
+</div>
+<p>The integration times for MATISSE-standalone for the UTs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.matisse.uts.low&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.111</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.matisse.uts.med&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.111</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.matisse.uts.high&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.111</span>
+</pre></div>
+</div>
+<p>The integration times for GRA4MAT for the ATs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.gra4mat.ats.low&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.6</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.gra4mat.ats.med&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.3</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.gra4mat.ats.high&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">3.</span>
+</pre></div>
+</div>
+<p>The integration times for GRA4MAT for the UTs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.gra4mat.uts.low&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.6</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.gra4mat.uts.med&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.6</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.gra4mat.uts.high&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.6</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="query">
+<h2>Query<a class="headerlink" href="#query" title="Permalink to this heading">#</a></h2>
+<p>The settings used for the <a class="reference internal" href="query.html#p2obp.backend.query.query" title="p2obp.backend.query.query"><code class="xref py py-func docutils literal notranslate"><span class="pre">query</span></code></a> function.</p>
+<section id="used-catalogs">
+<h3>Used Catalogs<a class="headerlink" href="#used-catalogs" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;gaia&quot;</span><span class="p">,</span> <span class="s2">&quot;tycho&quot;</span><span class="p">,</span> <span class="s2">&quot;nomad&quot;</span><span class="p">,</span>
+                       <span class="s2">&quot;2mass&quot;</span><span class="p">,</span> <span class="s2">&quot;wise&quot;</span><span class="p">,</span> <span class="s2">&quot;mdfc&quot;</span><span class="p">,</span>
+                       <span class="s2">&quot;simbad&quot;</span><span class="p">,</span> <span class="s2">&quot;local&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The local catalogs/databases queried.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.local.standard&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Targets&quot;</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.local.ciao&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;CIAO Offaxis Targets&quot;</span>
+</pre></div>
+</div>
+<p>Setting the following option to either <code class="code highlight python docutils literal highlight-python"><span class="n">ciao</span></code> or <code class="code highlight python docutils literal highlight-python"><span class="n">standard</span></code> will query one of
+the above catalogs. If the options is set to <code class="code highlight python docutils literal highlight-python"><span class="n">none</span></code>, no local catalog will be queried.
+But this can be easier done with the <a class="reference internal" href="query.html#p2obp.backend.query.query" title="p2obp.backend.query.query"><code class="xref py py-func docutils literal notranslate"><span class="pre">query</span></code></a> function by excluding
+the <code class="code highlight python docutils literal highlight-python"><span class="n">local</span></code> catalog.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.local.active&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;standard&quot;</span>
+</pre></div>
+</div>
+<p>The online catalogs queried.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.gaia.catalog&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;I/345/gaia2&quot;</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.tycho.catalog&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;I/350/tyc2tdsc&quot;</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.nomad.catalog&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;I/297/out&quot;</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.2mass.catalog&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;II/246/out&quot;</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.wise.catalog&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;II/311/wise&quot;</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.mdfc.catalog&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;II/361/mdfc-v10&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="catalog-fields">
+<h3>Catalog fields<a class="headerlink" href="#catalog-fields" title="Permalink to this heading">#</a></h3>
+<p>Set the fields accessed in each catalog.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.gaia.fields&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">]</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.tycho.fields&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="s2">&quot;e_BTmag&quot;</span><span class="p">,</span> <span class="s2">&quot;e_VTmag&quot;</span><span class="p">]</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.nomad.fields&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">]</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.2mass.fields&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">]</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.wise.fields&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">]</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.mdfc.fields&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;**&quot;</span><span class="p">]</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.simbad.fields&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;mk&quot;</span><span class="p">,</span> <span class="s2">&quot;sp&quot;</span><span class="p">,</span> <span class="s2">&quot;sptype&quot;</span><span class="p">,</span> <span class="s2">&quot;fe_h&quot;</span><span class="p">,</span>
+                                     <span class="s2">&quot;pm&quot;</span><span class="p">,</span> <span class="s2">&quot;plx&quot;</span><span class="p">,</span> <span class="s2">&quot;rv_value&quot;</span><span class="p">,</span>
+                                     <span class="s2">&quot;flux(U)&quot;</span><span class="p">,</span> <span class="s2">&quot;flux_error(U)&quot;</span><span class="p">,</span>
+                                     <span class="s2">&quot;flux(B)&quot;</span><span class="p">,</span> <span class="s2">&quot;flux_error(B)&quot;</span><span class="p">,</span>
+                                     <span class="s2">&quot;flux(V)&quot;</span><span class="p">,</span> <span class="s2">&quot;flux_error(V)&quot;</span><span class="p">,</span>
+                                     <span class="s2">&quot;flux(R)&quot;</span><span class="p">,</span> <span class="s2">&quot;flux_error(R)&quot;</span><span class="p">,</span>
+                                     <span class="s2">&quot;flux(I)&quot;</span><span class="p">,</span> <span class="s2">&quot;flux_error(I)&quot;</span><span class="p">,</span>
+                                     <span class="s2">&quot;flux(J)&quot;</span><span class="p">,</span> <span class="s2">&quot;flux_error(J)&quot;</span><span class="p">,</span>
+                                     <span class="s2">&quot;flux(H)&quot;</span><span class="p">,</span> <span class="s2">&quot;flux_error(H)&quot;</span><span class="p">,</span>
+                                     <span class="s2">&quot;flux(K)&quot;</span><span class="p">,</span> <span class="s2">&quot;flux_error(K)&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="catalog-queries">
+<h3>Catalog queries<a class="headerlink" href="#catalog-queries" title="Permalink to this heading">#</a></h3>
+<p>The queries that are collected from each catalog.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.gaia.query&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Gmag&quot;</span><span class="p">,</span> <span class="s2">&quot;pmRA&quot;</span><span class="p">,</span> <span class="s2">&quot;pmDE&quot;</span><span class="p">]</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.tycho.query&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;VTmag&quot;</span><span class="p">]</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.2mass.query&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Jmag&quot;</span><span class="p">,</span> <span class="s2">&quot;Hmag&quot;</span><span class="p">,</span> <span class="s2">&quot;Kmag&quot;</span><span class="p">]</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.nomad.query&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Vmag&quot;</span><span class="p">]</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.wise.query&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;W1mag&quot;</span><span class="p">,</span> <span class="s2">&quot;W3mag&quot;</span><span class="p">,</span> <span class="s2">&quot;Hmag&quot;</span><span class="p">,</span> <span class="s2">&quot;Kmag&quot;</span><span class="p">]</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.mdfc.query&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;med-Lflux&quot;</span><span class="p">,</span> <span class="s2">&quot;med-Nflux&quot;</span><span class="p">,</span> <span class="s2">&quot;Hmag&quot;</span><span class="p">,</span> <span class="s2">&quot;Kmag&quot;</span><span class="p">]</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.simbad.query&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;RA&quot;</span><span class="p">,</span> <span class="s2">&quot;DEC&quot;</span><span class="p">,</span> <span class="s2">&quot;PMRA&quot;</span><span class="p">,</span> <span class="s2">&quot;PMDEC&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;FLUX_V&quot;</span><span class="p">,</span> <span class="s2">&quot;FLUX_H&quot;</span><span class="p">,</span> <span class="s2">&quot;FLUX_K&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The possible fields for the catalogs are the following</p>
+<p>For <code class="code highlight python docutils literal highlight-python"><span class="n">simbad</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;MAIN_ID&#39;</span><span class="p">,</span> <span class="s1">&#39;RA&#39;</span><span class="p">,</span> <span class="s1">&#39;DEC&#39;</span><span class="p">,</span> <span class="s1">&#39;RA_PREC&#39;</span><span class="p">,</span> <span class="s1">&#39;DEC_PREC&#39;</span><span class="p">,</span> <span class="s1">&#39;COO_ERR_MAJA&#39;</span><span class="p">,</span>
+<span class="s1">&#39;COO_ERR_MINA&#39;</span><span class="p">,</span> <span class="s1">&#39;COO_ERR_ANGLE&#39;</span><span class="p">,</span> <span class="s1">&#39;COO_QUAL&#39;</span><span class="p">,</span> <span class="s1">&#39;COO_WAVELENGTH&#39;</span><span class="p">,</span> <span class="s1">&#39;COO_BIBCODE&#39;</span><span class="p">,</span>
+<span class="s1">&#39;MK_ds&#39;</span><span class="p">,</span> <span class="s1">&#39;MK_mss&#39;</span><span class="p">,</span> <span class="s1">&#39;MK_Spectral_type&#39;</span><span class="p">,</span> <span class="s1">&#39;MK_bibcode&#39;</span><span class="p">,</span> <span class="s1">&#39;SP_TYPE&#39;</span><span class="p">,</span> <span class="s1">&#39;SP_TYPE_2&#39;</span><span class="p">,</span>
+<span class="s1">&#39;SP_QUAL&#39;</span><span class="p">,</span> <span class="s1">&#39;SP_BIBCODE&#39;</span><span class="p">,</span> <span class="s1">&#39;Fe_H_Teff&#39;</span><span class="p">,</span> <span class="s1">&#39;Fe_H_log_g&#39;</span><span class="p">,</span> <span class="s1">&#39;Fe_H_Fe_H&#39;</span><span class="p">,</span> <span class="s1">&#39;Fe_H_flag&#39;</span><span class="p">,</span>
+<span class="s1">&#39;Fe_H_CompStar&#39;</span><span class="p">,</span> <span class="s1">&#39;Fe_H_CatNo&#39;</span><span class="p">,</span> <span class="s1">&#39;Fe_H_bibcode&#39;</span><span class="p">,</span> <span class="s1">&#39;PMRA&#39;</span><span class="p">,</span> <span class="s1">&#39;PMDEC&#39;</span><span class="p">,</span> <span class="s1">&#39;PM_ERR_MAJA&#39;</span><span class="p">,</span>
+<span class="s1">&#39;PM_ERR_MINA&#39;</span><span class="p">,</span> <span class="s1">&#39;PM_ERR_ANGLE&#39;</span><span class="p">,</span> <span class="s1">&#39;PLX_VALUE&#39;</span><span class="p">,</span> <span class="s1">&#39;RV_VALUE&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX_U&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX_ERROR_U&#39;</span><span class="p">,</span>
+<span class="s1">&#39;FLUX_B&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX_ERROR_B&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX_V&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX_ERROR_V&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX_R&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX_ERROR_R&#39;</span><span class="p">,</span>
+<span class="s1">&#39;FLUX_I&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX_ERROR_I&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX_J&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX_ERROR_J&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX_H&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX_ERROR_H&#39;</span><span class="p">,</span>
+<span class="s1">&#39;FLUX_K&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX_ERROR_K&#39;</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="compose.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">p2obp.backend.compose</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="parse.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">p2obp.backend.parse</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logger-settings">Logger Settings</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ob-creation">OB Creation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#general">General</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-time">Integration time</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#query">Query</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#used-catalogs">Used Catalogs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#catalog-fields">Catalog fields</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#catalog-queries">Catalog queries</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../_sources/modules/options.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+  <p class="copyright">
+    
+      © Copyright 2023, Marten Scheuck.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item"><p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.3.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,866 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>p2obp.automate &#8212; p2obp 1.0.3 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/p2obp/automate';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  <div class="navbar-header-items__start">
+    
+      <div class="navbar-item">
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">p2obp 1.0.3 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../getting_started.html">
+                        Getting Started
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../features.html">
+                        Features
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../api.html">
+                        API
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-external" href="https://github.com/MBSck/p2obp/releases">
+                        Changelog
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../credit.html">
+                        Credit
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+        </div>
+      
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+    </div>
+  
+
+  
+</div>
+
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../getting_started.html">
+                        Getting Started
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../features.html">
+                        Features
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../api.html">
+                        API
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-external" href="https://github.com/MBSck/p2obp/releases">
+                        Changelog
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../credit.html">
+                        Credit
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumbs">
+  <ul class="bd-breadcrumbs" role="navigation" aria-label="Breadcrumb">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">p2obp.automate</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <h1>Source code for p2obp.automate</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">p2api</span>
+
+<span class="kn">from</span> <span class="nn">.backend</span> <span class="kn">import</span> <span class="n">options</span>
+<span class="kn">from</span> <span class="nn">.backend.compose</span> <span class="kn">import</span> <span class="n">set_ob_name</span><span class="p">,</span> <span class="n">write_ob</span><span class="p">,</span> <span class="n">compose_ob</span>
+<span class="kn">from</span> <span class="nn">.backend.parse</span> <span class="kn">import</span> <span class="n">parse_array_config</span><span class="p">,</span> <span class="n">parse_operational_mode</span><span class="p">,</span>\
+    <span class="n">parse_run_resolution</span><span class="p">,</span> <span class="n">parse_run_prog_id</span><span class="p">,</span> <span class="n">parse_night_name</span><span class="p">,</span> <span class="n">parse_night_plan</span>
+<span class="kn">from</span> <span class="nn">.backend.upload</span> <span class="kn">import</span> <span class="n">login</span><span class="p">,</span> <span class="n">get_remote_run</span><span class="p">,</span>\
+    <span class="n">create_remote_container</span><span class="p">,</span> <span class="n">upload_ob</span>
+
+
+<span class="c1"># TODO: Make this shorter? Or into an option even?</span>
+<span class="n">OPERATIONAL_MODES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;both&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;standalone&quot;</span><span class="p">,</span> <span class="s2">&quot;GRA4MAT&quot;</span><span class="p">],</span>
+                     <span class="s2">&quot;st&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;standalone&quot;</span><span class="p">],</span> <span class="s2">&quot;gr&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;GRA4MAT&quot;</span><span class="p">],</span>
+                     <span class="s2">&quot;matisse&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;standalone&quot;</span><span class="p">],</span> <span class="s2">&quot;gra4mat&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;GRA4MAT&quot;</span><span class="p">]}</span>
+
+<span class="c1"># TOOD: Add night astronomer comments to template</span>
+<span class="c1"># TODO: Find way to switch of photometry of template</span>
+<div class="viewcode-block" id="copy_list_and_replace_values"><a class="viewcode-back" href="../../automate.html#p2obp.automate.copy_list_and_replace_values">[docs]</a><span class="k">def</span> <span class="nf">copy_list_and_replace_values</span><span class="p">(</span><span class="n">input_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Replaces all values in list with the given value. Takes into account</span>
+<span class="sd">    nested lists.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input_list : list of any</span>
+<span class="sd">        An input list of any form. May contain once-nested lists.</span>
+<span class="sd">    value : any</span>
+<span class="sd">        Any value that will make up the new list.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    output_list : list</span>
+<span class="sd">        The input_list with all its values replaced by the given value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">output_list</span> <span class="o">=</span> <span class="n">input_list</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">input_list</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">sub_index</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">element</span><span class="p">):</span>
+                <span class="n">output_list</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="n">sub_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">output_list</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="k">return</span> <span class="n">output_list</span></div>
+
+
+<div class="viewcode-block" id="read_dict_to_lists"><a class="viewcode-back" href="../../automate.html#p2obp.automate.read_dict_to_lists">[docs]</a><span class="k">def</span> <span class="nf">read_dict_to_lists</span><span class="p">(</span><span class="n">night</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reads the data of the night plan contained in a dictionary</span>
+<span class="sd">    into the four lists (targets, calibrators, order and tags).&quot;&quot;&quot;</span>
+    <span class="n">targets</span><span class="p">,</span> <span class="n">calibrators</span><span class="p">,</span> <span class="n">orders</span><span class="p">,</span> <span class="n">tags</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">calibrator</span> <span class="ow">in</span> <span class="n">night</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">targets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">calibrator</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">calibrators</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">calibrator</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">])</span>
+            <span class="n">orders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">calibrator</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;order&quot;</span><span class="p">])</span>
+            <span class="n">tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">calibrator</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;tag&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cal_info</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="n">calibrator</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+                                  <span class="n">calibrator</span><span class="p">[</span><span class="s2">&quot;order&quot;</span><span class="p">],</span>
+                                  <span class="n">calibrator</span><span class="p">[</span><span class="s2">&quot;tag&quot;</span><span class="p">])</span>
+                                <span class="k">for</span> <span class="n">calibrator</span> <span class="ow">in</span> <span class="n">calibrator</span><span class="p">])</span>
+            <span class="n">calibrators</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cal_info</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+            <span class="n">orders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cal_info</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+            <span class="n">tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cal_info</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">targets</span><span class="p">,</span> <span class="n">calibrators</span><span class="p">,</span> <span class="n">orders</span><span class="p">,</span> <span class="n">tags</span></div>
+
+
+<div class="viewcode-block" id="unwrap_lists"><a class="viewcode-back" href="../../automate.html#p2obp.automate.unwrap_lists">[docs]</a><span class="k">def</span> <span class="nf">unwrap_lists</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">calibrator</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+                 <span class="n">order</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+                 <span class="n">tag</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This untangles the calibrators, orders and tags</span>
+<span class="sd">    lists into a sequential lists that has the target at</span>
+<span class="sd">    its centre.</span>
+
+<span class="sd">    The structure of the list is that they contain tuples</span>
+<span class="sd">    as entries of the form (&lt;calibrator/target&gt;, &lt;cal/sci-flag&gt;, &lt;tag&gt;,).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">calibrators_before</span><span class="p">,</span> <span class="n">calibrators_after</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">calibrator</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">cal</span><span class="p">,</span> <span class="nb">ord</span><span class="p">,</span> <span class="n">tg</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">calibrator</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">ord</span> <span class="o">==</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span>
+                <span class="n">calibrators_before</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cal</span><span class="p">,</span> <span class="s2">&quot;cal&quot;</span><span class="p">,</span> <span class="n">tg</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">calibrators_after</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cal</span><span class="p">,</span> <span class="s2">&quot;cal&quot;</span><span class="p">,</span> <span class="n">tg</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">order</span> <span class="o">==</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span>
+            <span class="n">calibrators_before</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">calibrator</span><span class="p">,</span> <span class="s2">&quot;cal&quot;</span><span class="p">,</span> <span class="n">tag</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">calibrators_after</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">calibrator</span><span class="p">,</span> <span class="s2">&quot;cal&quot;</span><span class="p">,</span> <span class="n">tag</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">calibrators_before</span> <span class="o">+</span> <span class="p">[(</span><span class="n">target</span><span class="p">,</span> <span class="s2">&quot;sci&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)]</span> <span class="o">+</span> <span class="n">calibrators_after</span></div>
+
+
+<div class="viewcode-block" id="create_ob"><a class="viewcode-back" href="../../automate.html#p2obp.automate.create_ob">[docs]</a><span class="k">def</span> <span class="nf">create_ob</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+              <span class="n">observational_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+              <span class="n">array_configuration</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+              <span class="n">operational_mode</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;st&quot;</span><span class="p">,</span>
+              <span class="n">sci_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="n">tag</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="n">resolution</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;low&quot;</span><span class="p">,</span>
+              <span class="n">connection</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">p2api</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="n">container_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+              <span class="n">server</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;production&quot;</span><span class="p">,</span>
+              <span class="n">output_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    target : str</span>
+<span class="sd">    observational_type : str</span>
+<span class="sd">    array_configuration : str</span>
+<span class="sd">        Determines the array configuration. Possible values are &quot;UTs&quot;,</span>
+<span class="sd">        &quot;small&quot;, &quot;medium&quot;, &quot;large&quot;, &quot;extended&quot;.</span>
+<span class="sd">    operational_mode : str, optional</span>
+<span class="sd">        The mode of operation for MATISSE. Can be either &quot;st&quot;/&quot;standalone&quot;</span>
+<span class="sd">        for the MATISSE-standalone mode or &quot;gr&quot;/&quot;gra4mat&quot; for GRA4MAT.</span>
+<span class="sd">        Default is standalone.</span>
+<span class="sd">    sci_name : str, optional</span>
+<span class="sd">    tag : str, optional</span>
+<span class="sd">    resolution : str, optional</span>
+<span class="sd">    connection : p2api, optional</span>
+<span class="sd">    container_id : int, optional</span>
+<span class="sd">    output_dir : path, optional</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">ob</span> <span class="o">=</span> <span class="n">compose_ob</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">observational_type</span><span class="p">,</span>
+                        <span class="n">array_configuration</span><span class="p">,</span> <span class="n">operational_mode</span><span class="p">,</span>
+                        <span class="n">sci_name</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">resolution</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">container_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">connection</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">connection</span> <span class="o">=</span> <span class="n">login</span><span class="p">(</span><span class="n">server</span><span class="o">=</span><span class="n">server</span><span class="p">)</span>
+            <span class="n">upload_ob</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">ob</span><span class="p">,</span> <span class="n">container_id</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ob_name</span> <span class="o">=</span> <span class="n">set_ob_name</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">observational_type</span><span class="p">,</span> <span class="n">sci_name</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span>
+            <span class="n">write_ob</span><span class="p">(</span><span class="n">ob</span><span class="p">,</span> <span class="n">ob_name</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[ERROR]: Failed creating OB &#39;</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&#39;! See &#39;p2obp.log&#39;.&quot;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;[ERROR]: Failed creating OB &#39;</span><span class="si">{target}</span><span class="s2">&#39;!&quot;</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="create_obs_from_lists"><a class="viewcode-back" href="../../automate.html#p2obp.automate.create_obs_from_lists">[docs]</a><span class="k">def</span> <span class="nf">create_obs_from_lists</span><span class="p">(</span><span class="n">targets</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                          <span class="n">calibrators</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]],</span>
+                          <span class="n">orders</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]],</span>
+                          <span class="n">tags</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]],</span>
+                          <span class="n">operational_mode</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                          <span class="n">observational_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                          <span class="n">array_configuration</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                          <span class="n">resolution</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+                          <span class="n">connection</span><span class="p">:</span> <span class="n">p2api</span><span class="p">,</span>
+                          <span class="n">container_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                          <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    targets : list of str</span>
+<span class="sd">    calibrators : list of str or list of list of str</span>
+<span class="sd">    orders : list of str or list of list of str</span>
+<span class="sd">    tags : list of str or list of list of str</span>
+<span class="sd">    operational_mode : str</span>
+<span class="sd">        The mode MATISSE is operated in and for which the OBs are created.</span>
+<span class="sd">        Either &quot;st&quot; for standalone, &quot;gr&quot; for GRA4MAT_ft_vis or &quot;both&quot;,</span>
+<span class="sd">        if obs for both are to be created. Default is &quot;st&quot;.</span>
+<span class="sd">    observational_mode : str, optional</span>
+<span class="sd">        Can either be &quot;vm&quot; for Visitor Mode (VM) or &quot;sm&quot; for Service</span>
+<span class="sd">        Mode (SM). Default is &quot;vm&quot;.</span>
+<span class="sd">    array_configuration : str</span>
+<span class="sd">    resolution: dict, optional</span>
+<span class="sd">        The default spectral resolutions for the obs in L-band. This is</span>
+<span class="sd">        a dictionary containing as keys the individual science targets</span>
+<span class="sd">        (the calibrators will be matched) and as values the resolution</span>
+<span class="sd">        of the specific target. The values have to be either &quot;low&quot;, &quot;med&quot;</span>
+<span class="sd">        or &quot;high&quot;. Default resolution is &quot;low&quot; and can be set via</span>
+<span class="sd">        options[&quot;resolution&quot;].</span>
+<span class="sd">    connection : p2api</span>
+<span class="sd">        The P2 python api.</span>
+<span class="sd">    container_id : int</span>
+<span class="sd">        The id that specifies the ob on p2.</span>
+<span class="sd">    output_dir : path</span>
+<span class="sd">        The output directory, where the (.obx)-files will be created in.</span>
+<span class="sd">        If left at &quot;None&quot; no files will be created.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">mode</span> <span class="ow">in</span> <span class="n">OPERATIONAL_MODES</span><span class="p">[</span><span class="n">operational_mode</span><span class="o">.</span><span class="n">lower</span><span class="p">()]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;&#39;</span><span class="si">:</span><span class="s2">-^50</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating OBs for </span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">-mode...&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;&#39;</span><span class="si">:</span><span class="s2">-^50</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">calibrators</span><span class="p">:</span>
+            <span class="n">calibrators</span> <span class="o">=</span> <span class="n">copy_list_and_replace_values</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">tags</span><span class="p">:</span>
+            <span class="n">tags</span> <span class="o">=</span> <span class="n">copy_list_and_replace_values</span><span class="p">(</span><span class="n">calibrators</span><span class="p">,</span> <span class="s2">&quot;LN&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">orders</span><span class="p">:</span>
+            <span class="n">orders</span> <span class="o">=</span> <span class="n">copy_list_and_replace_values</span><span class="p">(</span><span class="n">calibrators</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mode_out_dir</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="n">mode</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">mode_out_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="n">mode_out_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mode_out_dir</span> <span class="o">=</span> <span class="n">output_dir</span>
+
+        <span class="k">if</span> <span class="n">observational_type</span> <span class="o">==</span> <span class="s2">&quot;vm&quot;</span> <span class="ow">and</span> <span class="n">container_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mode_id</span> <span class="o">=</span> <span class="n">create_remote_container</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span>
+                                              <span class="n">container_id</span><span class="p">,</span> <span class="n">observational_type</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mode_id</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">calibrator</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">tag</span> \
+                <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="n">calibrators</span><span class="p">,</span> <span class="n">orders</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">mode_out_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">target_dir</span> <span class="o">=</span> <span class="n">mode_out_dir</span> <span class="o">/</span> <span class="n">target</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">target_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                    <span class="n">target_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">target_dir</span> <span class="o">=</span> <span class="n">mode_out_dir</span>
+
+            <span class="k">if</span> <span class="n">observational_type</span> <span class="o">==</span> <span class="s2">&quot;vm&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">mode_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">target_id</span> <span class="o">=</span> <span class="n">create_remote_container</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span>
+                                                        <span class="n">mode_id</span><span class="p">,</span> <span class="n">observational_type</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">container_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">target_id</span> <span class="o">=</span> <span class="n">create_remote_container</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span>
+                                                        <span class="n">container_id</span><span class="p">,</span> <span class="n">observational_type</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">target_id</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="k">if</span> <span class="n">resolution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">resolution</span><span class="p">:</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">resolution</span><span class="p">[</span><span class="n">target</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;resolution&quot;</span><span class="p">]</span>
+
+            <span class="n">unwrapped_lists</span> <span class="o">=</span> <span class="n">unwrap_lists</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">calibrator</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">sci_cal_flag</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span> <span class="ow">in</span> <span class="n">unwrapped_lists</span><span class="p">:</span>
+                <span class="n">sci_name</span> <span class="o">=</span> <span class="n">target</span> <span class="k">if</span> <span class="n">sci_cal_flag</span> <span class="o">==</span> <span class="s2">&quot;cal&quot;</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">create_ob</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">sci_cal_flag</span><span class="p">,</span> <span class="n">array_configuration</span><span class="p">,</span>
+                          <span class="n">operational_mode</span><span class="p">,</span> <span class="n">sci_name</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span>
+                          <span class="n">connection</span><span class="p">,</span> <span class="n">target_id</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="n">target_dir</span><span class="p">)</span></div>
+
+
+<span class="c1"># TODO: Write down how the runs need to be written down in the observing plan -&gt; Make</span>
+<span class="c1"># it automatic at some point</span>
+<span class="c1"># TODO: Make print better if both uploading and making is active</span>
+<span class="c1"># TODO: Log if nan appears in dataset or empty value</span>
+<div class="viewcode-block" id="create_obs_from_dict"><a class="viewcode-back" href="../../automate.html#p2obp.automate.create_obs_from_dict">[docs]</a><span class="k">def</span> <span class="nf">create_obs_from_dict</span><span class="p">(</span><span class="n">night_plan</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+                         <span class="n">operational_mode</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                         <span class="n">observational_mode</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                         <span class="n">resolution</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+                         <span class="n">container_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                         <span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                         <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                         <span class="n">server</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                         <span class="n">output_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Also automatically gets the operational mode, the array_config,</span>
+<span class="sd">    the resolution and the run&#39;s program id from the run name and if</span>
+<span class="sd">    it cannot be detected, it will then prompts the user to input it</span>
+<span class="sd">    manually.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    night_plan : dict</span>
+<span class="sd">        A dictionary containing a parsed night plan. If given</span>
+<span class="sd">        it will automatically upload the obs to p2.</span>
+<span class="sd">    operational_mode : str</span>
+<span class="sd">        The mode MATISSE is operated in and for which the OBs are created.</span>
+<span class="sd">        Either &quot;st&quot; for standalone, &quot;gr&quot; for GRA4MAT_ft_vis or &quot;both&quot;,</span>
+<span class="sd">        if obs for both are to be created. Default is &quot;st&quot;.</span>
+<span class="sd">    observational_mode : str, optional</span>
+<span class="sd">        Can either be &quot;vm&quot; for Visitor Mode (VM) or &quot;sm&quot; for Service</span>
+<span class="sd">        Mode (SM). Default is &quot;vm&quot;.</span>
+<span class="sd">    resolution: dict, optional</span>
+<span class="sd">        The default spectral resolutions for the obs in L-band. This is</span>
+<span class="sd">        a dictionary containing as keys the individual science targets</span>
+<span class="sd">        (the calibrators will be matched) and as values the resolution</span>
+<span class="sd">        of the specific target. The values have to be either &quot;low&quot;, &quot;med&quot;</span>
+<span class="sd">        or &quot;high&quot;. Default resolution is &quot;low&quot; and can be set via</span>
+<span class="sd">        options[&quot;resolution&quot;].</span>
+<span class="sd">    container_id : int</span>
+<span class="sd">    username : str</span>
+<span class="sd">        The p2 user name.</span>
+<span class="sd">    password : str</span>
+<span class="sd">        The p2 user password.</span>
+<span class="sd">    server: str, optional</span>
+<span class="sd">    output_dir : path</span>
+<span class="sd">        The output directory, where the (.obx)-files will be created in.</span>
+<span class="sd">        If left at &quot;None&quot; no files will be created.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">server</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">run_key</span><span class="p">,</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">night_plan</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># TODO: Enable direct user input for these? Add more parameters?</span>
+        <span class="c1"># Maybe make this parsing more robust?</span>
+        <span class="c1"># TODO: Avoid program stoppage caused by this parsing errors and</span>
+        <span class="c1"># just give user that information.</span>
+        <span class="k">if</span> <span class="n">container_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">run_prog_id</span> <span class="o">=</span> <span class="n">parse_run_prog_id</span><span class="p">(</span><span class="n">run_key</span><span class="p">)</span>
+            <span class="n">run_id</span> <span class="o">=</span> <span class="n">get_remote_run</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">run_prog_id</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">run_id</span> <span class="o">=</span> <span class="n">container_id</span>
+        <span class="n">array_config</span> <span class="o">=</span> <span class="n">parse_array_config</span><span class="p">(</span><span class="n">run_key</span><span class="p">)</span>
+        <span class="n">operational_mode</span> <span class="o">=</span> <span class="n">parse_operational_mode</span><span class="p">(</span><span class="n">run_key</span><span class="p">)</span>
+        <span class="c1"># TODO: Make this so it automatically sets the option</span>
+        <span class="n">options</span><span class="p">[</span><span class="s2">&quot;resolution&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse_run_resolution</span><span class="p">(</span><span class="n">run_key</span><span class="p">)</span>
+
+        <span class="c1"># TODO: Improve this error and make it possible to also only</span>
+        <span class="c1"># generated (.obx)-files.</span>
+        <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">run_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Determining run id automatically&quot;</span>
+                             <span class="s2">&quot; or via input has failed!&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">run_name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">run_key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+            <span class="n">run_dir</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="n">run_name</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">run_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="n">run_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">run_dir</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;&#39;</span><span class="si">:</span><span class="s2">-^50</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating OBs for </span><span class="si">{</span><span class="n">run_key</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">night_key</span><span class="p">,</span> <span class="n">night</span> <span class="ow">in</span> <span class="n">run</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;&#39;</span><span class="si">:</span><span class="s2">-^50</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="n">night_name</span> <span class="o">=</span> <span class="n">parse_night_name</span><span class="p">(</span><span class="n">night_key</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">observational_mode</span> <span class="o">==</span> <span class="s2">&quot;vm&quot;</span><span class="p">:</span>
+                <span class="n">night_id</span> <span class="o">=</span> <span class="n">create_remote_container</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span>
+                                                   <span class="n">night_name</span><span class="p">,</span>
+                                                   <span class="n">run_id</span><span class="p">,</span>
+                                                   <span class="n">observational_mode</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">night_id</span> <span class="o">=</span> <span class="n">run_id</span>
+
+            <span class="k">if</span> <span class="n">run_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">night_dir</span> <span class="o">=</span> <span class="n">run_dir</span> <span class="o">/</span> <span class="n">night_name</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating folder: &#39;</span><span class="si">{</span><span class="n">night_dir</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;, and filling it with OBs...&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">night_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                    <span class="n">night_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">night_dir</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="n">create_obs_from_lists</span><span class="p">(</span><span class="o">*</span><span class="n">read_dict_to_lists</span><span class="p">(</span><span class="n">night</span><span class="p">),</span> <span class="n">operational_mode</span><span class="p">,</span>
+                                  <span class="n">observational_mode</span><span class="p">,</span> <span class="n">array_config</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span>
+                                  <span class="n">connection</span><span class="p">,</span> <span class="n">night_id</span><span class="p">,</span> <span class="n">night_dir</span><span class="p">)</span></div>
+
+
+<span class="c1"># TODO: Think of implementation of uploading after parsing?</span>
+<span class="c1"># TODO: Think of adding the `create_ob` script that combines `compose_ob` and </span>
+<span class="c1"># `upload_ob`.</span>
+<div class="viewcode-block" id="create_obs"><a class="viewcode-back" href="../../automate.html#p2obp.automate.create_obs">[docs]</a><span class="k">def</span> <span class="nf">create_obs</span><span class="p">(</span><span class="n">night_plan</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="n">manual_input</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="n">operational_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;st&quot;</span><span class="p">,</span>
+               <span class="n">observational_mode</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;vm&quot;</span><span class="p">,</span>
+               <span class="n">resolution</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="n">container_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="n">username</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="n">password</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="n">server</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;production&quot;</span><span class="p">,</span>
+               <span class="n">output_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    night_plan : path, optional</span>
+<span class="sd">        A dictionary containing a parsed night plan. If given</span>
+<span class="sd">        it will automatically upload the obs to p2.</span>
+<span class="sd">    manual_input : list of lists, optional</span>
+<span class="sd">        The manual input of the four needed lists</span>
+<span class="sd">        [targets, calibrators, tags, order]. Only the &quot;targets&quot; and</span>
+<span class="sd">        &quot;calibrators&quot; list need to be provided, &quot;tags&quot; and &quot;order&quot; can</span>
+<span class="sd">        be autofilled.</span>
+<span class="sd">    operational_mode : str, optional</span>
+<span class="sd">        The mode MATISSE is operated in and for which the OBs are created.</span>
+<span class="sd">        Either &quot;st&quot; for standalone, &quot;gr&quot; for GRA4MAT_ft_vis or &quot;both&quot;,</span>
+<span class="sd">        if obs for both are to be created. Default is &quot;st&quot;.</span>
+<span class="sd">    observational_mode : str, optional</span>
+<span class="sd">        Can either be &quot;vm&quot; for Visitor Mode (VM) or &quot;sm&quot; for Service</span>
+<span class="sd">        Mode (SM). Default is &quot;vm&quot;.</span>
+<span class="sd">    resolution: dict, optional</span>
+<span class="sd">        The default spectral resolutions for the obs in L-band. This is</span>
+<span class="sd">        a dictionary containing as keys the individual science targets</span>
+<span class="sd">        (the calibrators will be matched) and as values the resolution</span>
+<span class="sd">        of the specific target. The values have to be either &quot;low&quot;, &quot;med&quot;</span>
+<span class="sd">        or &quot;high&quot;. Default resolution is &quot;low&quot; and can be set via</span>
+<span class="sd">        options[&quot;resolution&quot;].</span>
+<span class="sd">    container_id : int, optional</span>
+<span class="sd">        The id that specifies the ob on p2.</span>
+<span class="sd">    username : str, optional</span>
+<span class="sd">        The p2 user name.</span>
+<span class="sd">    password : str, optional</span>
+<span class="sd">        The p2 user password.</span>
+<span class="sd">    server: str, optional</span>
+<span class="sd">    output_dir: path, optional</span>
+<span class="sd">        The output directory, where the (.obx)-files will be created in.</span>
+<span class="sd">        If left at &quot;None&quot; no files will be created.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">night_plan</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">container_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;Either output directory, container id or&quot;</span>
+                      <span class="s2">&quot; night plan must be set!&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">output_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;manualOBs&quot;</span><span class="p">)</span>\
+                <span class="k">if</span> <span class="n">manual_input</span> <span class="k">else</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;automaticOBs&quot;</span><span class="p">)</span>
+        <span class="c1"># TODO: Apply here a removal of the old files</span>
+
+    <span class="k">if</span> <span class="n">manual_input</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">array_config</span> <span class="o">=</span> <span class="n">parse_array_config</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">targets</span><span class="p">,</span> <span class="n">calibrators</span><span class="p">,</span> <span class="n">orders</span><span class="p">,</span> <span class="n">tags</span> <span class="o">=</span> <span class="n">manual_input</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;In case of manual input four lists &quot;</span>
+                             <span class="s2">&quot; (science_targets, calibrators, orders, tag)&quot;</span>
+                             <span class="s2">&quot; must be given!&quot;</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">exc</span>
+        <span class="k">if</span> <span class="n">container_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">connection</span> <span class="o">=</span> <span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">server</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">connection</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">create_obs_from_lists</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="n">calibrators</span><span class="p">,</span> <span class="n">orders</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span>
+                              <span class="n">operational_mode</span><span class="p">,</span> <span class="n">observational_mode</span><span class="p">,</span> <span class="n">array_config</span><span class="p">,</span>
+                              <span class="n">resolution</span><span class="p">,</span> <span class="n">connection</span><span class="p">,</span> <span class="n">container_id</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">night_plan</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">night_plan</span> <span class="o">=</span> <span class="n">parse_night_plan</span><span class="p">(</span><span class="n">night_plan</span><span class="p">)</span>
+        <span class="n">create_obs_from_dict</span><span class="p">(</span><span class="n">night_plan</span><span class="p">,</span> <span class="n">operational_mode</span><span class="p">,</span>
+                             <span class="n">observational_mode</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">container_id</span><span class="p">,</span>
+                             <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;Neither manul input list or input&quot;</span>
+                      <span class="s2">&quot; night plan path has been detected!&quot;</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">outdir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/Users/scheuck/Data/observations/obs/&quot;</span><span class="p">)</span>
+    <span class="n">night_plan</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/Users/scheuck/Data/observations/CIAO/MATISSE_CIAO_UTs_plan_v2.txt&quot;</span><span class="p">)</span>
+
+    <span class="n">sci_lst</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;YLW 16A&quot;</span><span class="p">]</span>
+    <span class="n">cal_lst</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">order_lst</span><span class="p">,</span> <span class="n">tag_lst</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="n">manual_lst</span> <span class="o">=</span> <span class="p">[</span><span class="n">sci_lst</span><span class="p">,</span> <span class="n">cal_lst</span><span class="p">,</span> <span class="n">order_lst</span><span class="p">,</span> <span class="n">tag_lst</span><span class="p">]</span>
+
+    <span class="n">res_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.local.active&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;ciao&quot;</span>
+    <span class="n">create_obs</span><span class="p">(</span><span class="n">night_plan</span><span class="o">=</span><span class="n">night_plan</span><span class="p">,</span> <span class="n">container_id</span><span class="o">=</span><span class="mi">3634531</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="s2">&quot;MATISSETeam&quot;</span><span class="p">)</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+  <p class="copyright">
+    
+      © Copyright 2023, Marten Scheuck.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item"><p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.3.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

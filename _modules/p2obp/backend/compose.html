@@ -1,0 +1,803 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>p2obp.backend.compose &#8212; p2obp 1.0.3 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/p2obp/backend/compose';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  <div class="navbar-header-items__start">
+    
+      <div class="navbar-item">
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">p2obp 1.0.3 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../getting_started.html">
+                        Getting Started
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../features.html">
+                        Features
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../api.html">
+                        API
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-external" href="https://github.com/MBSck/p2obp/releases">
+                        Changelog
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../credit.html">
+                        Credit
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+        </div>
+      
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+    </div>
+  
+
+  
+</div>
+
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../getting_started.html">
+                        Getting Started
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../features.html">
+                        Features
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../api.html">
+                        API
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-external" href="https://github.com/MBSck/p2obp/releases">
+                        Changelog
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../../credit.html">
+                        Credit
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumbs">
+  <ul class="bd-breadcrumbs" role="navigation" aria-label="Breadcrumb">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">p2obp.backend.compose</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <h1>Source code for p2obp.backend.compose</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span> <span class="nn">astropy.units</span> <span class="k">as</span> <span class="nn">u</span>
+<span class="kn">import</span> <span class="nn">pkg_resources</span>
+<span class="kn">import</span> <span class="nn">toml</span>
+<span class="kn">from</span> <span class="nn">astropy.coordinates</span> <span class="kn">import</span> <span class="n">SkyCoord</span>
+
+<span class="kn">from</span> <span class="nn">.query</span> <span class="kn">import</span> <span class="n">query</span>
+<span class="kn">from</span> <span class="nn">.options</span> <span class="kn">import</span> <span class="n">options</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">convert_proper_motions</span>
+
+<span class="c1"># TODO: Include log message if nan has been replaced</span>
+<span class="c1"># TODO: Exchange, possibly slow function?</span>
+<span class="n">TEMPLATE_FILE</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s2">&quot;p2obp&quot;</span><span class="p">,</span> <span class="s2">&quot;data/templates.toml&quot;</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="load_template"><a class="viewcode-back" href="../../../modules/compose.html#p2obp.backend.compose.load_template">[docs]</a><span class="k">def</span> <span class="nf">load_template</span><span class="p">(</span><span class="n">file</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+                  <span class="n">header</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                  <span class="n">sub_header</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                  <span class="n">operational_mode</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Loads a template from a (.toml)-file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    file : path</span>
+<span class="sd">        A (.toml)-file containing templates.</span>
+<span class="sd">    header : str</span>
+<span class="sd">        The name of the specific template.</span>
+<span class="sd">    sub_header : str, optional</span>
+<span class="sd">        The name of a sub-template.</span>
+<span class="sd">    operational_mode : str, optional</span>
+<span class="sd">        The mode in which MATISSE is operated, either</span>
+<span class="sd">        &quot;gra4mat&quot; or &quot;matisse&quot;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    template : dict</span>
+<span class="sd">        A dictionary that is the template.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;r+&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">toml_file</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">operational_mode</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">toml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">toml_file</span><span class="p">)[</span><span class="n">operational_mode</span><span class="p">][</span><span class="n">header</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">toml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">toml_file</span><span class="p">)[</span><span class="n">header</span><span class="p">][</span><span class="n">sub_header</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="write_dict"><a class="viewcode-back" href="../../../modules/compose.html#p2obp.backend.compose.write_dict">[docs]</a><span class="k">def</span> <span class="nf">write_dict</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Iterates over the key and value pairs of a</span>
+<span class="sd">    dictionary and writes them.&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">key</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">40</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="write_ob"><a class="viewcode-back" href="../../../modules/compose.html#p2obp.backend.compose.write_ob">[docs]</a><span class="k">def</span> <span class="nf">write_ob</span><span class="p">(</span><span class="n">ob</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">ob_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Writes the (.obx)-file to the specified directory&quot;&quot;&quot;</span>
+    <span class="n">out_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ob_name</span><span class="si">}</span><span class="s2">.obx&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span> <span class="s2">&quot;w+&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">obx_file</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">dictionary</span> <span class="ow">in</span> <span class="n">ob</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+                <span class="k">for</span> <span class="n">sub_dict</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                    <span class="n">write_dict</span><span class="p">(</span><span class="n">obx_file</span><span class="p">,</span> <span class="n">sub_dict</span><span class="p">)</span>
+                    <span class="n">obx_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">write_dict</span><span class="p">(</span><span class="n">obx_file</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">)</span>
+                <span class="n">obx_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created OB: &#39;</span><span class="si">{</span><span class="n">ob_name</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="set_ob_name"><a class="viewcode-back" href="../../../modules/compose.html#p2obp.backend.compose.set_ob_name">[docs]</a><span class="k">def</span> <span class="nf">set_ob_name</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+                <span class="n">observation_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                <span class="n">sci_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">tag</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sets the OB&#39;s name.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    target : dict or str</span>
+<span class="sd">    observation_type : str</span>
+<span class="sd">    sci_name : str, optional</span>
+<span class="sd">    tag : str, Optional</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ob_name : str</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ob_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">observation_type</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">ob_name</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="n">target</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ob_name</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="n">target</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="n">sci_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ob_name</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="n">sci_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="n">ob_name</span> <span class="k">if</span> <span class="n">tag</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ob_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">tag</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+<div class="viewcode-block" id="set_resolution_and_dit"><a class="viewcode-back" href="../../../modules/compose.html#p2obp.backend.compose.set_resolution_and_dit">[docs]</a><span class="k">def</span> <span class="nf">set_resolution_and_dit</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+                           <span class="n">resolution</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                           <span class="n">operational_mode</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                           <span class="n">array_configuration</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    target : dict</span>
+<span class="sd">    resolution : str</span>
+<span class="sd">    operational_mode : str</span>
+<span class="sd">    array_configuration : str</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    resolution : str</span>
+<span class="sd">    dit : float</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">array</span> <span class="o">=</span> <span class="s2">&quot;uts&quot;</span> <span class="k">if</span> <span class="s2">&quot;ut&quot;</span> <span class="ow">in</span> <span class="n">array_configuration</span> <span class="k">else</span> <span class="s2">&quot;ats&quot;</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;dit.</span><span class="si">{</span><span class="n">operational_mode</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">array</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;resolution.overwrite&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">array</span> <span class="o">==</span> <span class="s2">&quot;uts&quot;</span> <span class="ow">and</span> <span class="s2">&quot;LResUT&quot;</span> <span class="ow">in</span> <span class="n">target</span><span class="p">:</span>
+            <span class="n">resolution</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;LResUT&quot;</span><span class="p">]</span>\
+                    <span class="k">if</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;LResUT&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;TBD&quot;</span> <span class="k">else</span> <span class="n">resolution</span>
+        <span class="k">elif</span> <span class="n">array</span> <span class="o">==</span> <span class="s2">&quot;ats&quot;</span> <span class="ow">and</span> <span class="s2">&quot;LResAT&quot;</span> <span class="ow">in</span> <span class="n">target</span><span class="p">:</span>
+            <span class="n">resolution</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;LResAT&quot;</span><span class="p">]</span>\
+                    <span class="k">if</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;LResAT&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;TBD&quot;</span> <span class="k">else</span> <span class="n">resolution</span>
+    <span class="k">return</span> <span class="n">resolution</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">options</span><span class="p">[</span><span class="n">key</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="format_proper_motions"><a class="viewcode-back" href="../../../modules/compose.html#p2obp.backend.compose.format_proper_motions">[docs]</a><span class="k">def</span> <span class="nf">format_proper_motions</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Correctly formats the right ascension&#39;s and declination&#39;s</span>
+<span class="sd">    proper motions.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;local.propRA&quot;</span> <span class="ow">in</span> <span class="n">target</span><span class="p">:</span>
+        <span class="n">propRa</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;local.propRa&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">&quot;local.propDec&quot;</span> <span class="ow">in</span> <span class="n">target</span><span class="p">:</span>
+        <span class="n">propDec</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;local.propDec&quot;</span><span class="p">]</span>
+    <span class="n">propRa</span><span class="p">,</span> <span class="n">propDec</span> <span class="o">=</span> <span class="n">convert_proper_motions</span><span class="p">(</span><span class="n">target</span><span class="p">[</span><span class="s2">&quot;PMRA&quot;</span><span class="p">],</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;PMDEC&quot;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">propRa</span><span class="p">,</span> <span class="n">propDec</span></div>
+
+
+<div class="viewcode-block" id="format_ra_and_dec"><a class="viewcode-back" href="../../../modules/compose.html#p2obp.backend.compose.format_ra_and_dec">[docs]</a><span class="k">def</span> <span class="nf">format_ra_and_dec</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Correclty formats the right ascension and declination.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;local.RA&quot;</span> <span class="ow">in</span> <span class="n">target</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;local.RA&quot;</span><span class="p">],</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;local.DEC&quot;</span><span class="p">]</span>
+    <span class="n">coordinates</span> <span class="o">=</span> <span class="n">SkyCoord</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">target</span><span class="p">[</span><span class="s1">&#39;RA&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">target</span><span class="p">[</span><span class="s1">&#39;DEC&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                           <span class="n">unit</span><span class="o">=</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">hourangle</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">))</span>
+    <span class="n">ra_hms</span> <span class="o">=</span> <span class="n">coordinates</span><span class="o">.</span><span class="n">ra</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">unit</span><span class="o">=</span><span class="n">u</span><span class="o">.</span><span class="n">hourangle</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">,</span>
+                                      <span class="n">pad</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">dec_dms</span> <span class="o">=</span> <span class="n">coordinates</span><span class="o">.</span><span class="n">dec</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">sep</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                        <span class="n">precision</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ra_hms</span><span class="p">,</span> <span class="n">dec_dms</span></div>
+
+
+<span class="c1"># CHECK: Implement some way to show that flux has been not set?</span>
+<div class="viewcode-block" id="format_fluxes"><a class="viewcode-back" href="../../../modules/compose.html#p2obp.backend.compose.format_fluxes">[docs]</a><span class="k">def</span> <span class="nf">format_fluxes</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Correctly gets and formats the fluxes from the queried data.&quot;&quot;&quot;</span>
+    <span class="n">flux_lband</span><span class="p">,</span> <span class="n">flux_nband</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="n">lband_keys</span><span class="p">,</span> <span class="n">nband_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Lflux&quot;</span><span class="p">,</span> <span class="s2">&quot;med-Lflux&quot;</span><span class="p">,</span> <span class="s2">&quot;W1mag&quot;</span><span class="p">],</span>\
+                             <span class="p">[</span><span class="s2">&quot;Nflux&quot;</span><span class="p">,</span> <span class="s2">&quot;med-Nflux&quot;</span><span class="p">,</span> <span class="s2">&quot;W3mag&quot;</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">lband_key</span><span class="p">,</span> <span class="n">nband_key</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">lband_keys</span><span class="p">,</span> <span class="n">nband_keys</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">lband_key</span> <span class="ow">in</span> <span class="n">target</span> <span class="ow">and</span> <span class="n">flux_lband</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">flux_lband</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="n">lband_key</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s2">&quot;mag&quot;</span> <span class="ow">in</span> <span class="n">lband_key</span><span class="p">:</span>
+                <span class="n">flux_lband</span> <span class="o">=</span> <span class="mf">309.54</span> <span class="o">*</span> <span class="mf">10.0</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="n">flux_lband</span><span class="o">/</span><span class="mf">2.5</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">nband_key</span> <span class="ow">in</span> <span class="n">target</span> <span class="ow">and</span> <span class="n">flux_nband</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">flux_nband</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="n">nband_key</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s2">&quot;mag&quot;</span> <span class="ow">in</span> <span class="n">nband_key</span><span class="p">:</span>
+                <span class="n">flux_nband</span> <span class="o">=</span> <span class="mf">31.674</span> <span class="o">*</span> <span class="mf">10.0</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="n">flux_nband</span><span class="o">/</span><span class="mf">2.5</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">flux_lband</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="k">if</span> <span class="n">flux_lband</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mf">0.</span><span class="p">,</span>\
+        <span class="nb">round</span><span class="p">(</span><span class="n">flux_nband</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="k">if</span> <span class="n">flux_nband</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mf">0.</span></div>
+
+
+<div class="viewcode-block" id="fill_header"><a class="viewcode-back" href="../../../modules/compose.html#p2obp.backend.compose.fill_header">[docs]</a><span class="k">def</span> <span class="nf">fill_header</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+                <span class="n">observation_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                <span class="n">array_configuration</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                <span class="n">sci_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">tag</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fills in the header dictionary with the information from the query.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    target : dict</span>
+<span class="sd">    observation_type : str</span>
+<span class="sd">    array_configuration : str</span>
+<span class="sd">    sci_name : str, optional</span>
+<span class="sd">    tag : str, optional</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    header : dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">header</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">header_user</span> <span class="o">=</span> <span class="n">load_template</span><span class="p">(</span><span class="n">TEMPLATE_FILE</span><span class="p">,</span>
+                                <span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="n">sub_header</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">)</span>
+    <span class="n">header_target</span> <span class="o">=</span> <span class="n">load_template</span><span class="p">(</span><span class="n">TEMPLATE_FILE</span><span class="p">,</span>
+                                  <span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="n">sub_header</span><span class="o">=</span><span class="s2">&quot;target&quot;</span><span class="p">)</span>
+    <span class="n">header_constraints</span> <span class="o">=</span> <span class="n">load_template</span><span class="p">(</span><span class="n">TEMPLATE_FILE</span><span class="p">,</span>
+                                       <span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="n">sub_header</span><span class="o">=</span><span class="s2">&quot;constraints&quot;</span><span class="p">)</span>
+    <span class="n">header_observation</span> <span class="o">=</span> <span class="n">load_template</span><span class="p">(</span><span class="n">TEMPLATE_FILE</span><span class="p">,</span>
+                                       <span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="n">sub_header</span><span class="o">=</span><span class="s2">&quot;observation&quot;</span><span class="p">)</span>
+    <span class="n">ob_name</span> <span class="o">=</span> <span class="n">set_ob_name</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">observation_type</span><span class="p">,</span> <span class="n">sci_name</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span>
+    <span class="n">ra_hms</span><span class="p">,</span> <span class="n">dec_dms</span> <span class="o">=</span> <span class="n">format_ra_and_dec</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+    <span class="n">prop_ra</span><span class="p">,</span> <span class="n">prop_dec</span> <span class="o">=</span> <span class="n">format_proper_motions</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+
+    <span class="n">header_user</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ob_name</span>
+    <span class="n">user_comments</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="s2">&quot;GSname&quot;</span> <span class="ow">in</span> <span class="n">target</span><span class="p">:</span>
+        <span class="n">user_comments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;GS: </span><span class="si">{</span><span class="n">target</span><span class="p">[</span><span class="s1">&#39;GSname&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;GSdist&quot;</span> <span class="ow">in</span> <span class="n">target</span><span class="p">:</span>
+        <span class="n">gs_distance</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">target</span><span class="p">[</span><span class="s2">&quot;GSdist&quot;</span><span class="p">])</span>
+        <span class="n">user_comments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;GS Distance: </span><span class="si">{</span><span class="n">gs_distance</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> arcsec&quot;</span><span class="p">)</span>
+    <span class="n">header_user</span><span class="p">[</span><span class="s2">&quot;userComments&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;. &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">user_comments</span><span class="p">)</span>
+    <span class="n">header_target</span><span class="p">[</span><span class="s2">&quot;TARGET.NAME&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+    <span class="n">header_target</span><span class="p">[</span><span class="s2">&quot;ra&quot;</span><span class="p">],</span> <span class="n">header_target</span><span class="p">[</span><span class="s2">&quot;dec&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ra_hms</span><span class="p">,</span> <span class="n">dec_dms</span>
+    <span class="n">header_target</span><span class="p">[</span><span class="s2">&quot;propRA&quot;</span><span class="p">],</span> <span class="n">header_target</span><span class="p">[</span><span class="s2">&quot;propDec&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prop_ra</span><span class="p">,</span> <span class="n">prop_dec</span>
+    <span class="n">header_observation</span><span class="p">[</span><span class="s2">&quot;OBSERVATION.DESCRIPTION.NAME&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ob_name</span>
+    <span class="k">if</span> <span class="s2">&quot;ut&quot;</span> <span class="ow">in</span> <span class="n">array_configuration</span><span class="p">:</span>
+        <span class="n">header_constraints</span><span class="p">[</span><span class="s2">&quot;moon_angular_distance&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">header</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">header_user</span>
+    <span class="n">header</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">header_target</span>
+    <span class="n">header</span><span class="p">[</span><span class="s2">&quot;constraints&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">header_constraints</span>
+    <span class="n">header</span><span class="p">[</span><span class="s2">&quot;observation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">header_observation</span>
+    <span class="k">return</span> <span class="n">header</span></div>
+
+
+<div class="viewcode-block" id="fill_acquisition"><a class="viewcode-back" href="../../../modules/compose.html#p2obp.backend.compose.fill_acquisition">[docs]</a><span class="k">def</span> <span class="nf">fill_acquisition</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+                     <span class="n">operational_mode</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                     <span class="n">array_configuration</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets the for the operational mode correct acquisition template</span>
+<span class="sd">    and then fills it in with the information from the query.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    target : dict</span>
+<span class="sd">    operational_mode : str</span>
+<span class="sd">    array_configuration : str</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    acquisition : dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">acquisition</span> <span class="o">=</span> <span class="n">load_template</span><span class="p">(</span><span class="n">TEMPLATE_FILE</span><span class="p">,</span> <span class="s2">&quot;acquisition&quot;</span><span class="p">,</span>
+                                <span class="n">operational_mode</span><span class="o">=</span><span class="n">operational_mode</span><span class="p">)</span>
+
+    <span class="n">flux_lband</span><span class="p">,</span> <span class="n">flux_nband</span> <span class="o">=</span> <span class="n">format_fluxes</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;GSRa&quot;</span> <span class="ow">in</span> <span class="n">target</span><span class="p">:</span>
+        <span class="n">acquisition</span><span class="p">[</span><span class="s2">&quot;COU.AG.ALPHA&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;GSRa&quot;</span><span class="p">]</span>
+        <span class="n">acquisition</span><span class="p">[</span><span class="s2">&quot;COU.AG.DELTA&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;GSDec&quot;</span><span class="p">]</span>
+        <span class="n">acquisition</span><span class="p">[</span><span class="s2">&quot;COU.AG.GSSOURCE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;SETUPFILE&quot;</span>
+
+    <span class="k">if</span> <span class="s2">&quot;GSpropRa&quot;</span> <span class="ow">in</span> <span class="n">target</span><span class="p">:</span>
+        <span class="n">acquisition</span><span class="p">[</span><span class="s2">&quot;COU.AG.PMA&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;GSpropRa&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">&quot;GSpropDec&quot;</span> <span class="ow">in</span> <span class="n">target</span><span class="p">:</span>
+        <span class="n">acquisition</span><span class="p">[</span><span class="s2">&quot;COU.AG.PMD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;GSpropDec&quot;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="s2">&quot;GSepoch&quot;</span> <span class="ow">in</span> <span class="n">target</span><span class="p">:</span>
+        <span class="n">acquisition</span><span class="p">[</span><span class="s2">&quot;COU.AG.EPOCH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;GSepoch&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">&quot;GSequinox&quot;</span> <span class="ow">in</span> <span class="n">target</span><span class="p">:</span>
+        <span class="n">acquisition</span><span class="p">[</span><span class="s2">&quot;COU.AG.EQUINOX&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;GSequinox&quot;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="s2">&quot;GSmag&quot;</span> <span class="ow">in</span> <span class="n">target</span><span class="p">:</span>
+        <span class="n">acquisition</span><span class="p">[</span><span class="s2">&quot;COU.GS.MAG&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;GSmag&quot;</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="s2">&quot;Vmag&quot;</span> <span class="ow">in</span> <span class="n">target</span><span class="p">:</span>
+        <span class="n">acquisition</span><span class="p">[</span><span class="s2">&quot;COU.GS.MAG&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;Vmag&quot;</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="s2">&quot;FLUX_V&quot;</span> <span class="ow">in</span> <span class="n">target</span><span class="p">:</span>
+        <span class="n">acquisition</span><span class="p">[</span><span class="s1">&#39;COU.GS.MAG&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;FLUX_V&quot;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="s2">&quot;ut&quot;</span> <span class="ow">in</span> <span class="n">array_configuration</span><span class="p">:</span>
+        <span class="n">array_configuration</span> <span class="o">=</span> <span class="s2">&quot;UTs&quot;</span>
+
+    <span class="n">acquisition</span><span class="p">[</span><span class="s2">&quot;ISS.BASELINE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">array_configuration</span>
+
+    <span class="c1"># TODO: Make logger here</span>
+    <span class="k">if</span> <span class="n">flux_lband</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">acquisition</span><span class="p">[</span><span class="s1">&#39;SEQ.TARG.FLUX.L&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flux_lband</span>
+    <span class="k">if</span> <span class="n">flux_nband</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">acquisition</span><span class="p">[</span><span class="s1">&#39;SEQ.TARG.FLUX.N&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">flux_nband</span>
+
+    <span class="k">if</span> <span class="s2">&quot;Kmag&quot;</span> <span class="ow">in</span> <span class="n">target</span><span class="p">:</span>
+        <span class="n">acquisition</span><span class="p">[</span><span class="s2">&quot;SEQ.TARG.MAG.K&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">target</span><span class="p">[</span><span class="s2">&quot;Kmag&quot;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">operational_mode</span> <span class="o">==</span> <span class="s2">&quot;gra4mat&quot;</span> <span class="ow">and</span> <span class="s2">&quot;Hmag&quot;</span> <span class="ow">in</span> <span class="n">target</span><span class="p">:</span>
+        <span class="n">acquisition</span><span class="p">[</span><span class="s2">&quot;SEQ.TARG.MAG.H&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">target</span><span class="p">[</span><span class="s2">&quot;Hmag&quot;</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">acquisition</span></div>
+
+
+<div class="viewcode-block" id="fill_observation"><a class="viewcode-back" href="../../../modules/compose.html#p2obp.backend.compose.fill_observation">[docs]</a><span class="k">def</span> <span class="nf">fill_observation</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
+                     <span class="n">resolution</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                     <span class="n">observation_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                     <span class="n">operational_mode</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                     <span class="n">array_configuration</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets the for the operational mode correct acquisition template</span>
+<span class="sd">    and then fills it in with the information from the query.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    target : dict</span>
+<span class="sd">    resolution : str</span>
+<span class="sd">    observation_type : str</span>
+<span class="sd">    operational_mode : str</span>
+<span class="sd">    array_configuration : str</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    acquisition : dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">observation</span> <span class="o">=</span> <span class="n">load_template</span><span class="p">(</span><span class="n">TEMPLATE_FILE</span><span class="p">,</span> <span class="s2">&quot;observation&quot;</span><span class="p">,</span>
+                                <span class="n">operational_mode</span><span class="o">=</span><span class="n">operational_mode</span><span class="p">)</span>
+    <span class="n">resolution</span><span class="p">,</span> <span class="n">dit</span> <span class="o">=</span> <span class="n">set_resolution_and_dit</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span>
+                                             <span class="n">operational_mode</span><span class="p">,</span> <span class="n">array_configuration</span><span class="p">)</span>
+    <span class="n">observation_type</span> <span class="o">=</span> <span class="s2">&quot;SCIENCE&quot;</span> <span class="k">if</span> <span class="n">observation_type</span> <span class="o">==</span> <span class="s2">&quot;sci&quot;</span> <span class="k">else</span> <span class="s2">&quot;CALIB&quot;</span>
+    <span class="n">observation</span><span class="p">[</span><span class="s2">&quot;DPR.CATG&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">observation_type</span>
+     <span class="c1"># TODO: Finish this</span>
+    <span class="n">observation</span><span class="p">[</span><span class="s2">&quot;INS.DIL.NAME&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">resolution</span>
+    <span class="n">observation</span><span class="p">[</span><span class="s2">&quot;DET1.DIT&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dit</span>
+    <span class="n">observation</span><span class="p">[</span><span class="s2">&quot;SEQ.DIL.WL0&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;central_wl&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">observation</span></div>
+
+
+<div class="viewcode-block" id="compose_ob"><a class="viewcode-back" href="../../../modules/compose.html#p2obp.backend.compose.compose_ob">[docs]</a><span class="k">def</span> <span class="nf">compose_ob</span><span class="p">(</span><span class="n">target_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+               <span class="n">observational_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+               <span class="n">array_configuration</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+               <span class="n">operational_mode</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;st&quot;</span><span class="p">,</span>
+               <span class="n">sci_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="n">tag</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+               <span class="n">resolution</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;low&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Composes the dictionary</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    target_name : str</span>
+<span class="sd">        The target&#39;s name.</span>
+<span class="sd">    observational_type : str</span>
+<span class="sd">    array_configuration : str</span>
+<span class="sd">        Determines the array configuration. Possible values are &quot;UTs&quot;,</span>
+<span class="sd">        &quot;small&quot;, &quot;medium&quot;, &quot;large&quot;, &quot;extended&quot;.</span>
+<span class="sd">    operational_mode : str, optional</span>
+<span class="sd">        The mode of operation for MATISSE. Can be either &quot;st&quot;/&quot;standalone&quot;</span>
+<span class="sd">        for the MATISSE-standalone mode or &quot;gr&quot;/&quot;gra4mat&quot; for GRA4MAT.</span>
+<span class="sd">        Default is standalone.</span>
+<span class="sd">    sci_name : str, optional</span>
+<span class="sd">    tag : str, optional</span>
+<span class="sd">    resolution : str, optional</span>
+<span class="sd">        The target&#39;s resolution.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    target : dict</span>
+<span class="sd">        A dictionary containg all the target&#39;s information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">array_configuration</span> <span class="o">=</span> <span class="n">array_configuration</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">array_configuration</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;uts&quot;</span><span class="p">,</span> <span class="s2">&quot;small&quot;</span><span class="p">,</span> <span class="s2">&quot;medium&quot;</span><span class="p">,</span> <span class="s2">&quot;large&quot;</span><span class="p">,</span> <span class="s2">&quot;extended&quot;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;Unknown array configuration provided!&quot;</span>
+                      <span class="s2">&quot; Choose from &#39;UTs&#39;, &#39;small&#39;, &#39;medium&#39;,&quot;</span>
+                      <span class="s2">&quot; &#39;large&#39; or &#39;extended&#39;.&quot;</span><span class="p">)</span>
+
+    <span class="n">observational_type</span> <span class="o">=</span> <span class="n">observational_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">observational_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;sci&quot;</span><span class="p">,</span> <span class="s2">&quot;cal&quot;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;Unknown observation type provided!&quot;</span>
+                      <span class="s2">&quot; Choose from &#39;SCI&#39; or &#39;CAL&#39;, for &quot;</span>
+                      <span class="s2">&quot;a science target or a calibrator.&quot;</span><span class="p">)</span>
+
+    <span class="n">operational_mode</span> <span class="o">=</span> <span class="n">operational_mode</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">operational_mode</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;st&quot;</span><span class="p">,</span> <span class="s2">&quot;standalone&quot;</span><span class="p">]:</span>
+        <span class="n">operational_mode</span> <span class="o">=</span> <span class="s2">&quot;matisse&quot;</span>
+    <span class="k">elif</span> <span class="n">operational_mode</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;gr&quot;</span><span class="p">,</span> <span class="s2">&quot;gra4mat&quot;</span><span class="p">]:</span>
+        <span class="n">operational_mode</span> <span class="o">=</span> <span class="s2">&quot;gra4mat&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;Unknown operational mode provided!&quot;</span>
+                      <span class="s2">&quot; Choose from &#39;st&#39;/&#39;standalone&#39; or&quot;</span>
+                      <span class="s2">&quot; &#39;gr&#39;/&#39;gra4mat&#39;.&quot;</span><span class="p">)</span>
+
+    <span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">resolution</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;low&quot;</span><span class="p">,</span> <span class="s2">&quot;med&quot;</span><span class="p">,</span> <span class="s2">&quot;high&quot;</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;Unknown resolution provided!&quot;</span>
+                      <span class="s2">&quot; Choose from &#39;low&#39;, &#39;med&#39; or &#39;high&#39;.&quot;</span><span class="p">)</span>
+
+    <span class="n">target</span> <span class="o">=</span> <span class="n">query</span><span class="p">(</span><span class="n">target_name</span><span class="p">)</span>
+    <span class="n">header</span> <span class="o">=</span> <span class="n">fill_header</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">observational_type</span><span class="p">,</span>
+                         <span class="n">array_configuration</span><span class="p">,</span> <span class="n">sci_name</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span>
+
+    <span class="n">acquisition</span> <span class="o">=</span> <span class="n">fill_acquisition</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">operational_mode</span><span class="p">,</span>
+                                   <span class="n">array_configuration</span><span class="p">)</span>
+
+    <span class="n">observation</span> <span class="o">=</span> <span class="n">fill_observation</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">observational_type</span><span class="p">,</span>
+                                   <span class="n">operational_mode</span><span class="p">,</span> <span class="n">array_configuration</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;header&quot;</span><span class="p">:</span> <span class="n">header</span><span class="p">,</span>
+            <span class="s2">&quot;acquisition&quot;</span><span class="p">:</span> <span class="n">acquisition</span><span class="p">,</span> <span class="s2">&quot;observation&quot;</span><span class="p">:</span> <span class="n">observation</span><span class="p">}</span></div>
+</pre></div>
+
+                </article>
+              
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+  <p class="copyright">
+    
+      © Copyright 2023, Marten Scheuck.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item"><p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.3.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
