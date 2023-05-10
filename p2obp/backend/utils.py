@@ -43,7 +43,8 @@ def prompt_user(message: str, selections: List[str]) -> str:
 
 
 def contains_element(list_to_search: List, element_to_search: str) -> bool:
-    """Checks if an element is in the list searched and returns 'True' or 'False'
+    """Checks if an element is in the list searched and returns
+    'True' or 'False'
 
     Parameters
     ----------

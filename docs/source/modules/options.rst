@@ -48,10 +48,27 @@ or any resolution set in an input dictionary for the :func:`create_obs <p2obp.au
 
    options["resolution.overwrite"] = False
 
+Photometry
+==========
+
+The default photometry settings for MATISSE-standalone
+
+.. code-block:: python
+
+   options["photometry.matisse.ats"] = True
+   options["photometry.matisse.uts"] = True
+
+The photometry settings for GRA4MAT
+
+.. code-block:: python
+
+   options["photometry.gra4mat.ats"] = True
+   options["photometry.gra4mat.uts"] = False
+
 Integration time
 ================
 
-The integration times for MATISSE-standalone for the ATs.
+The default integration times for MATISSE-standalone for the ATs.
 
 .. code-block:: python
 
@@ -59,7 +76,7 @@ The integration times for MATISSE-standalone for the ATs.
    options["dit.matisse.ats.med"] = 0.111
    options["dit.matisse.ats.high"] = 0.111
 
-The integration times for MATISSE-standalone for the UTs.
+The default integration times for MATISSE-standalone for the UTs.
 
 .. code-block:: python
 
@@ -67,7 +84,7 @@ The integration times for MATISSE-standalone for the UTs.
    options["dit.matisse.uts.med"] = 0.111
    options["dit.matisse.uts.high"] = 0.111
 
-The integration times for GRA4MAT for the ATs.
+The default integration times for GRA4MAT for the ATs.
 
 .. code-block:: python
 
@@ -75,7 +92,7 @@ The integration times for GRA4MAT for the ATs.
    options["dit.gra4mat.ats.med"] = 1.3
    options["dit.gra4mat.ats.high"] = 3.
 
-The integration times for GRA4MAT for the UTs.
+The default integration times for GRA4MAT for the UTs.
 
 .. code-block:: python
 
@@ -86,7 +103,7 @@ The integration times for GRA4MAT for the UTs.
 Central wavelength
 ==================
 
-The central wavelengths for MATISSE-standalone for the ATs.
+The default central wavelengths for MATISSE-standalone for the ATs.
 
 .. code-block:: python
 
@@ -94,7 +111,7 @@ The central wavelengths for MATISSE-standalone for the ATs.
    options["w0.matisse.ats.med"] = 4.1
    options["w0.matisse.ats.high"] = 4.1
 
-The central wavelengths for MATISSE-standalone for the UTs.
+The default central wavelengths for MATISSE-standalone for the UTs.
 
 .. code-block:: python
 
@@ -103,7 +120,7 @@ The central wavelengths for MATISSE-standalone for the UTs.
    options["w0.matisse.uts.high"] = 4.1
 
 
-The central wavelengths for GRA4MAT for the ATs.
+The default central wavelengths for GRA4MAT for the ATs.
 
 .. code-block:: python
 
@@ -112,14 +129,13 @@ The central wavelengths for GRA4MAT for the ATs.
    options["w0.gra4mat.ats.high"] = 4.1
 
 
-The central wavelengths for GRA4MAT for the UTs.
+The default central wavelengths for GRA4MAT for the UTs.
 
 .. code-block:: python
 
    options["w0.gra4mat.uts.low"] = 3.52
    options["w0.gra4mat.uts.med"] = 3.52
    options["w0.gra4mat.uts.high"] = 3.52
-
 
 -----
 Query

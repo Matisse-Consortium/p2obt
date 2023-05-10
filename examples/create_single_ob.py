@@ -1,6 +1,6 @@
 """
 Create singular ob
-=========================
+==================
 
 This script is meant to give an example on how to use the
 the `create_ob`-function of p2obp to create a single ob and

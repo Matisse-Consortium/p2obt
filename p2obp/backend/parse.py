@@ -234,10 +234,10 @@ def parse_groups(section: List) -> Dict:
     return data
 
 
-def get_file_section(lines: List, identifier: str) -> Dict:
-    """Gets the section of a file corresponding to the given identifier and
-    returns a dict with the keys being the match to the identifier and the
-    values being a subset of the lines list.
+def parse_file_section(lines: List, identifier: str) -> Dict:
+    """Parses the section of a file that corresponds to the given identifier
+    and returns a dict with the keys being the match to the identifier and
+    the values being a subset of the lines list.
 
     Parameters
     ----------
@@ -265,7 +265,6 @@ def get_file_section(lines: List, identifier: str) -> Dict:
     return dict(zip(labels, sections))
 
 
-# TODO: Add documentation for the night dict in the Returns
 # TODO: Fix parsing of the first entry? -> Is parsed wrongly
 # -> Check parsing generally.
 def parse_night_plan(night_plan: Path,
@@ -311,9 +310,9 @@ def parse_night_plan(night_plan: Path,
             f"File {night_plan.name} was not found/does not exist!")
 
     runs = {}
-    for run_id, run in get_file_section(lines, run_identifier).items():
+    for run_id, run in parse_file_section(lines, run_identifier).items():
         nights = {}
-        for night_id, night in get_file_section(run, night_identifier).items():
+        for night_id, night in parse_file_section(run, night_identifier).items():
             night_content = parse_groups(night)
 
             # HACK: Only add nights that have content

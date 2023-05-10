@@ -1,6 +1,6 @@
 """
 Automatic ob creation pipeline
-=========================
+==============================
 
 This is meant to give an example on how to use the
 fully automated pipeline of p2obp for ob-creation, namely the script
@@ -8,7 +8,7 @@ fully automated pipeline of p2obp for ob-creation, namely the script
 """
 from pathlib import Path
 
-from p2obp import options, ob_creation
+from p2obp import options, create_obs
 
 # NOTE: The path in which the 'manualOBs'-directory will be created
 output_dir = Path("../assets/")
@@ -42,5 +42,5 @@ options["resolution"] = "low"
 # This will either upload the obs to a the specified container (keyword
 # 'container_id' on p2) or make them locally, if an 'output_dir' is
 # specified.
-ob_creation(manual_lst=manual_lst, operational_mode="both",
-            resolution=res_dict, output_dir=output_dir)
+create_obs(manual_lst=manual_lst, operational_mode="both",
+           resolution=res_dict, output_dir=output_dir)

@@ -19,11 +19,10 @@ OPERATIONAL_MODES = {"both": ["standalone", "GRA4MAT"],
                      "st": ["standalone"], "gr": ["GRA4MAT"],
                      "matisse": ["standalone"], "gra4mat": ["GRA4MAT"]}
 
-# TOOD: Add night astronomer comments to template
-# TODO: Find way to switch of photometry of template
+
 def copy_list_and_replace_values(input_list: List[Any], value: Any) -> List:
     """Replaces all values in list with the given value. Takes into account
-    nested lists.
+    once nested lists.
 
     Parameters
     ----------
@@ -248,14 +247,10 @@ def create_obs_from_lists(targets: List[str],
                 if not name:
                     continue
                 create_ob(name, sci_cal_flag, array_configuration,
-                          operational_mode, sci_name, tag, res,
+                          mode, sci_name, tag, res,
                           connection, target_id, output_dir=target_dir)
 
 
-# TODO: Write down how the runs need to be written down in the observing plan -> Make
-# it automatic at some point
-# TODO: Make print better if both uploading and making is active
-# TODO: Log if nan appears in dataset or empty value
 def create_obs_from_dict(night_plan: Dict,
                          operational_mode: str,
                          observational_mode: str,
@@ -301,53 +296,43 @@ def create_obs_from_dict(night_plan: Dict,
         The output directory, where the (.obx)-files will be created in.
         If left at "None" no files will be created.
     """
-    connection = login(username, password, server)
+    if output_dir is None:
+        connection = login(username, password, server)
+    else:
+        connection = None
+        run_id = None
+
     for run_key, run in night_plan.items():
-        # TODO: Enable direct user input for these? Add more parameters?
-        # Maybe make this parsing more robust?
-        # TODO: Avoid program stoppage caused by this parsing errors and
-        # just give user that information.
-        if container_id is None:
-            run_prog_id = parse_run_prog_id(run_key)
-            run_id = get_remote_run(connection, run_prog_id)
-        else:
-            run_id = container_id
         array_config = parse_array_config(run_key)
         operational_mode = parse_operational_mode(run_key)
-        # TODO: Make this so it automatically sets the option
         options["resolution"] = parse_run_resolution(run_key)
 
-        # TODO: Improve this error and make it possible to also only
-        # generated (.obx)-files.
-        if output_dir is None and run_id is None:
-            raise ValueError("Determining run id automatically"
-                             " or via input has failed!")
-
-        if output_dir is not None:
+        if output_dir is None:
+            if container_id is None:
+                run_prog_id = parse_run_prog_id(run_key)
+                run_id = get_remote_run(connection, run_prog_id)
+            else:
+                run_id = container_id
+        else:
             run_name = ''.join(run_key.split(",")[0].strip().split())
             run_dir = output_dir / run_name
             if not run_dir.exists():
                 run_dir.mkdir(parents=True, exist_ok=True)
-        else:
-            run_dir = None
 
         print(f"{'':-^50}")
         print(f"Creating OBs for {run_key}...")
         for night_key, night in run.items():
             print(f"{'':-^50}")
-
             night_name = parse_night_name(night_key)
-            if observational_mode == "vm":
-                night_id = create_remote_container(connection,
-                                                   night_name,
-                                                   run_id,
-                                                   observational_mode)
+            if observational_mode == "vm" and connection is not None:
+                night_id = create_remote_container(connection, night_name,
+                                                   run_id, observational_mode)
             else:
                 night_id = run_id
 
             if run_dir is not None:
                 night_dir = run_dir / night_name
-                print(f"Creating folder: '{night_dir.name}', and filling it with OBs...")
+                print(f"Creating folder '{night_dir.name}...'")
                 if not night_dir.exists():
                     night_dir.mkdir(parents=True, exist_ok=True)
             else:
@@ -358,9 +343,6 @@ def create_obs_from_dict(night_plan: Dict,
                                   connection, night_id, night_dir)
 
 
-# TODO: Think of implementation of uploading after parsing?
-# TODO: Think of adding the `create_ob` script that combines `compose_ob` and 
-# `upload_ob`.
 def create_obs(night_plan: Optional[Path] = None,
                manual_input: Optional[List[List]] = None,
                operational_mode: str = "st",

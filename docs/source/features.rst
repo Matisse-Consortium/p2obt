@@ -38,16 +38,32 @@ In order to even better utilise the parser it is helpful to adhere to some
 guidlines while writting the night/observation plans.
 These are outlined in the following:
 
+.. note::
+
+   The parser will only identify sections of a file as a run, that contain a line
+   starting with **run** (optional)
+
+   The parser will only identify sections of a file as a run, that contain a line
+   starting with **run** (optional).
+
+.. warning::
+   :name: Important Notice
+   
+   In order for the parser to work within individual nights /runs, i.e., the individual
+   observing blocks, the SCI-CAL (or CAL-SCI-CAL, SCI-CAL-SCI, or any combination) needs
+   to be separated from the next (SCI-CAL, etc.) observing block by a white line or
+   a comment (a line starting with #).
+   In case for files that end on such an observation block, a white line should be added
+   to ensure the proper functioning of the parser.
+
+
 Run Names
 ---------
 
-.. warning::
+.. note::
 
-   The parser will only identify sections of a file as a run, that contain a line
-   starting with **run**.
-
-   If none of them are detected then the whole file will be identified as one run and
-   attributed as **full_run**.
+   If no run is detected then the whole file will be identified as one run and
+   attributed to be a **full_run**.
 
 Additionally, if the run name has a certain shape/format, then the 
 :func:`create_obs <p2obp.automate.create_obs>` function
@@ -58,7 +74,9 @@ can automatically determine the following things about the run:
 * The **resolution** (*LOW/LR, MED/MEDIUM/MR or HIGH/HR*)
 * The **program id** (and by this the container id on p2)
 
-The parser is insensitive to the order and capitalization of the above settings.
+.. note:: 
+
+   The parser is insensitive to the order and capitalization of the above settings.
 
 Here are some examples
 
@@ -74,6 +92,11 @@ GRA4MAT obs to the run2 (111.253T.002) on p2 in medium resolution for the UTs ar
 
 Night Names
 -----------
+
+.. note::
+
+   If no night is detected within a run then the whole run will be identified as one
+   night and attributed to be a **full_night**.
 
 The parser can also identify individual nights that are contained within a run by
 lines starting with **night** that are followed up by some block containing

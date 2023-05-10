@@ -95,11 +95,12 @@ def set_ob_name(target: Union[Dict, str],
     return ob_name if tag is None else f"{ob_name}_{tag}"
 
 
-def get_res_dit_and_w0(target: Dict,
-                       resolution: str,
-                       operational_mode: str,
-                       array_configuration: str) -> Tuple[str, float]:
-    """
+def get_observation_settings(target: Dict,
+                             resolution: str,
+                             operational_mode: str,
+                             array_configuration: str) -> Tuple[str, float]:
+    """Gets the observation settings from the `options` corresponding
+    to the resolution, operational mode and array configuration.
 
     Parameters
     ----------
@@ -117,6 +118,8 @@ def get_res_dit_and_w0(target: Dict,
     array = "uts" if "ut" in array_configuration else "ats"
     integration_time = f"dit.{operational_mode}.{array}.{resolution}"
     central_wl = f"w0.{operational_mode}.{array}.{resolution}"
+    photometry = f"photometry.{operational_mode}.{array}"
+
     if not options["resolution.overwrite"]:
         if array == "uts" and "LResUT" in target:
             resolution = target["LResUT"]\
@@ -124,7 +127,8 @@ def get_res_dit_and_w0(target: Dict,
         elif array == "ats" and "LResAT" in target:
             resolution = target["LResAT"]\
                     if target["LResAT"] != "TBD" else resolution
-    return resolution.upper(), options[integration_time], options[central_wl]
+    return resolution.upper(), options[integration_time],\
+        options[central_wl], options[photometry]
 
 
 def format_proper_motions(target: Dict) -> Tuple[float, float]:
@@ -157,7 +161,6 @@ def format_ra_and_dec(target: Dict) -> Tuple[str, str]:
     return ra_hms, dec_dms
 
 
-# CHECK: Implement some way to show that flux has been not set?
 def format_fluxes(target: Dict) -> Tuple[float, float]:
     """Correctly gets and formats the fluxes from the queried data."""
     flux_lband, flux_nband = None, None
@@ -279,7 +282,6 @@ def fill_acquisition(target: Dict,
 
     acquisition["ISS.BASELINE"] = array_configuration
 
-    # TODO: Make logger here
     if flux_lband is not None:
         acquisition['SEQ.TARG.FLUX.L'] = flux_lband
     if flux_nband is not None:
@@ -315,13 +317,15 @@ def fill_observation(target: Dict,
     """
     observation = load_template(TEMPLATE_FILE, "observation",
                                 operational_mode=operational_mode)
-    resolution, dit, w0 = get_res_dit_and_w0(target, resolution,
-                                             operational_mode, array_configuration)
+    resolution, dit,\
+        w0, photometry = get_observation_settings(target, resolution,
+                                                  operational_mode,
+                                                  array_configuration)
     observation_type = "SCIENCE" if observation_type == "sci" else "CALIB"
     observation["DPR.CATG"] = observation_type
-     # TODO: Finish this
     observation["INS.DIL.NAME"] = resolution
     observation["DET1.DIT"] = dit
+    observation["SEQ.PHOTO.ST"] = "T" if photometry else "F"
     observation["SEQ.DIL.WL0"] = w0
     return observation
 

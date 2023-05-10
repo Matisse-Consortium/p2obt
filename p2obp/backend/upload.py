@@ -6,8 +6,6 @@ from typing import Optional, Dict
 import numpy as np
 import p2api
 
-from .options import options
-
 
 TARGET_MAPPING = {"TARGET.NAME": "name",
                   "ra": "ra",
@@ -51,8 +49,8 @@ TEMPLATE_MAPPING = {"ACQUISITION.TEMPLATE.NAME": str,
                     "SEQ.DIL.USER.WL0": float,
                     "SEQ.DIL.WL0": float,
                     "SEQ.FRINGES.NCYCLES": float,
-                    "SEQ.OFFSET.ALPHA": float,
-                    "SEQ.OFFSET.DELTA": float,
+                    "SEQ.OFFSET.ALPHA": list,
+                    "SEQ.OFFSET.DELTA": list,
                     "SEQ.PHOTO.ST": bool,
                     "SEQ.SKY.OFFS.ALPHA": float,
                     "SEQ.SKY.OFFS.DELTA": float,
@@ -112,9 +110,6 @@ def login(username: Optional[str] = None,
             password = console.password_alert(password_prompt)
         elif sys.stdin.isatty():
             password = getpass.getpass(password_prompt)
-        else:
-            # TODO: Remove this, too unsafe?
-            password = input(password_prompt)
     return p2api.ApiConnection(server, username, password)
 
 

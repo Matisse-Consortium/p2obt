@@ -16,13 +16,20 @@ logging.basicConfig(filename=options["logging.path"] / "p2obp.log",
                     filemode="w", level=options["logging.level"],
                     format=options["logging.format"])
 
-
 # NOTE: The settings for the `create_obs` and `create_ob`-scripts.
 # NOTE: Sets the standard resolution.
 options["resolution"] = "low"
 options["resolution.overwrite"] = False
 
-# NOTE: Set the central wavelengths for standalone
+# NOTE: Set the photometry for standalone.
+options["photometry.matisse.ats"] = True
+options["photometry.matisse.uts"] = True
+
+# NOTE: Set the photometry for gra4mat.
+options["photometry.gra4mat.ats"] = True
+options["photometry.gra4mat.uts"] = False
+
+# NOTE: Set the central wavelengths for standalone.
 options["w0.matisse.ats.low"] = 4.1
 options["w0.matisse.ats.med"] = 4.1
 options["w0.matisse.ats.high"] = 4.1
@@ -64,7 +71,7 @@ options["catalogs"] = ["gaia", "tycho", "nomad",
                        "simbad", "local"]
 
 # TODO: Implement the backup target source?
-# NOTE: The local catalogs/databases
+# NOTE: The local catalogs/databases.
 options["catalogs.local.standard"] = "Targets"
 options["catalogs.local.ciao"] = "CIAO Offaxis Targets"
 options["catalogs.local.active"] = "standard"

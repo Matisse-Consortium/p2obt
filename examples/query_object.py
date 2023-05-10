@@ -1,6 +1,6 @@
 """
 Query
-=========================
+=====
 
 This script is meant to give an example on how to use the
 the `query`-function of p2obp to get information on a target.
