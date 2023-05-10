@@ -36,7 +36,7 @@ options["w0.gra4mat.ats.low"] = 4.1
 options["w0.gra4mat.ats.med"] = 4.1
 options["w0.gra4mat.ats.high"] = 4.1
 
-options["w0.gra4mat.uts.low"] = 3.52
+options["w0.gra4mat.uts.low"] = 4.1
 options["w0.gra4mat.uts.med"] = 3.52
 options["w0.gra4mat.uts.high"] = 3.52
 
