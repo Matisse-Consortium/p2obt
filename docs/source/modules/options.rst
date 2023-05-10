@@ -29,16 +29,10 @@ The logging settings that are used for logging errors.
 OB Creation
 -----------
 
-General
-=======
-
 General settings for the pipeline-function :func:`create_obs <p2obp.automate.create_obs>`.
 
-This option sets the central wavelength used for all observation templates.
-
-.. code-block:: python
-
-   options["central_wl"] = 4.1
+Resolution
+==========
 
 This options sets the standard resolution for all created obs.
 
@@ -88,6 +82,44 @@ The integration times for GRA4MAT for the UTs.
    options["dit.gra4mat.uts.low"] = 0.6
    options["dit.gra4mat.uts.med"] = 0.6
    options["dit.gra4mat.uts.high"] = 0.6
+
+Central wavelength
+==================
+
+The central wavelengths for MATISSE-standalone for the ATs.
+
+.. code-block:: python
+
+   options["w0.matisse.ats.low"] = 4.1
+   options["w0.matisse.ats.med"] = 4.1
+   options["w0.matisse.ats.high"] = 4.1
+
+The central wavelengths for MATISSE-standalone for the UTs.
+
+.. code-block:: python
+
+   options["w0.matisse.uts.low"] = 4.1
+   options["w0.matisse.uts.med"] = 4.1
+   options["w0.matisse.uts.high"] = 4.1
+
+
+The central wavelengths for GRA4MAT for the ATs.
+
+.. code-block:: python
+
+   options["w0.gra4mat.ats.low"] = 4.1
+   options["w0.gra4mat.ats.med"] = 4.1
+   options["w0.gra4mat.ats.high"] = 4.1
+
+
+The central wavelengths for GRA4MAT for the UTs.
+
+.. code-block:: python
+
+   options["w0.gra4mat.uts.low"] = 3.52
+   options["w0.gra4mat.uts.med"] = 3.52
+   options["w0.gra4mat.uts.high"] = 3.52
+
 
 -----
 Query

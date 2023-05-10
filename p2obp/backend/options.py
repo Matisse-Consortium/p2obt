@@ -20,11 +20,28 @@ logging.basicConfig(filename=options["logging.path"] / "p2obp.log",
 
 # NOTE: The settings for the `create_obs` and `create_ob`-scripts.
 # NOTE: Sets the standard resolution.
-options["central_wl"] = 4.1
 options["resolution"] = "low"
 options["resolution.overwrite"] = False
 
-# NOTE: Set the integration times for the standalone.
+# NOTE: Set the central wavelengths for standalone
+options["w0.matisse.ats.low"] = 4.1
+options["w0.matisse.ats.med"] = 4.1
+options["w0.matisse.ats.high"] = 4.1
+
+options["w0.matisse.uts.low"] = 4.1
+options["w0.matisse.uts.med"] = 4.1
+options["w0.matisse.uts.high"] = 4.1
+
+# NOTE: Set the integration times for gra4mat.
+options["w0.gra4mat.ats.low"] = 4.1
+options["w0.gra4mat.ats.med"] = 4.1
+options["w0.gra4mat.ats.high"] = 4.1
+
+options["w0.gra4mat.uts.low"] = 3.52
+options["w0.gra4mat.uts.med"] = 3.52
+options["w0.gra4mat.uts.high"] = 3.52
+
+# NOTE: Set the integration times for standalone.
 options["dit.matisse.ats.low"] = 0.111
 options["dit.matisse.ats.med"] = 0.111
 options["dit.matisse.ats.high"] = 0.111
@@ -33,7 +50,7 @@ options["dit.matisse.uts.low"] = 0.111
 options["dit.matisse.uts.med"] = 0.111
 options["dit.matisse.uts.high"] = 0.111
 
-# NOTE: Set the integration times for the gra4mat.
+# NOTE: Set the integration times for gra4mat.
 options["dit.gra4mat.ats.low"] = 0.6
 options["dit.gra4mat.ats.med"] = 1.3
 options["dit.gra4mat.ats.high"] = 3.

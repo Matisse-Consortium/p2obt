@@ -96,10 +96,10 @@ def set_ob_name(target: Union[Dict, str],
     return ob_name if tag is None else f"{ob_name}_{tag}"
 
 
-def set_resolution_and_dit(target: Dict,
-                           resolution: str,
-                           operational_mode: str,
-                           array_configuration: str) -> Tuple[str, float]:
+def get_res_dit_and_w0(target: Dict,
+                       resolution: str,
+                       operational_mode: str,
+                       array_configuration: str) -> Tuple[str, float]:
     """
 
     Parameters
@@ -112,10 +112,12 @@ def set_resolution_and_dit(target: Dict,
     Returns
     -------
     resolution : str
-    dit : float
+    integration_time : float
+    central_wl : float
     """
     array = "uts" if "ut" in array_configuration else "ats"
-    key = f"dit.{operational_mode}.{array}.{resolution}"
+    integration_time = f"dit.{operational_mode}.{array}.{resolution}"
+    central_wl = f"w0.{operational_mode}.{array}.{resolution}"
     if not options["resolution.overwrite"]:
         if array == "uts" and "LResUT" in target:
             resolution = target["LResUT"]\
@@ -123,7 +125,7 @@ def set_resolution_and_dit(target: Dict,
         elif array == "ats" and "LResAT" in target:
             resolution = target["LResAT"]\
                     if target["LResAT"] != "TBD" else resolution
-    return resolution.upper(), options[key]
+    return resolution.upper(), options[integration_time], options[central_wl]
 
 
 def format_proper_motions(target: Dict) -> Tuple[float, float]:
@@ -308,14 +310,14 @@ def fill_observation(target: Dict,
     """
     observation = load_template(TEMPLATE_FILE, "observation",
                                 operational_mode=operational_mode)
-    resolution, dit = set_resolution_and_dit(target, resolution,
+    resolution, dit, w0 = get_res_dit_and_w0(target, resolution,
                                              operational_mode, array_configuration)
     observation_type = "SCIENCE" if observation_type == "sci" else "CALIB"
     observation["DPR.CATG"] = observation_type
      # TODO: Finish this
     observation["INS.DIL.NAME"] = resolution
     observation["DET1.DIT"] = dit
-    observation["SEQ.DIL.WL0"] = options["central_wl"]
+    observation["SEQ.DIL.WL0"] = w0
     return observation
 
 
