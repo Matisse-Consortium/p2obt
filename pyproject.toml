@@ -37,7 +37,6 @@ dependencies = [
   "toml >= 0.10.2",
   "p2api >= 1.0.5",
   "openpyxl >= 3.1.2",
-  "pyephem==9.99",
   "pandas >= 2.0.1"
 ]
 
