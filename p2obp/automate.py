@@ -1,6 +1,7 @@
 import logging
 from pathlib import Path
 from typing import Union, Optional, Any, Dict, List, Tuple
+from warnings import warn
 
 import numpy as np
 import p2api
@@ -129,6 +130,11 @@ def create_ob(target: str,
     output_dir : path, optional
     """
     try:
+        if sci_name is not None and observational_type == "sci":
+            warn("[WARNING]: The ob was specified as a science ob,"
+                 " but a science target name was specified."
+                 " It will be changed to a calibrator.")
+            observational_type = "cal"
         ob = compose_ob(target, observational_type,
                         array_configuration, operational_mode,
                         sci_name, tag, resolution)
@@ -436,18 +442,3 @@ def create_obs(night_plan: Optional[Path] = None,
     else:
         raise IOError("Neither manul input list or input"
                       " night plan path has been detected!")
-
-
-if __name__ == "__main__":
-    outdir = Path("/Users/scheuck/Data/observations/obs/")
-    night_plan = Path("/Users/scheuck/Data/observations/CIAO/MATISSE_CIAO_UTs_plan_v2.txt")
-
-    sci_lst = ["YLW 16A"]
-    cal_lst = []
-    order_lst, tag_lst = [], []
-    manual_lst = [sci_lst, cal_lst, order_lst, tag_lst]
-
-    res_dict = {}
-
-    options["catalogs.local.active"] = "ciao"
-    create_obs(night_plan=night_plan, container_id=3634531, username="MATISSETeam")

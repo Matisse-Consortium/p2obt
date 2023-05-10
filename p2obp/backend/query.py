@@ -204,10 +204,3 @@ def query(target_name: str,
         target = {**target, **best_matches}
     target["name"] = remove_parenthesis(target["name"])
     return {**target, **local_target}
-
-
-if __name__ == "__main__":
-    options["catalogs.local.active"] = "ciao"
-    dic = query("hd142666")
-    from pprint import pprint
-    pprint(dic)
