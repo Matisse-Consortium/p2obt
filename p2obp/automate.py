@@ -106,7 +106,7 @@ def create_ob(target: str,
               sci_name: Optional[str] = None,
               tag: Optional[str] = None,
               resolution: Optional[str] = "low",
-              connection: Optional[p2api] = None,
+              connection: Optional = None,
               container_id: Optional[int] = None,
               server: Optional[str] = "production",
               output_dir: Optional[Path] = None) -> None:
