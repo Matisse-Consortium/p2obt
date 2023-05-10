@@ -9,7 +9,7 @@ from astroquery.simbad import Simbad
 from astroquery.vizier import Vizier
 
 from .options import options
-from .utils import add_space
+from .utils import add_space, remove_parenthesis
 
 
 TARGET_INFO_FILE = Path(pkg_resources.resource_filename("p2obp", "data/Extensive Target Information.xlsx"))
@@ -202,6 +202,7 @@ def query(target_name: str,
         catalog_table = get_catalog(target_name, catalog, match_radius)
         best_matches = get_best_match(target, catalog, catalog_table)
         target = {**target, **best_matches}
+    target["name"] = remove_parenthesis(target["name"])
     return {**target, **local_target}
 
 

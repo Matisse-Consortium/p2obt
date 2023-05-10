@@ -8,7 +8,7 @@ from astropy.coordinates import SkyCoord
 
 from .query import query
 from .options import options
-from .utils import convert_proper_motions
+from .utils import convert_proper_motions, remove_parenthesis
 
 # TODO: Exchange, possibly slow function?
 TEMPLATE_FILE = Path(pkg_resources.resource_filename("p2obp", "data/templates.toml"))
@@ -89,7 +89,7 @@ def set_ob_name(target: Union[Dict, str],
     if isinstance(target, dict):
         ob_name += f"_{target['name'].replace(' ', '_')}"
     else:
-        ob_name += f"_{target.replace(' ', '_')}"
+        ob_name += remove_parenthesis(f"_{target.replace(' ', '_')}")
     if sci_name is not None:
         ob_name += f"_{sci_name.replace(' ', '_')}"
     return ob_name if tag is None else f"{ob_name}_{tag}"

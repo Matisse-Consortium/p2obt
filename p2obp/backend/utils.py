@@ -18,6 +18,15 @@ def add_space(input_str: str):
     return input_str
 
 
+def remove_parenthesis(input_str: str):
+    """Removes parenthesis from a string.
+
+    This if for the ob's name so it is elegible for upload
+    (either manually after (.obx)-file creation or automatically.
+    """
+    return re.sub(r'[\[\](){}]', '', input_str)
+
+
 def prompt_user(message: str, selections: List[str]) -> str:
     """Prompts the user for a numerical input and returns
     the associated value from the selection list.
