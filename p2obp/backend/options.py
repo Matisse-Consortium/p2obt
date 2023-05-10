@@ -3,7 +3,6 @@ from pathlib import Path
 
 options = {}
 
-
 # NOTE: General settings for the `p2obp`.
 options["logging.folder"] = "logs"
 options["logging.path"] = Path(__file__).parent.parent / options["logging.folder"]

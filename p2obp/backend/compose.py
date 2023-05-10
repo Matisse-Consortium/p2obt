@@ -10,7 +10,6 @@ from .query import query
 from .options import options
 from .utils import convert_proper_motions
 
-# TODO: Include log message if nan has been replaced
 # TODO: Exchange, possibly slow function?
 TEMPLATE_FILE = Path(pkg_resources.resource_filename("p2obp", "data/templates.toml"))
 
@@ -131,16 +130,22 @@ def get_res_dit_and_w0(target: Dict,
 def format_proper_motions(target: Dict) -> Tuple[float, float]:
     """Correctly formats the right ascension's and declination's
     proper motions."""
+    propRa, propDec = 0, 0
     if "local.propRA" in target:
         propRa = target["local.propRa"]
     if "local.propDec" in target:
         propDec = target["local.propDec"]
-    propRa, propDec = convert_proper_motions(target["PMRA"], target["PMDEC"])
+    if "PMRA" in target and "PMDEC" in target:
+        propRa, propDec = convert_proper_motions(target["PMRA"], target["PMDEC"])
+    elif "PMRA" in target:
+        propRa = convert_proper_motions(target["PMRA"])
+    elif "PMDEC" in target:
+        propDec = convert_proper_motions(target["PMDEC"])
     return propRa, propDec
 
 
 def format_ra_and_dec(target: Dict) -> Tuple[str, str]:
-    """Correclty formats the right ascension and declination."""
+    """Correctly formats the right ascension and declination."""
     if "local.RA" in target:
         return target["local.RA"], target["local.DEC"]
     coordinates = SkyCoord(f"{target['RA']} {target['DEC']}",
