@@ -31,7 +31,7 @@ For more information on the specific capabilities of this software see :ref:`Fea
      pip install git+https://github.com/MBSck/p2obp.git
 
 
-   For more information see :ref:`Getting Started <getting_started>`
+   For more information (or if you encounter problems, such as missing files) see :ref:`Getting Started <getting_started>`
 
 .. toctree::
    :hidden:
