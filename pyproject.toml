@@ -56,9 +56,6 @@ dev = [
 [tool.setuptools.packages.find]
 where = ["p2obp"]
 
-[tool.setuptools.package-data]
-"p2obp.data" = ["*.toml", "*.xlsx"]
-
 [tool.setuptools]
 include-package-data = true
 
