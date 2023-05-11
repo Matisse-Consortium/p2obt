@@ -53,12 +53,6 @@ dev = [
     "numpydoc==1.5.0",
 ]
 
-[tool.setuptools.packages.find]
-where = ["p2obp"]
-
-[tool.setuptools.package-data]
-p2obp = ["*.toml", "*.xlsx"]
-
 [tool.setuptools]
 include-package-data = true
 
