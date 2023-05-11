@@ -391,9 +391,9 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="modules/compose.html#p2obp.backend.compose.format_fluxes"><code class="docutils literal notranslate"><span class="pre">format_fluxes()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/compose.html#p2obp.backend.compose.format_proper_motions"><code class="docutils literal notranslate"><span class="pre">format_proper_motions()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/compose.html#p2obp.backend.compose.format_ra_and_dec"><code class="docutils literal notranslate"><span class="pre">format_ra_and_dec()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/compose.html#p2obp.backend.compose.get_observation_settings"><code class="docutils literal notranslate"><span class="pre">get_observation_settings()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/compose.html#p2obp.backend.compose.load_template"><code class="docutils literal notranslate"><span class="pre">load_template()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/compose.html#p2obp.backend.compose.set_ob_name"><code class="docutils literal notranslate"><span class="pre">set_ob_name()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/compose.html#p2obp.backend.compose.set_resolution_and_dit"><code class="docutils literal notranslate"><span class="pre">set_resolution_and_dit()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/compose.html#p2obp.backend.compose.write_dict"><code class="docutils literal notranslate"><span class="pre">write_dict()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/compose.html#p2obp.backend.compose.write_ob"><code class="docutils literal notranslate"><span class="pre">write_ob()</span></code></a></li>
 </ul>
@@ -401,8 +401,10 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="modules/options.html">p2obp.backend.options</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="modules/options.html#logger-settings">Logger Settings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/options.html#ob-creation">OB Creation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="modules/options.html#general">General</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules/options.html#resolution">Resolution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules/options.html#photometry">Photometry</a></li>
 <li class="toctree-l3"><a class="reference internal" href="modules/options.html#integration-time">Integration time</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules/options.html#central-wavelength">Central wavelength</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="modules/options.html#query">Query</a><ul>
@@ -414,8 +416,8 @@ document.write(`
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="modules/parse.html">p2obp.backend.parse</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="modules/parse.html#p2obp.backend.parse.get_file_section"><code class="docutils literal notranslate"><span class="pre">get_file_section()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/parse.html#p2obp.backend.parse.parse_array_config"><code class="docutils literal notranslate"><span class="pre">parse_array_config()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/parse.html#p2obp.backend.parse.parse_file_section"><code class="docutils literal notranslate"><span class="pre">parse_file_section()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/parse.html#p2obp.backend.parse.parse_groups"><code class="docutils literal notranslate"><span class="pre">parse_groups()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/parse.html#p2obp.backend.parse.parse_line"><code class="docutils literal notranslate"><span class="pre">parse_line()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/parse.html#p2obp.backend.parse.parse_night_name"><code class="docutils literal notranslate"><span class="pre">parse_night_name()</span></code></a></li>
@@ -445,11 +447,10 @@ document.write(`
 </li>
 <li class="toctree-l1"><a class="reference internal" href="modules/utils.html">p2obp.backend.utils</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="modules/utils.html#p2obp.backend.utils.add_space"><code class="docutils literal notranslate"><span class="pre">add_space()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/utils.html#p2obp.backend.utils.calculate_night_lengths"><code class="docutils literal notranslate"><span class="pre">calculate_night_lengths()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules/utils.html#p2obp.backend.utils.calculate_twilight"><code class="docutils literal notranslate"><span class="pre">calculate_twilight()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/utils.html#p2obp.backend.utils.contains_element"><code class="docutils literal notranslate"><span class="pre">contains_element()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/utils.html#p2obp.backend.utils.convert_proper_motions"><code class="docutils literal notranslate"><span class="pre">convert_proper_motions()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules/utils.html#p2obp.backend.utils.prompt_user"><code class="docutils literal notranslate"><span class="pre">prompt_user()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules/utils.html#p2obp.backend.utils.remove_parenthesis"><code class="docutils literal notranslate"><span class="pre">remove_parenthesis()</span></code></a></li>
 </ul>
 </li>
 </ul>

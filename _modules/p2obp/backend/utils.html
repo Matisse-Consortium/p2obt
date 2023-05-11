@@ -338,16 +338,10 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <h1>Source code for p2obp.backend.utils</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span>
+<span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span>
 
 <span class="kn">import</span> <span class="nn">astropy.units</span> <span class="k">as</span> <span class="nn">u</span>
-<span class="kn">import</span> <span class="nn">ephem</span>
-<span class="kn">import</span> <span class="nn">pytz</span>
-<span class="kn">from</span> <span class="nn">astropy.time</span> <span class="kn">import</span> <span class="n">Time</span>
-<span class="kn">from</span> <span class="nn">astropy.coordinates</span> <span class="kn">import</span> <span class="n">EarthLocation</span>
 
 
 <div class="viewcode-block" id="add_space"><a class="viewcode-back" href="../../../modules/utils.html#p2obp.backend.utils.add_space">[docs]</a><span class="k">def</span> <span class="nf">add_space</span><span class="p">(</span><span class="n">input_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
@@ -356,6 +350,15 @@ document.write(`
     <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^HD\s*\d+&#39;</span><span class="p">,</span> <span class="n">input_str</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^HD&#39;</span><span class="p">,</span> <span class="s1">&#39;HD &#39;</span><span class="p">,</span> <span class="n">input_str</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">input_str</span></div>
+
+
+<div class="viewcode-block" id="remove_parenthesis"><a class="viewcode-back" href="../../../modules/utils.html#p2obp.backend.utils.remove_parenthesis">[docs]</a><span class="k">def</span> <span class="nf">remove_parenthesis</span><span class="p">(</span><span class="n">input_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Removes parenthesis from a string.</span>
+
+<span class="sd">    This if for the ob&#39;s name so it is elegible for upload</span>
+<span class="sd">    (either manually after (.obx)-file creation or automatically.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[\[\]()</span><span class="si">{}</span><span class="s1">]&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">input_str</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="prompt_user"><a class="viewcode-back" href="../../../modules/utils.html#p2obp.backend.utils.prompt_user">[docs]</a><span class="k">def</span> <span class="nf">prompt_user</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">selections</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -380,7 +383,8 @@ document.write(`
 
 
 <div class="viewcode-block" id="contains_element"><a class="viewcode-back" href="../../../modules/utils.html#p2obp.backend.utils.contains_element">[docs]</a><span class="k">def</span> <span class="nf">contains_element</span><span class="p">(</span><span class="n">list_to_search</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">element_to_search</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks if an element is in the list searched and returns &#39;True&#39; or &#39;False&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks if an element is in the list searched and returns</span>
+<span class="sd">    &#39;True&#39; or &#39;False&#39;</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -410,168 +414,6 @@ document.write(`
                       <span class="s2">&quot; astropy.units.mas.&quot;</span><span class="p">)</span>
     <span class="n">proper_motions</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">Quantity</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">arcsec</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">proper_motions</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">proper_motions</span><span class="o">.</span><span class="n">value</span> <span class="k">if</span> <span class="n">rfloat</span> <span class="k">else</span> <span class="n">proper_motions</span></div>
-
-
-<div class="viewcode-block" id="calculate_twilight"><a class="viewcode-back" href="../../../modules/utils.html#p2obp.backend.utils.calculate_twilight">[docs]</a><span class="k">def</span> <span class="nf">calculate_twilight</span><span class="p">(</span><span class="n">date</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">datetime</span><span class="p">],</span>
-                       <span class="n">site</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;paranal&quot;</span><span class="p">,</span>
-                       <span class="n">latitude</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                       <span class="n">longitude</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                       <span class="n">twilight_kind</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;astronomical&quot;</span>
-                       <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">namedtuple</span><span class="p">,</span> <span class="n">namedtuple</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates the sunset and sunrise for the input type of twilight.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    date : str or datetime.date or datetime.datetime</span>
-<span class="sd">        Can either be a string of the form &quot;yyyy-mm-dd&quot; or</span>
-<span class="sd">        a `datetime.date`/`datetime.datetime`.</span>
-<span class="sd">    site : str, optional</span>
-<span class="sd">        The site at which the sunset and sunrise are to be</span>
-<span class="sd">        determined.</span>
-<span class="sd">    latitude : float, optional</span>
-<span class="sd">        The latitude at which the sunset and sunrise are to be</span>
-<span class="sd">        determined [deg].</span>
-<span class="sd">    longitude : float, optional</span>
-<span class="sd">        The longitude at which the sunset and sunrise are to be</span>
-<span class="sd">        determined [deg].</span>
-<span class="sd">    twilight_kind : str, optional</span>
-<span class="sd">        The type of twilight. Can be &quot;civil&quot; for -6 degrees, &quot;nautical&quot;</span>
-<span class="sd">        for -12 degrees and astronomical for -18 degrees.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    sunset : namedtuple of str</span>
-<span class="sd">        The sunset at the twilight specified. This is a named tuple</span>
-<span class="sd">        containing string entries for &quot;utc&quot;, &quot;lst&quot; and &quot;cet&quot;.</span>
-<span class="sd">    sunrise : namedtuple of str</span>
-<span class="sd">        The sunrise at the twilight specified. This is a named tuple</span>
-<span class="sd">        containing string entries for &quot;utc&quot;, &quot;lst&quot; and &quot;cet&quot;.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">TimesTuple</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s2">&quot;TimesTuple&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;utc&quot;</span><span class="p">,</span> <span class="s2">&quot;lst&quot;</span><span class="p">,</span> <span class="s2">&quot;cet&quot;</span><span class="p">])</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">)):</span>
-        <span class="n">date</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">latitude</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">location</span> <span class="o">=</span> <span class="n">EarthLocation</span><span class="p">(</span><span class="n">lat</span><span class="o">=</span><span class="n">latitude</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">,</span> <span class="n">lon</span><span class="o">=</span><span class="n">longitude</span><span class="o">*</span><span class="n">u</span><span class="o">.</span><span class="n">deg</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">location</span> <span class="o">=</span> <span class="n">EarthLocation</span><span class="o">.</span><span class="n">of_site</span><span class="p">(</span><span class="n">site</span><span class="p">)</span>
-    <span class="n">observer</span> <span class="o">=</span> <span class="n">ephem</span><span class="o">.</span><span class="n">Observer</span><span class="p">()</span>
-    <span class="n">observer</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">date</span>
-    <span class="n">observer</span><span class="o">.</span><span class="n">lat</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">lat</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-    <span class="n">observer</span><span class="o">.</span><span class="n">lon</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">lon</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">twilight_kind</span> <span class="o">==</span> <span class="s2">&quot;civil&quot;</span><span class="p">:</span>
-        <span class="n">observer</span><span class="o">.</span><span class="n">horizon</span> <span class="o">=</span> <span class="s2">&quot;-6&quot;</span>
-    <span class="k">elif</span> <span class="n">twilight_kind</span> <span class="o">==</span> <span class="s2">&quot;nautical&quot;</span><span class="p">:</span>
-        <span class="n">observer</span><span class="o">.</span><span class="n">horizon</span> <span class="o">=</span> <span class="s2">&quot;-12&quot;</span>
-    <span class="k">elif</span> <span class="n">twilight_kind</span> <span class="o">==</span> <span class="s2">&quot;astronomical&quot;</span><span class="p">:</span>
-        <span class="n">observer</span><span class="o">.</span><span class="n">horizon</span> <span class="o">=</span> <span class="s2">&quot;-18&quot;</span>
-
-    <span class="n">sunset</span> <span class="o">=</span> <span class="n">observer</span><span class="o">.</span><span class="n">next_setting</span><span class="p">(</span><span class="n">ephem</span><span class="o">.</span><span class="n">Sun</span><span class="p">(),</span> <span class="n">use_center</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">sunrise</span> <span class="o">=</span> <span class="n">observer</span><span class="o">.</span><span class="n">next_rising</span><span class="p">(</span><span class="n">ephem</span><span class="o">.</span><span class="n">Sun</span><span class="p">(),</span> <span class="n">use_center</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="n">sunset</span><span class="p">,</span> <span class="n">sunrise</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">Time</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">datetime</span><span class="p">()),</span> <span class="p">[</span><span class="n">sunset</span><span class="p">,</span> <span class="n">sunrise</span><span class="p">])</span>
-    <span class="n">sunset_utc</span><span class="p">,</span> <span class="n">sunrise_utc</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">utc</span><span class="p">,</span> <span class="p">[</span><span class="n">sunset</span><span class="p">,</span> <span class="n">sunrise</span><span class="p">])</span>
-    <span class="n">sunrise_utc</span> <span class="o">+=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-    <span class="n">utc_timezone</span> <span class="o">=</span> <span class="n">pytz</span><span class="o">.</span><span class="n">timezone</span><span class="p">(</span><span class="s2">&quot;UTC&quot;</span><span class="p">)</span>
-    <span class="n">sunset_aware_utc</span> <span class="o">=</span> <span class="n">utc_timezone</span><span class="o">.</span><span class="n">localize</span><span class="p">(</span><span class="n">sunset_utc</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">())</span>
-    <span class="n">sunrise_aware_utc</span> <span class="o">=</span> <span class="n">utc_timezone</span><span class="o">.</span><span class="n">localize</span><span class="p">(</span><span class="n">sunrise_utc</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">())</span>
-
-    <span class="n">sunset_lst</span> <span class="o">=</span> <span class="n">sunset</span><span class="o">.</span><span class="n">sidereal_time</span><span class="p">(</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="n">location</span><span class="o">.</span><span class="n">lon</span><span class="p">)</span>
-    <span class="n">sunrise_lst</span> <span class="o">=</span> <span class="n">sunrise</span><span class="o">.</span><span class="n">sidereal_time</span><span class="p">(</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="n">location</span><span class="o">.</span><span class="n">lon</span><span class="p">)</span>
-
-    <span class="n">cet_timezone</span> <span class="o">=</span> <span class="n">pytz</span><span class="o">.</span><span class="n">timezone</span><span class="p">(</span><span class="s2">&quot;CET&quot;</span><span class="p">)</span>
-    <span class="n">sunset_cet</span> <span class="o">=</span> <span class="n">sunset_aware_utc</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">cet_timezone</span><span class="p">)</span>
-    <span class="n">sunrise_cet</span> <span class="o">=</span> <span class="n">sunrise_aware_utc</span><span class="o">.</span><span class="n">astimezone</span><span class="p">(</span><span class="n">cet_timezone</span><span class="p">)</span>
-
-    <span class="n">sunset</span> <span class="o">=</span> <span class="n">TimesTuple</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">sunset_utc</span><span class="p">),</span>
-                        <span class="nb">str</span><span class="p">(</span><span class="n">sunset_lst</span><span class="p">),</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sunset_cet</span><span class="o">.</span><span class="n">date</span><span class="p">()</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">sunset_cet</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">sunrise</span> <span class="o">=</span> <span class="n">TimesTuple</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">sunrise_utc</span><span class="p">),</span>
-                         <span class="nb">str</span><span class="p">(</span><span class="n">sunrise_lst</span><span class="p">),</span>
-                         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sunrise_cet</span><span class="o">.</span><span class="n">date</span><span class="p">()</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">sunrise_cet</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">sunset</span><span class="p">,</span> <span class="n">sunrise</span></div>
-
-
-<span class="c1"># TODO: Reimplement this as classes to take into account all three types utc, lst and</span>
-<span class="c1"># so at once</span>
-<div class="viewcode-block" id="calculate_night_lengths"><a class="viewcode-back" href="../../../modules/utils.html#p2obp.backend.utils.calculate_night_lengths">[docs]</a><span class="k">def</span> <span class="nf">calculate_night_lengths</span><span class="p">(</span><span class="n">date</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">datetime</span><span class="p">],</span>
-                            <span class="n">observation_slot</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                            <span class="n">site</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;paranal&quot;</span><span class="p">,</span>
-                            <span class="n">latitude</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                            <span class="n">longitude</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                            <span class="n">twilight_kind</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;astronomical&quot;</span>
-                            <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">namedtuple</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates the length of the total night as well as the </span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    date : str or datetime.date or datetime.datetime</span>
-<span class="sd">        Can either be a string of the form &quot;yyyy-mm-dd&quot; or</span>
-<span class="sd">        a `datetime.date`/`datetime.datetime`.</span>
-<span class="sd">    observation_slot : str</span>
-<span class="sd">        This is the time that is alloted for the observations</span>
-<span class="sd">        on the night in question. Can be any combination of the</span>
-<span class="sd">        following &quot;0.6h1&quot;, &quot;1.2h2&quot; or &quot;1.0n&quot;. The floats can be</span>
-<span class="sd">        any number and the string specifies the start &quot;h1&quot; for</span>
-<span class="sd">        the beginning of the night, &quot;h2&quot; for the second half of </span>
-<span class="sd">        the night and &quot;n&quot; for the full night.</span>
-<span class="sd">    site : str, optional</span>
-<span class="sd">        The site at which the sunset and sunrise are to be</span>
-<span class="sd">        determined.</span>
-<span class="sd">    latitude : float, optional</span>
-<span class="sd">        The latitude at which the sunset and sunrise are to be</span>
-<span class="sd">        determined [deg].</span>
-<span class="sd">    longitude : float, optional</span>
-<span class="sd">        The longitude at which the sunset and sunrise are to be</span>
-<span class="sd">        determined [deg].</span>
-<span class="sd">    twilight_kind : str, optional</span>
-<span class="sd">        The type of twilight. Can be &quot;civil&quot; for -6 degrees, &quot;nautical&quot;</span>
-<span class="sd">        for -12 degrees and astronomical for -18 degrees.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    night_duration : namedtuple</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">NightDuration</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s2">&quot;NightDuration&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;duration&quot;</span><span class="p">,</span> <span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">,</span>
-                                                 <span class="s2">&quot;observation&quot;</span><span class="p">])</span>
-    <span class="n">Observation</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s2">&quot;Observation&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">,</span>
-                                             <span class="s2">&quot;duration&quot;</span><span class="p">,</span> <span class="s2">&quot;minutes&quot;</span><span class="p">])</span>
-    <span class="n">sunset</span><span class="p">,</span> <span class="n">sunrise</span> <span class="o">=</span> <span class="n">calculate_twilight</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">latitude</span><span class="p">,</span>
-                                         <span class="n">longitude</span><span class="p">,</span> <span class="n">twilight_kind</span><span class="p">)</span>
-    <span class="n">sunset_utc</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">sunset</span><span class="o">.</span><span class="n">utc</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S.</span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">sunrise_utc</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">sunrise</span><span class="o">.</span><span class="n">utc</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S.</span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">total_duration</span> <span class="o">=</span> <span class="n">sunrise_utc</span> <span class="o">-</span> <span class="n">sunset_utc</span>
-
-    <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(\d+\.\d+|\d+\.\d*|\d+)([a-z]+)(\d*)&quot;</span>
-    <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">observation_slot</span><span class="p">)</span>
-    <span class="n">multiplicative_factor</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-    <span class="n">part_identifier</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">half_night_identifier</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span> <span class="k">if</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-    <span class="k">if</span> <span class="n">part_identifier</span> <span class="o">==</span> <span class="s2">&quot;n&quot;</span><span class="p">:</span>
-        <span class="n">observation_duration</span> <span class="o">=</span> <span class="n">total_duration</span>
-        <span class="n">observation_start</span> <span class="o">=</span> <span class="n">sunrise</span>
-    <span class="k">elif</span> <span class="n">part_identifier</span> <span class="o">==</span> <span class="s2">&quot;h&quot;</span><span class="p">:</span>
-        <span class="n">observation_duration</span> <span class="o">=</span> <span class="p">(</span><span class="n">total_duration</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">multiplicative_factor</span>
-        <span class="n">observation_minutes</span> <span class="o">=</span> <span class="n">observation_duration</span><span class="o">.</span><span class="n">seconds</span> <span class="o">//</span> <span class="mi">60</span>
-        <span class="k">if</span> <span class="n">half_night_identifier</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">observation_start</span> <span class="o">=</span> <span class="n">sunset</span>
-            <span class="n">observation_end</span> <span class="o">=</span> <span class="n">sunset_utc</span> <span class="o">+</span> <span class="n">observation_duration</span>
-        <span class="k">elif</span> <span class="n">half_night_identifier</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="n">observation_start</span> <span class="o">=</span> <span class="n">sunrise_utc</span> <span class="o">-</span> <span class="n">observation_duration</span>
-            <span class="n">observation_end</span> <span class="o">=</span> <span class="n">sunrise_utc</span>
-    <span class="n">observation</span> <span class="o">=</span> <span class="n">Observation</span><span class="p">(</span><span class="n">observation_slot</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">observation_start</span><span class="p">),</span>
-                              <span class="nb">str</span><span class="p">(</span><span class="n">observation_end</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">observation_duration</span><span class="p">),</span>
-                              <span class="n">observation_minutes</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">NightDuration</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">total_duration</span><span class="p">),</span> <span class="n">sunset</span><span class="o">.</span><span class="n">lst</span><span class="p">,</span> <span class="n">sunrise</span><span class="o">.</span><span class="n">lst</span><span class="p">,</span> <span class="n">observation</span><span class="p">)</span></div>
-
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2023</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-    <span class="n">sunset</span><span class="p">,</span> <span class="n">sunrise</span> <span class="o">=</span> <span class="n">calculate_twilight</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
-    <span class="nb">breakpoint</span><span class="p">()</span>
 </pre></div>
 
                 </article>

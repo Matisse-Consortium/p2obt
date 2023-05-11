@@ -382,13 +382,9 @@ that can be changed and their default values as seen in the script <code class="
 </section>
 <section id="ob-creation">
 <h2>OB Creation<a class="headerlink" href="#ob-creation" title="Permalink to this heading">#</a></h2>
-<section id="general">
-<h3>General<a class="headerlink" href="#general" title="Permalink to this heading">#</a></h3>
 <p>General settings for the pipeline-function <a class="reference internal" href="../automate.html#p2obp.automate.create_obs" title="p2obp.automate.create_obs"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_obs</span></code></a>.</p>
-<p>This option sets the central wavelength used for all observation templates.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;central_wl&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">4.1</span>
-</pre></div>
-</div>
+<section id="resolution">
+<h3>Resolution<a class="headerlink" href="#resolution" title="Permalink to this heading">#</a></h3>
 <p>This options sets the standard resolution for all created obs.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;resolution&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;low&quot;</span>
 </pre></div>
@@ -400,30 +396,70 @@ or any resolution set in an input dictionary for the <a class="reference interna
 </pre></div>
 </div>
 </section>
+<section id="photometry">
+<h3>Photometry<a class="headerlink" href="#photometry" title="Permalink to this heading">#</a></h3>
+<p>The default photometry settings for MATISSE-standalone</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;photometry.matisse.ats&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;photometry.matisse.uts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+<p>The photometry settings for GRA4MAT</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;photometry.gra4mat.ats&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;photometry.gra4mat.uts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+</div>
+</section>
 <section id="integration-time">
 <h3>Integration time<a class="headerlink" href="#integration-time" title="Permalink to this heading">#</a></h3>
-<p>The integration times for MATISSE-standalone for the ATs.</p>
+<p>The default integration times for MATISSE-standalone for the ATs.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.matisse.ats.low&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.111</span>
 <span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.matisse.ats.med&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.111</span>
 <span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.matisse.ats.high&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.111</span>
 </pre></div>
 </div>
-<p>The integration times for MATISSE-standalone for the UTs.</p>
+<p>The default integration times for MATISSE-standalone for the UTs.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.matisse.uts.low&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.111</span>
 <span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.matisse.uts.med&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.111</span>
 <span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.matisse.uts.high&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.111</span>
 </pre></div>
 </div>
-<p>The integration times for GRA4MAT for the ATs.</p>
+<p>The default integration times for GRA4MAT for the ATs.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.gra4mat.ats.low&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.6</span>
 <span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.gra4mat.ats.med&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.3</span>
 <span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.gra4mat.ats.high&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">3.</span>
 </pre></div>
 </div>
-<p>The integration times for GRA4MAT for the UTs.</p>
+<p>The default integration times for GRA4MAT for the UTs.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.gra4mat.uts.low&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.6</span>
 <span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.gra4mat.uts.med&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.6</span>
 <span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.gra4mat.uts.high&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.6</span>
+</pre></div>
+</div>
+</section>
+<section id="central-wavelength">
+<h3>Central wavelength<a class="headerlink" href="#central-wavelength" title="Permalink to this heading">#</a></h3>
+<p>The default central wavelengths for MATISSE-standalone for the ATs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;w0.matisse.ats.low&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">4.1</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;w0.matisse.ats.med&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">4.1</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;w0.matisse.ats.high&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">4.1</span>
+</pre></div>
+</div>
+<p>The default central wavelengths for MATISSE-standalone for the UTs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;w0.matisse.uts.low&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">4.1</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;w0.matisse.uts.med&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">4.1</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;w0.matisse.uts.high&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">4.1</span>
+</pre></div>
+</div>
+<p>The default central wavelengths for GRA4MAT for the ATs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;w0.gra4mat.ats.low&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">4.1</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;w0.gra4mat.ats.med&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">4.1</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;w0.gra4mat.ats.high&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">4.1</span>
+</pre></div>
+</div>
+<p>The default central wavelengths for GRA4MAT for the UTs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;w0.gra4mat.uts.low&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">3.52</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;w0.gra4mat.uts.med&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">3.52</span>
+<span class="n">options</span><span class="p">[</span><span class="s2">&quot;w0.gra4mat.uts.high&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">3.52</span>
 </pre></div>
 </div>
 </section>
@@ -564,8 +600,10 @@ the <code class="code highlight python docutils literal highlight-python"><span 
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#logger-settings">Logger Settings</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ob-creation">OB Creation</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#general">General</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#resolution">Resolution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#photometry">Photometry</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-time">Integration time</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#central-wavelength">Central wavelength</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#query">Query</a><ul class="nav section-nav flex-column">

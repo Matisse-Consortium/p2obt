@@ -574,10 +574,10 @@ document.write(`
     <span class="k">return</span> <span class="n">data</span></div>
 
 
-<div class="viewcode-block" id="get_file_section"><a class="viewcode-back" href="../../../modules/parse.html#p2obp.backend.parse.get_file_section">[docs]</a><span class="k">def</span> <span class="nf">get_file_section</span><span class="p">(</span><span class="n">lines</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets the section of a file corresponding to the given identifier and</span>
-<span class="sd">    returns a dict with the keys being the match to the identifier and the</span>
-<span class="sd">    values being a subset of the lines list.</span>
+<div class="viewcode-block" id="parse_file_section"><a class="viewcode-back" href="../../../modules/parse.html#p2obp.backend.parse.parse_file_section">[docs]</a><span class="k">def</span> <span class="nf">parse_file_section</span><span class="p">(</span><span class="n">lines</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parses the section of a file that corresponds to the given identifier</span>
+<span class="sd">    and returns a dict with the keys being the match to the identifier and</span>
+<span class="sd">    the values being a subset of the lines list.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -605,7 +605,6 @@ document.write(`
     <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">sections</span><span class="p">))</span></div>
 
 
-<span class="c1"># TODO: Add documentation for the night dict in the Returns</span>
 <span class="c1"># TODO: Fix parsing of the first entry? -&gt; Is parsed wrongly</span>
 <span class="c1"># -&gt; Check parsing generally.</span>
 <div class="viewcode-block" id="parse_night_plan"><a class="viewcode-back" href="../../../modules/parse.html#p2obp.backend.parse.parse_night_plan">[docs]</a><span class="k">def</span> <span class="nf">parse_night_plan</span><span class="p">(</span><span class="n">night_plan</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
@@ -651,9 +650,9 @@ document.write(`
             <span class="sa">f</span><span class="s2">&quot;File </span><span class="si">{</span><span class="n">night_plan</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> was not found/does not exist!&quot;</span><span class="p">)</span>
 
     <span class="n">runs</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">get_file_section</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">run_identifier</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">run_id</span><span class="p">,</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">parse_file_section</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">run_identifier</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">nights</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">night_id</span><span class="p">,</span> <span class="n">night</span> <span class="ow">in</span> <span class="n">get_file_section</span><span class="p">(</span><span class="n">run</span><span class="p">,</span> <span class="n">night_identifier</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">night_id</span><span class="p">,</span> <span class="n">night</span> <span class="ow">in</span> <span class="n">parse_file_section</span><span class="p">(</span><span class="n">run</span><span class="p">,</span> <span class="n">night_identifier</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">night_content</span> <span class="o">=</span> <span class="n">parse_groups</span><span class="p">(</span><span class="n">night</span><span class="p">)</span>
 
             <span class="c1"># HACK: Only add nights that have content</span>

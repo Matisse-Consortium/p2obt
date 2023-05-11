@@ -172,16 +172,16 @@ This will either upload the obs to a the specified container (keyword
 
 .. code-block:: python
 
-  ob_creation(manual_lst=manual_lst, operational_mode="both",
-              resolution=resolution, container_id=3001786,
-              server="demo", password="52052")
+  create_obs(manual_lst=manual_lst, operational_mode="both",
+             resolution=resolution, container_id=3001786,
+             server="demo", password="52052")
 
 or make them locally as (.obx)-files, if an :python:`output_dir` is specified.
 
 .. code-block:: python
 
-  ob_creation(manual_lst=manual_lst, operational_mode="both",
-              resolution=res_dict, output_dir=output_dir)
+  create_obs(manual_lst=manual_lst, operational_mode="both",
+             resolution=res_dict, output_dir=output_dir)
 
 .. note::
 
@@ -209,8 +209,8 @@ The code to create the (.obx)-files locally, is similar to before
 
 .. code-block:: python
 
-  ob_creation(night_plan=night_plan,
-              resolution=res_dict, output_dir=output_dir)
+  create_obs(night_plan=night_plan,
+             resolution=res_dict, output_dir=output_dir)
 
 .. note::
 
@@ -226,9 +226,10 @@ The code to create the (.obx)-files locally, is similar to before
    obs will be uploaded to this container instead and possible :python:`run_id`'s will
    be ignored.
 
-and similarly for uploading the obs directly
+   Additionally, specifying an :python:`output_dir` will always overwrite the online creation.
+
+and similarly for uploading the obs directly just omit the :python:`output_dir`.
 
 .. code-block:: python
 
-  ob_creation(night_plan=night_plan, resolution=resolutions,
-              server="demo", password="52052")
+  create_obs(night_plan=night_plan, resolution=resolutions)

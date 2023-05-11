@@ -368,28 +368,6 @@ document.write(`
   <section id="module-p2obp.backend.parse">
 <span id="p2obp-backend-parse"></span><h1>p2obp.backend.parse<a class="headerlink" href="#module-p2obp.backend.parse" title="Permalink to this heading">#</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="p2obp.backend.parse.get_file_section">
-<span class="sig-prename descclassname"><span class="pre">p2obp.backend.parse.</span></span><span class="sig-name descname"><span class="pre">get_file_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lines</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="../_modules/p2obp/backend/parse.html#get_file_section"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p2obp.backend.parse.get_file_section" title="Permalink to this definition">#</a></dt>
-<dd><p>Gets the section of a file corresponding to the given identifier and
-returns a dict with the keys being the match to the identifier and the
-values being a subset of the lines list.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>lines</strong> (<em>list</em>) – The lines read from a file.</p></li>
-<li><p><strong>identifier</strong> (<em>str</em>) – The identifier by which they should be split into subsets.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>subset</strong> – A dict that contains a subsets of the original lines.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="p2obp.backend.parse.parse_array_config">
 <span class="sig-prename descclassname"><span class="pre">p2obp.backend.parse.</span></span><span class="sig-name descname"><span class="pre">parse_array_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/p2obp/backend/parse.html#parse_array_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p2obp.backend.parse.parse_array_config" title="Permalink to this definition">#</a></dt>
 <dd><p>Parses the array configuration from string containing it.</p>
@@ -404,6 +382,28 @@ it prompts the user for manual configuration input.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="p2obp.backend.parse.parse_file_section">
+<span class="sig-prename descclassname"><span class="pre">p2obp.backend.parse.</span></span><span class="sig-name descname"><span class="pre">parse_file_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lines</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="../_modules/p2obp/backend/parse.html#parse_file_section"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p2obp.backend.parse.parse_file_section" title="Permalink to this definition">#</a></dt>
+<dd><p>Parses the section of a file that corresponds to the given identifier
+and returns a dict with the keys being the match to the identifier and
+the values being a subset of the lines list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lines</strong> (<em>list</em>) – The lines read from a file.</p></li>
+<li><p><strong>identifier</strong> (<em>str</em>) – The identifier by which they should be split into subsets.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>subset</strong> – A dict that contains a subsets of the original lines.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
@@ -605,8 +605,8 @@ manual resolution input.</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#p2obp.backend.parse.get_file_section"><code class="docutils literal notranslate"><span class="pre">get_file_section()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#p2obp.backend.parse.parse_array_config"><code class="docutils literal notranslate"><span class="pre">parse_array_config()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#p2obp.backend.parse.parse_file_section"><code class="docutils literal notranslate"><span class="pre">parse_file_section()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#p2obp.backend.parse.parse_groups"><code class="docutils literal notranslate"><span class="pre">parse_groups()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#p2obp.backend.parse.parse_line"><code class="docutils literal notranslate"><span class="pre">parse_line()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#p2obp.backend.parse.parse_night_name"><code class="docutils literal notranslate"><span class="pre">parse_night_name()</span></code></a></li>

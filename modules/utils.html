@@ -375,74 +375,10 @@ between the HD and the rest.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="p2obp.backend.utils.calculate_night_lengths">
-<span class="sig-prename descclassname"><span class="pre">p2obp.backend.utils.</span></span><span class="sig-name descname"><span class="pre">calculate_night_lengths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">&lt;module</span> <span class="pre">'datetime'</span> <span class="pre">from</span> <span class="pre">'/Users/scheuck/.pyenv/versions/3.11.0/lib/python3.11/datetime.py'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observation_slot:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">'paranal'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude:</span> <span class="pre">float</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitude:</span> <span class="pre">float</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">twilight_kind:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">'astronomical'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">namedtuple</span></span></span><a class="reference internal" href="../_modules/p2obp/backend/utils.html#calculate_night_lengths"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p2obp.backend.utils.calculate_night_lengths" title="Permalink to this definition">#</a></dt>
-<dd><p>Calculates the length of the total night as well as the</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>date</strong> (<em>str</em><em> or </em><em>datetime.date</em><em> or </em><em>datetime.datetime</em>) – Can either be a string of the form “yyyy-mm-dd” or
-a <cite>datetime.date</cite>/<cite>datetime.datetime</cite>.</p></li>
-<li><p><strong>observation_slot</strong> (<em>str</em>) – This is the time that is alloted for the observations
-on the night in question. Can be any combination of the
-following “0.6h1”, “1.2h2” or “1.0n”. The floats can be
-any number and the string specifies the start “h1” for
-the beginning of the night, “h2” for the second half of
-the night and “n” for the full night.</p></li>
-<li><p><strong>site</strong> (<em>str</em><em>, </em><em>optional</em>) – The site at which the sunset and sunrise are to be
-determined.</p></li>
-<li><p><strong>latitude</strong> (<em>float</em><em>, </em><em>optional</em>) – The latitude at which the sunset and sunrise are to be
-determined [deg].</p></li>
-<li><p><strong>longitude</strong> (<em>float</em><em>, </em><em>optional</em>) – The longitude at which the sunset and sunrise are to be
-determined [deg].</p></li>
-<li><p><strong>twilight_kind</strong> (<em>str</em><em>, </em><em>optional</em>) – The type of twilight. Can be “civil” for -6 degrees, “nautical”
-for -12 degrees and astronomical for -18 degrees.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>night_duration</strong></p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>namedtuple</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="p2obp.backend.utils.calculate_twilight">
-<span class="sig-prename descclassname"><span class="pre">p2obp.backend.utils.</span></span><span class="sig-name descname"><span class="pre">calculate_twilight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">&lt;module</span> <span class="pre">'datetime'</span> <span class="pre">from</span> <span class="pre">'/Users/scheuck/.pyenv/versions/3.11.0/lib/python3.11/datetime.py'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">'paranal'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latitude:</span> <span class="pre">float</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">longitude:</span> <span class="pre">float</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">twilight_kind:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">'astronomical'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">namedtuple</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">namedtuple</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/p2obp/backend/utils.html#calculate_twilight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p2obp.backend.utils.calculate_twilight" title="Permalink to this definition">#</a></dt>
-<dd><p>Calculates the sunset and sunrise for the input type of twilight.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>date</strong> (<em>str</em><em> or </em><em>datetime.date</em><em> or </em><em>datetime.datetime</em>) – Can either be a string of the form “yyyy-mm-dd” or
-a <cite>datetime.date</cite>/<cite>datetime.datetime</cite>.</p></li>
-<li><p><strong>site</strong> (<em>str</em><em>, </em><em>optional</em>) – The site at which the sunset and sunrise are to be
-determined.</p></li>
-<li><p><strong>latitude</strong> (<em>float</em><em>, </em><em>optional</em>) – The latitude at which the sunset and sunrise are to be
-determined [deg].</p></li>
-<li><p><strong>longitude</strong> (<em>float</em><em>, </em><em>optional</em>) – The longitude at which the sunset and sunrise are to be
-determined [deg].</p></li>
-<li><p><strong>twilight_kind</strong> (<em>str</em><em>, </em><em>optional</em>) – The type of twilight. Can be “civil” for -6 degrees, “nautical”
-for -12 degrees and astronomical for -18 degrees.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>sunset</strong> (<em>namedtuple of str</em>) – The sunset at the twilight specified. This is a named tuple
-containing string entries for “utc”, “lst” and “cet”.</p></li>
-<li><p><strong>sunrise</strong> (<em>namedtuple of str</em>) – The sunrise at the twilight specified. This is a named tuple
-containing string entries for “utc”, “lst” and “cet”.</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="p2obp.backend.utils.contains_element">
 <span class="sig-prename descclassname"><span class="pre">p2obp.backend.utils.</span></span><span class="sig-name descname"><span class="pre">contains_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_to_search</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_to_search</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/p2obp/backend/utils.html#contains_element"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p2obp.backend.utils.contains_element" title="Permalink to this definition">#</a></dt>
-<dd><p>Checks if an element is in the list searched and returns ‘True’ or ‘False’</p>
+<dd><p>Checks if an element is in the list searched and returns
+‘True’ or ‘False’</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -485,6 +421,14 @@ the associated value from the selection list.</p>
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="p2obp.backend.utils.remove_parenthesis">
+<span class="sig-prename descclassname"><span class="pre">p2obp.backend.utils.</span></span><span class="sig-name descname"><span class="pre">remove_parenthesis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/p2obp/backend/utils.html#remove_parenthesis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p2obp.backend.utils.remove_parenthesis" title="Permalink to this definition">#</a></dt>
+<dd><p>Removes parenthesis from a string.</p>
+<p>This if for the ob’s name so it is elegible for upload
+(either manually after (.obx)-file creation or automatically.</p>
 </dd></dl>
 
 </section>
@@ -537,11 +481,10 @@ the associated value from the selection list.</p>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#p2obp.backend.utils.add_space"><code class="docutils literal notranslate"><span class="pre">add_space()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#p2obp.backend.utils.calculate_night_lengths"><code class="docutils literal notranslate"><span class="pre">calculate_night_lengths()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#p2obp.backend.utils.calculate_twilight"><code class="docutils literal notranslate"><span class="pre">calculate_twilight()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#p2obp.backend.utils.contains_element"><code class="docutils literal notranslate"><span class="pre">contains_element()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#p2obp.backend.utils.convert_proper_motions"><code class="docutils literal notranslate"><span class="pre">convert_proper_motions()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#p2obp.backend.utils.prompt_user"><code class="docutils literal notranslate"><span class="pre">prompt_user()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#p2obp.backend.utils.remove_parenthesis"><code class="docutils literal notranslate"><span class="pre">remove_parenthesis()</span></code></a></li>
 </ul>
   </nav></div>
 

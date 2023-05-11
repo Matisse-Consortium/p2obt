@@ -496,14 +496,14 @@ to <code class="code highlight python docutils literal highlight-python"><span c
 <code class="code highlight python docutils literal highlight-python"><span class="s2">&quot;st&quot;</span></code> for MATISSE-standalone specifies the obs’ settings).
 This will either upload the obs to a the specified container (keyword
 <code class="code highlight python docutils literal highlight-python"><span class="n">container_id</span></code> on p2)</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ob_creation</span><span class="p">(</span><span class="n">manual_lst</span><span class="o">=</span><span class="n">manual_lst</span><span class="p">,</span> <span class="n">operational_mode</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span>
-            <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span> <span class="n">container_id</span><span class="o">=</span><span class="mi">3001786</span><span class="p">,</span>
-            <span class="n">server</span><span class="o">=</span><span class="s2">&quot;demo&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;52052&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">create_obs</span><span class="p">(</span><span class="n">manual_lst</span><span class="o">=</span><span class="n">manual_lst</span><span class="p">,</span> <span class="n">operational_mode</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span>
+           <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span> <span class="n">container_id</span><span class="o">=</span><span class="mi">3001786</span><span class="p">,</span>
+           <span class="n">server</span><span class="o">=</span><span class="s2">&quot;demo&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;52052&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>or make them locally as (.obx)-files, if an <code class="code highlight python docutils literal highlight-python"><span class="n">output_dir</span></code> is specified.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ob_creation</span><span class="p">(</span><span class="n">manual_lst</span><span class="o">=</span><span class="n">manual_lst</span><span class="p">,</span> <span class="n">operational_mode</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span>
-            <span class="n">resolution</span><span class="o">=</span><span class="n">res_dict</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">create_obs</span><span class="p">(</span><span class="n">manual_lst</span><span class="o">=</span><span class="n">manual_lst</span><span class="p">,</span> <span class="n">operational_mode</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span>
+           <span class="n">resolution</span><span class="o">=</span><span class="n">res_dict</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -526,8 +526,8 @@ see <a class="reference internal" href="../features.html#features"><span class="
 function will parse this into chuncks of runs that have subsections for nights and in those
 some sort of science target and calibrator(s) arrangements.</p>
 <p>The code to create the (.obx)-files locally, is similar to before</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ob_creation</span><span class="p">(</span><span class="n">night_plan</span><span class="o">=</span><span class="n">night_plan</span><span class="p">,</span>
-            <span class="n">resolution</span><span class="o">=</span><span class="n">res_dict</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">create_obs</span><span class="p">(</span><span class="n">night_plan</span><span class="o">=</span><span class="n">night_plan</span><span class="p">,</span>
+           <span class="n">resolution</span><span class="o">=</span><span class="n">res_dict</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="n">output_dir</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -541,10 +541,10 @@ each detected run and every not detected keyword.</p>
 <p>One can also directly provide a <code class="code highlight python docutils literal highlight-python"><span class="n">container_id</span></code>, then the automatically created
 obs will be uploaded to this container instead and possible <code class="code highlight python docutils literal highlight-python"><span class="n">run_id</span></code>’s will
 be ignored.</p>
+<p>Additionally, specifying an <code class="code highlight python docutils literal highlight-python"><span class="n">output_dir</span></code> will always overwrite the online creation.</p>
 </div>
-<p>and similarly for uploading the obs directly</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ob_creation</span><span class="p">(</span><span class="n">night_plan</span><span class="o">=</span><span class="n">night_plan</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolutions</span><span class="p">,</span>
-            <span class="n">server</span><span class="o">=</span><span class="s2">&quot;demo&quot;</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="s2">&quot;52052&quot;</span><span class="p">)</span>
+<p>and similarly for uploading the obs directly just omit the <code class="code highlight python docutils literal highlight-python"><span class="n">output_dir</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">create_obs</span><span class="p">(</span><span class="n">night_plan</span><span class="o">=</span><span class="n">night_plan</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="n">resolutions</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>

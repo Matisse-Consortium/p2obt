@@ -8,9 +8,10 @@ Installation
 ============
 
 .. sourcecode:: bash
- 
-  pip install git+https://github.com/MBSck/p2obp.git
-
+  
+  git clone git@github.com:MBSck/p2obp.git
+  cd p2obp
+  pip install .
 
 Optional
 ============

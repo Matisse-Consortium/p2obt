@@ -370,14 +370,28 @@ software name is detected.</p>
 <p>In order to even better utilise the parser it is helpful to adhere to some
 guidlines while writting the night/observation plans.
 These are outlined in the following:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The parser will only identify sections of a file as a run, that contain a line
+starting with <strong>run</strong> (optional)</p>
+<p>The parser will only identify sections of a file as a run, that contain a line
+starting with <strong>run</strong> (optional).</p>
+</div>
+<div class="admonition warning" id="important-notice">
+<p class="admonition-title">Warning</p>
+<p>In order for the parser to work within individual nights /runs, i.e., the individual
+observing blocks, the SCI-CAL (or CAL-SCI-CAL, SCI-CAL-SCI, or any combination) needs
+to be separated from the next (SCI-CAL, etc.) observing block by a white line or
+a comment (a line starting with #).
+In case for files that end on such an observation block, a white line should be added
+to ensure the proper functioning of the parser.</p>
+</div>
 <section id="run-names">
 <h4>Run Names<a class="headerlink" href="#run-names" title="Permalink to this heading">#</a></h4>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>The parser will only identify sections of a file as a run, that contain a line
-starting with <strong>run</strong>.</p>
-<p>If none of them are detected then the whole file will be identified as one run and
-attributed as <strong>full_run</strong>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If no run is detected then the whole file will be identified as one run and
+attributed to be a <strong>full_run</strong>.</p>
 </div>
 <p>Additionally, if the run name has a certain shape/format, then the
 <a class="reference internal" href="automate.html#p2obp.automate.create_obs" title="p2obp.automate.create_obs"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_obs</span></code></a> function
@@ -388,7 +402,10 @@ can automatically determine the following things about the run:</p>
 <li><p>The <strong>resolution</strong> (<em>LOW/LR, MED/MEDIUM/MR or HIGH/HR</em>)</p></li>
 <li><p>The <strong>program id</strong> (and by this the container id on p2)</p></li>
 </ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>The parser is insensitive to the order and capitalization of the above settings.</p>
+</div>
 <p>Here are some examples</p>
 <div class="admonition-file-contents admonition">
 <p class="admonition-title">File Contents</p>
@@ -402,6 +419,11 @@ GRA4MAT obs to the run2 (111.253T.002) on p2 in medium resolution for the UTs ar
 </section>
 <section id="night-names">
 <h4>Night Names<a class="headerlink" href="#night-names" title="Permalink to this heading">#</a></h4>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If no night is detected within a run then the whole run will be identified as one
+night and attributed to be a <strong>full_night</strong>.</p>
+</div>
 <p>The parser can also identify individual nights that are contained within a run by
 lines starting with <strong>night</strong> that are followed up by some block containing
 science targets and calibrators. This means, there is no need to avoid the word night
