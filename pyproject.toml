@@ -56,5 +56,8 @@ dev = [
 [tool.setuptools]
 include-package-data = true
 
+[tool.setuptools.package-data]
+p2obp = ["*.toml", "*.xlsx"]
+
 [project.urls]
 repository = "https://github.com/MBSck/p2obp"
