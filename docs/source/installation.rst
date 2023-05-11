@@ -8,19 +8,10 @@ Installation
 ============
 
 .. sourcecode:: bash
- 
-  pip install git+https://github.com/MBSck/p2obp.git
-
-.. note::
-   
-  If there is a missing file error appearing, try to install it in this way
-
-  .. sourcecode:: bash
-    
-    git clone git@github.com:MBSck/p2obp.git
-    cd p2obp
-    pip install .
-
+  
+  git clone git@github.com:MBSck/p2obp.git
+  cd p2obp
+  pip install .
 
 Optional
 ============

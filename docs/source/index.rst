@@ -25,13 +25,15 @@ For more information on the specific capabilities of this software see :ref:`Fea
      parsing and from this ob creation and upload. Alternatively, it also provides the same
      automated (local (.obx)) creation and upload for manual input.
 
+
    .. code-block:: bash
      :caption: Quick Installation
+     
+     git clone git@github.com:MBSck/p2obp.git
+     cd p2obp
+     pip install .
 
-     pip install git+https://github.com/MBSck/p2obp.git
-
-
-   For more information (or if you encounter problems, such as missing files) see :ref:`Getting Started <getting_started>`
+   For more information see :ref:`Getting Started <getting_started>`
 
 .. toctree::
    :hidden:
