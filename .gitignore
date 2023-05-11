@@ -5,6 +5,7 @@ logs/
 *egg-info*/
 dist/
 doc/
+build/
 docs/html
 docs/build/
 
