@@ -1,1 +1,2 @@
-recursive-include p2obp/data/*
+include *.xlsx
+include *.toml
