@@ -23,7 +23,7 @@ repository.
  For the global settings of the :python:`p2obp` package see :ref:`options <options>`.
  
 .. toctree::
- :maxdepth: 3
+ :maxdepth: -1
  :caption: Examples
 
  examples/ob_creation

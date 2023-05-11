@@ -22,9 +22,9 @@ from p2obp import options, query
 # a list as input). Further can the 'match_radius' be determined (in arcsec).
 target = query("HD 142666")
 print("Query with standard settings:")
-print("f{'':-^50}")
+print(f"{'':-^50}")
 pprint(target)
-print("f{'':-^50}")
+print(f"{'':-^50}")
 
 # %%
 # Speficying accessed fields
@@ -44,9 +44,9 @@ options["catalogs.tycho.fields"] = ["**"]
 # too many are excluded)
 target = query("HD 142666", exclude_catalogs=["tycho"])
 print("Query with 'tycho' catalog excluded:")
-print("f{'':-^50}")
+print(f"{'':-^50}")
 pprint(target)
-print("f{'':-^50}")
+print(f"{'':-^50}")
 
 # %%
 # Querying local catalog
@@ -57,9 +57,9 @@ print("f{'':-^50}")
 # purposes
 target = query("M8E-IR")
 print("Query of target present in local 'standard' catalog:")
-print("f{'':-^50}")
+print(f"{'':-^50}")
 pprint(target)
-print("f{'':-^50}")
+print(f"{'':-^50}")
 
 # %%
 # Querying different local catalog
@@ -69,6 +69,6 @@ print("f{'':-^50}")
 options["catalogs.local.active"] = "ciao"
 target = query("YLW 16A")
 print("Query of target present in local 'ciao' catalog:")
-print("f{'':-^50}")
+print(f"{'':-^50}")
 pprint(target)
-print("f{'':-^50}")
+print(f"{'':-^50}")

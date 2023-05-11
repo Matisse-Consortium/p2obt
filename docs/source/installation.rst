@@ -11,10 +11,10 @@ Installation
   
   git clone git@github.com:MBSck/p2obp.git
   cd p2obp
-  pip install .
+  pip install -e .
 
 Optional
-============
+========
 
 An optional dependency is R. van Boekel's :bash:`calibrator_find.pro`.
 This is an IDL software used for calibrator finding, from which 

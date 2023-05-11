@@ -7,7 +7,6 @@
 p2obp.backend.options
 =====================
 
-
 The global settings for :python:`p2obp` are contained in a dictionary and can be
 changed by the user. Hereafter follows a list of all the availabe options 
 that can be changed and their default values as seen in the script :python:`options`.
