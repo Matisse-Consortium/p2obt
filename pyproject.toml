@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "p2obp"
-version = "1.5.4"
+version = "1.5.5"
 description = "The Phase 2 OB Pipeline (p2obp) an automation tool for the MATISSE observation preparation."
 requires-python = ">=3.9"
 readme = "README.md"
@@ -55,6 +55,9 @@ dev = [
 
 [tool.setuptools.packages.find]
 where = ["p2obp"]
+
+[tool.setuptools.package-data]
+p2obp = ["*.toml", "*.xlsx"]
 
 [tool.setuptools]
 include-package-data = true

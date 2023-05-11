@@ -1,0 +1,2 @@
+graft p2obp
+global-exclude *.py[cod]
