@@ -31,7 +31,7 @@ For more information on the specific capabilities of this software see :ref:`Fea
      
      git clone git@github.com:MBSck/p2obp.git
      cd p2obp
-     pip install .
+     pip install -e .
 
    For more information see :ref:`Getting Started <getting_started>`
 

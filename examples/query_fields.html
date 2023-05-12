@@ -1,0 +1,581 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Query Fields &#8212; p2obp 1.0.3 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'examples/query_fields';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Utils" href="utils.html" />
+    <link rel="prev" title="Query" href="query.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  <div class="navbar-header-items__start">
+    
+      <div class="navbar-item">
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">p2obp 1.0.3 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="../getting_started.html">
+                        Getting Started
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../features.html">
+                        Features
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../api.html">
+                        API
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-external" href="https://github.com/MBSck/p2obp/releases">
+                        Changelog
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../credit.html">
+                        Credit
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+        </div>
+      
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="../getting_started.html">
+                        Getting Started
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../features.html">
+                        Features
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../api.html">
+                        API
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-external" href="https://github.com/MBSck/p2obp/releases">
+                        Changelog
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../credit.html">
+                        Credit
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item"><nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="ob_creation.html">OB Creation</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="query.html">Query</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Query Fields</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utils</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Additional Resources</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference external" href="https://www.eso.org/sci/observing/phase2/p2intro/Phase2API.html">Phase 2 API</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.eso.org/sci/observing/phase2/p2intro/Phase2API/ApiContributedSoftware.html">User-contributed software ESO</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://simbad.cds.unistra.fr/guide/otypes.htx">Simbad Object Types</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumbs">
+  <ul class="bd-breadcrumbs" role="navigation" aria-label="Breadcrumb">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../getting_started.html" class="nav-link">Getting Started</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="query.html" class="nav-link">Query</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">Query Fields</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="query-fields">
+<h1>Query Fields<a class="headerlink" href="#query-fields" title="Permalink to this heading">#</a></h1>
+<p>This is a list of all the queryable fields for the different catalogs, that can be
+specified by the user in the <a class="reference internal" href="../modules/options.html#p2obp-backend-options"><span class="std std-ref">options</span></a>.</p>
+<section id="simbad">
+<h2>Simbad<a class="headerlink" href="#simbad" title="Permalink to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;MAIN_ID&#39;</span><span class="p">,</span> <span class="s1">&#39;RA&#39;</span><span class="p">,</span> <span class="s1">&#39;DEC&#39;</span><span class="p">,</span> <span class="s1">&#39;RA_PREC&#39;</span><span class="p">,</span> <span class="s1">&#39;DEC_PREC&#39;</span><span class="p">,</span>
+<span class="s1">&#39;COO_ERR_MAJA&#39;</span><span class="p">,</span> <span class="s1">&#39;COO_ERR_MINA&#39;</span><span class="p">,</span> <span class="s1">&#39;COO_ERR_ANGLE&#39;</span><span class="p">,</span>
+<span class="s1">&#39;COO_QUAL&#39;</span><span class="p">,</span> <span class="s1">&#39;COO_WAVELENGTH&#39;</span><span class="p">,</span> <span class="s1">&#39;COO_BIBCODE&#39;</span><span class="p">,</span>
+<span class="s1">&#39;MK_ds&#39;</span><span class="p">,</span> <span class="s1">&#39;MK_mss&#39;</span><span class="p">,</span> <span class="s1">&#39;MK_Spectral_type&#39;</span><span class="p">,</span> <span class="s1">&#39;MK_bibcode&#39;</span><span class="p">,</span>
+<span class="s1">&#39;SP_TYPE&#39;</span><span class="p">,</span> <span class="s1">&#39;SP_TYPE_2&#39;</span><span class="p">,</span> <span class="s1">&#39;SP_QUAL&#39;</span><span class="p">,</span> <span class="s1">&#39;SP_BIBCODE&#39;</span><span class="p">,</span>
+<span class="s1">&#39;Fe_H_Teff&#39;</span><span class="p">,</span> <span class="s1">&#39;Fe_H_log_g&#39;</span><span class="p">,</span> <span class="s1">&#39;Fe_H_Fe_H&#39;</span><span class="p">,</span> <span class="s1">&#39;Fe_H_flag&#39;</span><span class="p">,</span>
+<span class="s1">&#39;Fe_H_CompStar&#39;</span><span class="p">,</span> <span class="s1">&#39;Fe_H_CatNo&#39;</span><span class="p">,</span> <span class="s1">&#39;Fe_H_bibcode&#39;</span><span class="p">,</span> <span class="s1">&#39;PMRA&#39;</span><span class="p">,</span>
+<span class="s1">&#39;PMDEC&#39;</span><span class="p">,</span> <span class="s1">&#39;PM_ERR_MAJA&#39;</span><span class="p">,</span> <span class="s1">&#39;PM_ERR_MINA&#39;</span><span class="p">,</span> <span class="s1">&#39;PM_ERR_ANGLE&#39;</span><span class="p">,</span>
+<span class="s1">&#39;PLX_VALUE&#39;</span><span class="p">,</span> <span class="s1">&#39;RV_VALUE&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX_U&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX_ERROR_U&#39;</span><span class="p">,</span>
+<span class="s1">&#39;FLUX_B&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX_ERROR_B&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX_V&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX_ERROR_V&#39;</span><span class="p">,</span>
+<span class="s1">&#39;FLUX_R&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX_ERROR_R&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX_I&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX_ERROR_I&#39;</span><span class="p">,</span>
+<span class="s1">&#39;FLUX_J&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX_ERROR_J&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX_H&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX_ERROR_H&#39;</span><span class="p">,</span>
+<span class="s1">&#39;FLUX_K&#39;</span><span class="p">,</span> <span class="s1">&#39;FLUX_ERROR_K&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="gaia">
+<h2>GAIA<a class="headerlink" href="#gaia" title="Permalink to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;RA_ICRS&#39;</span><span class="p">,</span> <span class="s1">&#39;e_RA_ICRS&#39;</span><span class="p">,</span> <span class="s1">&#39;DE_ICRS&#39;</span><span class="p">,</span> <span class="s1">&#39;e_DE_ICRS&#39;</span><span class="p">,</span>
+<span class="s1">&#39;Source&#39;</span><span class="p">,</span> <span class="s1">&#39;Plx&#39;</span><span class="p">,</span> <span class="s1">&#39;e_Plx&#39;</span><span class="p">,</span> <span class="s1">&#39;pmRA&#39;</span><span class="p">,</span> <span class="s1">&#39;e_pmRA&#39;</span><span class="p">,</span>
+<span class="s1">&#39;pmDE&#39;</span><span class="p">,</span> <span class="s1">&#39;e_pmDE&#39;</span><span class="p">,</span> <span class="s1">&#39;Dup&#39;</span><span class="p">,</span> <span class="s1">&#39;FG&#39;</span><span class="p">,</span> <span class="s1">&#39;e_FG&#39;</span><span class="p">,</span> <span class="s1">&#39;Gmag&#39;</span><span class="p">,</span>
+<span class="s1">&#39;e_Gmag&#39;</span><span class="p">,</span> <span class="s1">&#39;FBP&#39;</span><span class="p">,</span> <span class="s1">&#39;e_FBP&#39;</span><span class="p">,</span> <span class="s1">&#39;BPmag&#39;</span><span class="p">,</span> <span class="s1">&#39;e_BPmag&#39;</span><span class="p">,</span>
+<span class="s1">&#39;FRP&#39;</span><span class="p">,</span> <span class="s1">&#39;e_FRP&#39;</span><span class="p">,</span> <span class="s1">&#39;RPmag&#39;</span><span class="p">,</span> <span class="s1">&#39;e_RPmag&#39;</span><span class="p">,</span> <span class="s1">&#39;BP-RP&#39;</span><span class="p">,</span>
+<span class="s1">&#39;RV&#39;</span><span class="p">,</span> <span class="s1">&#39;e_RV&#39;</span><span class="p">,</span> <span class="s1">&#39;Teff&#39;</span><span class="p">,</span> <span class="s1">&#39;AG&#39;</span><span class="p">,</span> <span class="s1">&#39;E_BP-RP_&#39;</span><span class="p">,</span> <span class="s1">&#39;Rad&#39;</span><span class="p">,</span> <span class="s1">&#39;Lum&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="tycho">
+<h2>TYCHO<a class="headerlink" href="#tycho" title="Permalink to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;e_BTmag&#39;</span><span class="p">,</span> <span class="s1">&#39;e_VTmag&#39;</span><span class="p">,</span> <span class="s1">&#39;IDTyc2&#39;</span><span class="p">,</span> <span class="s1">&#39;RAT&#39;</span><span class="p">,</span>
+<span class="s1">&#39;DET&#39;</span><span class="p">,</span> <span class="s1">&#39;pmRA&#39;</span><span class="p">,</span> <span class="s1">&#39;pmDE&#39;</span><span class="p">,</span> <span class="s1">&#39;EpRA1990&#39;</span><span class="p">,</span>
+<span class="s1">&#39;EpDE1990&#39;</span><span class="p">,</span> <span class="s1">&#39;CCDM&#39;</span><span class="p">,</span> <span class="s1">&#39;BTmag&#39;</span><span class="p">,</span> <span class="s1">&#39;VTmag&#39;</span><span class="p">,</span>
+<span class="s1">&#39;TDSC&#39;</span><span class="p">,</span> <span class="s1">&#39;WDS&#39;</span><span class="p">,</span> <span class="s1">&#39;PA&#39;</span><span class="p">,</span> <span class="s1">&#39;Sep&#39;</span><span class="p">,</span> <span class="s1">&#39;_RA.icrs&#39;</span><span class="p">,</span> <span class="s1">&#39;_DE.icrs&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="nomad">
+<h2>NOMAD<a class="headerlink" href="#nomad" title="Permalink to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;NOMAD1&#39;</span><span class="p">,</span> <span class="s1">&#39;YM&#39;</span><span class="p">,</span> <span class="s1">&#39;RAJ2000&#39;</span><span class="p">,</span> <span class="s1">&#39;DEJ2000&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span>
+<span class="s1">&#39;pmRA&#39;</span><span class="p">,</span> <span class="s1">&#39;e_pmRA&#39;</span><span class="p">,</span> <span class="s1">&#39;pmDE&#39;</span><span class="p">,</span> <span class="s1">&#39;e_pmDE&#39;</span><span class="p">,</span> <span class="s1">&#39;Bmag&#39;</span><span class="p">,</span>
+<span class="s1">&#39;r_Bmag&#39;</span><span class="p">,</span> <span class="s1">&#39;Vmag&#39;</span><span class="p">,</span> <span class="s1">&#39;r_Vmag&#39;</span><span class="p">,</span> <span class="s1">&#39;Rmag&#39;</span><span class="p">,</span> <span class="s1">&#39;r_Rmag&#39;</span><span class="p">,</span>
+<span class="s1">&#39;Jmag&#39;</span><span class="p">,</span> <span class="s1">&#39;Hmag&#39;</span><span class="p">,</span> <span class="s1">&#39;Kmag&#39;</span><span class="p">,</span> <span class="s1">&#39;R&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="mass">
+<h2>2MASS<a class="headerlink" href="#mass" title="Permalink to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;RAJ2000&#39;</span><span class="p">,</span> <span class="s1">&#39;DEJ2000&#39;</span><span class="p">,</span> <span class="s1">&#39;_2MASS&#39;</span><span class="p">,</span> <span class="s1">&#39;Jmag&#39;</span><span class="p">,</span>
+<span class="s1">&#39;e_Jmag&#39;</span><span class="p">,</span> <span class="s1">&#39;Hmag&#39;</span><span class="p">,</span> <span class="s1">&#39;e_Hmag&#39;</span><span class="p">,</span> <span class="s1">&#39;Kmag&#39;</span><span class="p">,</span> <span class="s1">&#39;e_Kmag&#39;</span><span class="p">,</span>
+<span class="s1">&#39;Qflg&#39;</span><span class="p">,</span> <span class="s1">&#39;Rflg&#39;</span><span class="p">,</span> <span class="s1">&#39;Bflg&#39;</span><span class="p">,</span> <span class="s1">&#39;Cflg&#39;</span><span class="p">,</span> <span class="s1">&#39;Xflg&#39;</span><span class="p">,</span> <span class="s1">&#39;Aflg&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="wise">
+<h2>WISE<a class="headerlink" href="#wise" title="Permalink to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;RAJ2000&#39;</span><span class="p">,</span> <span class="s1">&#39;DEJ2000&#39;</span><span class="p">,</span> <span class="s1">&#39;eeMaj&#39;</span><span class="p">,</span> <span class="s1">&#39;eeMin&#39;</span><span class="p">,</span> <span class="s1">&#39;Im&#39;</span><span class="p">,</span>
+<span class="s1">&#39;W1mag&#39;</span><span class="p">,</span> <span class="s1">&#39;e_W1mag&#39;</span><span class="p">,</span> <span class="s1">&#39;W2mag&#39;</span><span class="p">,</span> <span class="s1">&#39;e_W2mag&#39;</span><span class="p">,</span>
+<span class="s1">&#39;W3mag&#39;</span><span class="p">,</span> <span class="s1">&#39;e_W3mag&#39;</span><span class="p">,</span> <span class="s1">&#39;W4mag&#39;</span><span class="p">,</span> <span class="s1">&#39;e_W4mag&#39;</span><span class="p">,</span>
+<span class="s1">&#39;Jmag&#39;</span><span class="p">,</span> <span class="s1">&#39;Hmag&#39;</span><span class="p">,</span> <span class="s1">&#39;Kmag&#39;</span><span class="p">,</span> <span class="s1">&#39;ccf&#39;</span><span class="p">,</span> <span class="s1">&#39;ex&#39;</span><span class="p">,</span> <span class="s1">&#39;var&#39;</span><span class="p">,</span> <span class="s1">&#39;d2M&#39;</span><span class="p">,</span> <span class="s1">&#39;_2M&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="mdfc">
+<h2>MDFC<a class="headerlink" href="#mdfc" title="Permalink to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;_r&#39;</span><span class="p">,</span> <span class="s1">&#39;Name&#39;</span><span class="p">,</span> <span class="s1">&#39;SpType&#39;</span><span class="p">,</span> <span class="s1">&#39;RAJ2000&#39;</span><span class="p">,</span> <span class="s1">&#39;DEJ2000&#39;</span><span class="p">,</span>
+<span class="s1">&#39;Dist&#39;</span><span class="p">,</span> <span class="s1">&#39;Teff-MIDI&#39;</span><span class="p">,</span> <span class="s1">&#39;Teff-GAIA&#39;</span><span class="p">,</span> <span class="s1">&#39;Comp&#39;</span><span class="p">,</span>
+<span class="s1">&#39;Mean-sep&#39;</span><span class="p">,</span> <span class="s1">&#39;mag1&#39;</span><span class="p">,</span> <span class="s1">&#39;mag2&#39;</span><span class="p">,</span> <span class="s1">&#39;Diam-MIDI&#39;</span><span class="p">,</span>
+<span class="s1">&#39;e_Diam-MIDI&#39;</span><span class="p">,</span> <span class="s1">&#39;Diam-Cohen&#39;</span><span class="p">,</span> <span class="s1">&#39;e_Diam-Cohen&#39;</span><span class="p">,</span>
+<span class="s1">&#39;Diam-GAIA&#39;</span><span class="p">,</span> <span class="s1">&#39;LDD-meas&#39;</span><span class="p">,</span> <span class="s1">&#39;e_LDD-meas&#39;</span><span class="p">,</span> <span class="s1">&#39;UDD-meas&#39;</span><span class="p">,</span>
+<span class="s1">&#39;Band-meas&#39;</span><span class="p">,</span> <span class="s1">&#39;LDD-est&#39;</span><span class="p">,</span> <span class="s1">&#39;e_LDD-est&#39;</span><span class="p">,</span> <span class="s1">&#39;UDDL-est&#39;</span><span class="p">,</span>
+<span class="s1">&#39;UDDM-est&#39;</span><span class="p">,</span> <span class="s1">&#39;UDDN-est&#39;</span><span class="p">,</span> <span class="s1">&#39;Jmag&#39;</span><span class="p">,</span> <span class="s1">&#39;Hmag&#39;</span><span class="p">,</span> <span class="s1">&#39;Kmag&#39;</span><span class="p">,</span>
+<span class="s1">&#39;W4mag&#39;</span><span class="p">,</span> <span class="s1">&#39;CalFlag&#39;</span><span class="p">,</span> <span class="s1">&#39;IRflag&#39;</span><span class="p">,</span> <span class="s1">&#39;nb-Lflux&#39;</span><span class="p">,</span>
+<span class="s1">&#39;med-Lflux&#39;</span><span class="p">,</span> <span class="s1">&#39;disp-Lflux&#39;</span><span class="p">,</span> <span class="s1">&#39;nb-Mflux&#39;</span><span class="p">,</span> <span class="s1">&#39;med-Mflux&#39;</span><span class="p">,</span>
+<span class="s1">&#39;disp-Mflux&#39;</span><span class="p">,</span> <span class="s1">&#39;nb-Nflux&#39;</span><span class="p">,</span> <span class="s1">&#39;med-Nflux&#39;</span><span class="p">,</span> <span class="s1">&#39;disp-Nflux&#39;</span><span class="p">,</span>
+<span class="s1">&#39;Lcorflux30&#39;</span><span class="p">,</span> <span class="s1">&#39;Lcorflux100&#39;</span><span class="p">,</span> <span class="s1">&#39;Lcorflux130&#39;</span><span class="p">,</span> <span class="s1">&#39;Mcorflux30&#39;</span><span class="p">,</span>
+<span class="s1">&#39;Mcorflux100&#39;</span><span class="p">,</span> <span class="s1">&#39;Mcorflux130&#39;</span><span class="p">,</span> <span class="s1">&#39;Ncorflux30&#39;</span><span class="p">,</span>
+<span class="s1">&#39;Ncorflux100&#39;</span><span class="p">,</span> <span class="s1">&#39;Ncorflux130&#39;</span><span class="p">,</span> <span class="s1">&#39;Simbad&#39;</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="query.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Query</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="utils.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Utils</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simbad">Simbad</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gaia">GAIA</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tycho">TYCHO</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#nomad">NOMAD</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mass">2MASS</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wise">WISE</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mdfc">MDFC</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../_sources/examples/query_fields.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+  <p class="copyright">
+    
+      © Copyright 2023, Marten Scheuck.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item"><p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.3.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
