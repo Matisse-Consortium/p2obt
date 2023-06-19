@@ -319,4 +319,5 @@ def parse_night_plan(night_plan: Path,
             if night_content:
                 nights[night_id] = night_content
         runs[run_id] = nights
+    # TODO: Raise error here if the parsed night plan is empty and suggest adding a white line at the end
     return runs

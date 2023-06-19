@@ -44,3 +44,6 @@ For more information on the specific capabilities of this software see :ref:`Fea
    api
    Changelog <https://github.com/MBSck/p2obp/releases>
    credit
+
+* :ref:`genindex`
+* :ref:`modindex`

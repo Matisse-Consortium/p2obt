@@ -7,12 +7,13 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 import os
 import sys
+import p2obp
+
 
 project = "p2obp"
 copyright = "2023, Marten Scheuck"
 author = "Marten Scheuck"
-release = "1.0.3"
-version = "1.3.1"
+release = p2obp.__version__
 
 # -- General configuration ---------------------------------------------------
 
