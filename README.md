@@ -2,7 +2,6 @@
 <!-- Project Shields -->
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 ![Lifecycle: production](https://img.shields.io/badge/lifecycle-production-orange.svg)
-![version](https://img.shields.io/badge/version-1.5.5-blue)
 
 The Phase 2 OB Pipeline (p2obp) has been made to streamline/automate
 the process of MATISSE observation preparation on p2.
