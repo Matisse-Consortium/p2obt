@@ -47,11 +47,11 @@ create_ob("HD 100920", "cal", "uts",
 OPTIONS["resolution"] = "med"
 
 # NOTE: Change constraint settings
-# Turbulence can be choosen from 10%, 30% or 70%. Default at 10%
+# Turbulence can be choosen from 10%, 30% or 70%. Default is 70%.
 OPTIONS["constraints.turbulence"] = 30
 
 # NOTE: Change sky-transparency settings. Can be choosen from 'photometric',
-# 'clear', 'thin' and 'variable'. Default at 'thin'.
+# 'clear', 'thin' and 'variable'. Default is 'thin'.
 OPTIONS["constraints.transparency"] = "clear"
 
 # %%
