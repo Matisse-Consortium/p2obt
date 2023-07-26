@@ -226,15 +226,15 @@ def create_obs_from_lists(targets: List[str],
             else:
                 target_dir = mode_out_dir
 
-            if observational_type == "vm":
+            if container_id is not None:
                 if mode_id is not None:
                     target_id = create_remote_container(connection, target,
                                                         mode_id, observational_type)
-                elif container_id is not None:
+                else:
                     target_id = create_remote_container(connection, target,
                                                         container_id, observational_type)
-                else:
-                    target_id = None
+            else:
+                target_id = None
 
             if resolution is not None and target in resolution:
                 res = resolution[target]
