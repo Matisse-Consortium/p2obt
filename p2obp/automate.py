@@ -308,6 +308,7 @@ def create_obs_from_dict(night_plan: Dict,
         options["resolution"] = parse_run_resolution(run_key)
 
         if output_dir is None:
+            run_dir = None
             if container_id is None:
                 run_prog_id = parse_run_prog_id(run_key)
                 run_id = get_remote_run(connection, run_prog_id)
