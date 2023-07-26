@@ -46,6 +46,14 @@ create_ob("HD 100920", "cal", "uts",
 # changed via the following.
 OPTIONS["resolution"] = "med"
 
+# NOTE: Change constraint settings
+# Turbulence can be choosen from 10%, 30% or 70%. Default at 10%
+OPTIONS["constraints.turbulence"] = 30
+
+# NOTE: Change sky-transparency settings. Can be choosen from 'photometric',
+# 'clear', 'thin' and 'variable'. Default at 'thin'.
+OPTIONS["constraints.transparency"] = "clear"
+
 # %%
 # Direct upload of an ob
 # ------------------------
@@ -56,6 +64,8 @@ OPTIONS["resolution"] = "med"
 # For this example the ob will be uploaded to ESO's demo environment
 # (https://www.eso.org/p2demo/home) to the subfolder "p2obp" of the
 # run "60.A-9252(N) MATISSE".
+# Tutorial server: username - '52052' , password - 'tutorial'
 create_ob("HD 100920", "cal", "uts",
           sci_name="HD 142666", operational_mode="gr",
-          container_id=3001786, server="demo", password="52052")
+          container_id=3001786, server="demo",
+          username="52052", password="tutorial")

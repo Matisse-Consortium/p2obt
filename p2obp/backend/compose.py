@@ -13,6 +13,14 @@ from .utils import convert_proper_motions, remove_parenthesis
 # TODO: Exchange, possibly slow function?
 TEMPLATE_FILE = Path(pkg_resources.resource_filename("p2obp", "data/templates.toml"))
 
+TURBULENCE = {10: "10%  (Seeing < 0.6 arcsec, t0 > 5.2 ms)",
+              30: "30%  (Seeing < 0.8 arcsec, t0 > 4.1 ms)",
+              70: "70%  (Seeing < 1.15 arcsec, t0 > 2.2 ms)"}
+SKY_TRANSPARENCY = {"photometric": "Photometric",
+                    "clear": "Clear",
+                    "thin": "Variable, thin cirrus",
+                    "thick": "Variable, thick cirrus"}
+
 
 def load_template(file: Path,
                   header: str,
@@ -225,8 +233,13 @@ def fill_header(target: Dict,
     header_target["ra"], header_target["dec"] = ra_hms, dec_dms
     header_target["propRA"], header_target["propDec"] = prop_ra, prop_dec
     header_observation["OBSERVATION.DESCRIPTION.NAME"] = ob_name
+
+    header_constraints["atm"] = TURBULENCE[OPTIONS["constraints.turbulence"]]
+    header_constraints["sky_transparency"] =\
+        SKY_TRANSPARENCY[OPTIONS["constraints.transparency"]]
     if "ut" in array_configuration:
         header_constraints["moon_angular_distance"] = 10
+
     header["user"] = header_user
     header["target"] = header_target
     header["constraints"] = header_constraints

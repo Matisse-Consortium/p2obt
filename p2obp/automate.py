@@ -108,10 +108,14 @@ def create_ob(target: str,
               resolution: Optional[str] = "low",
               connection: Optional = None,
               container_id: Optional[int] = None,
+              username: Optional[str] = None,
+              password: Optional[str] = None,
               server: Optional[str] = "production",
               output_dir: Optional[Path] = None) -> None:
-    """
+    """Creates a singular OB either locally or on P2.
 
+    Parameters
+    ----------
     target : str
     observational_type : str
     array_configuration : str
@@ -126,6 +130,9 @@ def create_ob(target: str,
     resolution : str, optional
     connection : p2api, optional
     container_id : int, optional
+    username : str, optional
+    password : str, optional
+    server : str, optional
     output_dir : path, optional
     """
     try:
@@ -139,7 +146,7 @@ def create_ob(target: str,
                         sci_name, tag, resolution)
         if container_id is not None:
             if connection is None:
-                connection = login(server=server)
+                connection = login(username, password, server)
             upload_ob(connection, ob, container_id)
 
         if output_dir is not None:

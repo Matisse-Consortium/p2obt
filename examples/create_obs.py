@@ -37,6 +37,14 @@ res_dict = {"Beta Leo": "med"}
 # set via the options.
 OPTIONS["resolution"] = "low"
 
+# NOTE: Change constraint settings
+# Turbulence can be choosen from 10%, 30% or 70%. Default at 10%
+OPTIONS["constraints.turbulence"] = 30
+
+# NOTE: Change sky-transparency settings. Can be choosen from 'photometric',
+# 'clear', 'thin' and 'variable'. Default at 'thin'.
+OPTIONS["constraints.transparency"] = "clear"
+
 # NOTE: The operational mode (either 'gr' for 'GRA4MAT' or 'st' for
 # 'MATISSE'-standalone specifies the obs' settings).
 # This will either upload the obs to a the specified container (keyword
