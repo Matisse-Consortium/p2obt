@@ -193,8 +193,9 @@ def create_obs_from_lists(targets: List[str],
         If left at "None" no files will be created.
     """
     for mode in OPERATIONAL_MODES[operational_mode.lower()]:
+        print(f"Creating OBs in {mode}-mode and {OPTIONS['resolution']}"
+              f"-resolution for the {array_configuration}...")
         print(f"{'':-^50}")
-        print(f"Creating OBs for {mode}-mode in {OPTIONS['resolution']} resolution...")
 
         if not calibrators:
             calibrators = copy_list_and_replace_values(targets, "")
