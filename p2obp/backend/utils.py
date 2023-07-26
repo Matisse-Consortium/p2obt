@@ -4,7 +4,7 @@ from typing import Optional, Tuple, List
 import astropy.units as u
 
 
-def add_space(input_str: str):
+def add_space(input_str: str) -> str:
     """Adds a space to the "HD xxxxxx" targets,
     between the HD and the rest. """
     if re.match(r'^HD\s*\d+', input_str, flags=re.IGNORECASE):
@@ -12,7 +12,12 @@ def add_space(input_str: str):
     return input_str
 
 
-def remove_parenthesis(input_str: str):
+def remove_spaces(input_str: str) -> str:
+    """Removes multiple spaces in names (e.g., 'HD  142666')."""
+    return re.sub(' +', ' ', input_str)
+
+
+def remove_parenthesis(input_str: str) -> str:
     """Removes parenthesis from a string.
 
     This if for the ob's name so it is elegible for upload

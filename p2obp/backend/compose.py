@@ -1,3 +1,4 @@
+import re
 from pathlib import Path
 from typing import Union, Optional, Dict, Tuple
 
@@ -8,7 +9,7 @@ from astropy.coordinates import SkyCoord
 
 from .query import query
 from .options import OPTIONS
-from .utils import convert_proper_motions, remove_parenthesis
+from .utils import convert_proper_motions, remove_parenthesis, remove_spaces
 
 # TODO: Exchange, possibly slow function?
 TEMPLATE_FILE = Path(pkg_resources.resource_filename("p2obp", "data/templates.toml"))
@@ -73,6 +74,7 @@ def write_ob(ob: Dict, ob_name: str, output_dir: Path) -> None:
     print(f"Created OB: '{ob_name}'.")
 
 
+# TODO: 'add_space' makes to many spaces. Fix at some point.
 def set_ob_name(target: Union[Dict, str],
                 observation_type: str,
                 sci_name: Optional[str] = None,
@@ -95,11 +97,13 @@ def set_ob_name(target: Union[Dict, str],
     """
     ob_name = f"{observation_type.upper()}"
     if isinstance(target, dict):
-        ob_name += f"_{target['name'].replace(' ', '_')}"
+        target_name = target['name']
     else:
-        ob_name += remove_parenthesis(f"_{target.replace(' ', '_')}")
+        target_name = remove_parenthesis(target)
+    # HACK: Removes multiple spaces.
+    ob_name += f"_{remove_spaces(target_name).replace(' ', '_')}"
     if sci_name is not None:
-        ob_name += f"_{sci_name.replace(' ', '_')}"
+        ob_name += f"_{remove_spaces(sci_name).replace(' ', '_')}"
     return ob_name if tag is None else f"{ob_name}_{tag}"
 
 
