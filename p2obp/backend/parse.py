@@ -10,7 +10,6 @@ from .utils import prompt_user
 # checking if there are integers for numbers higher than last calibrator and
 # then adding these
 
-
 # TODO: Maybe substiute with match and cases?
 def parse_operational_mode(run_name: str) -> str:
     """Parses the run's used instrument from string containing it,
@@ -21,7 +20,7 @@ def parse_operational_mode(run_name: str) -> str:
 
     Parameters
     ----------
-    run_name : str, optional
+    run_name : str
         The name of the run.
 
     Returns
@@ -108,7 +107,7 @@ def parse_run_prog_id(run_name: str) -> str:
 
     Parameters
     ----------
-    run_name : str, optional
+    run_name : str
         The name of the run.
 
     Returns
@@ -265,8 +264,6 @@ def parse_file_section(lines: List, identifier: str) -> Dict:
     return dict(zip(labels, sections))
 
 
-# TODO: Fix parsing of the first entry? -> Is parsed wrongly
-# -> Check parsing generally.
 def parse_night_plan(night_plan: Path,
                      run_identifier: Optional[str] = "run",
                      night_identifier: Optional[str] = "night"

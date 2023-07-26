@@ -6,7 +6,7 @@ from warnings import warn
 import numpy as np
 import p2api
 
-from .backend import options
+from .backend import OPTIONS
 from .backend.compose import set_ob_name, write_ob, compose_ob
 from .backend.parse import parse_array_config, parse_operational_mode,\
     parse_run_resolution, parse_run_prog_id, parse_night_name, parse_night_plan
@@ -194,8 +194,7 @@ def create_obs_from_lists(targets: List[str],
     """
     for mode in OPERATIONAL_MODES[operational_mode.lower()]:
         print(f"{'':-^50}")
-        print(f"Creating OBs for {mode}-mode...")
-        print(f"{'':-^50}")
+        print(f"Creating OBs for {mode}-mode in {OPTIONS['resolution']} resolution...")
 
         if not calibrators:
             calibrators = copy_list_and_replace_values(targets, "")
@@ -239,7 +238,7 @@ def create_obs_from_lists(targets: List[str],
             if resolution is not None and target in resolution:
                 res = resolution[target]
             else:
-                res = options["resolution"]
+                res = OPTIONS["resolution"]
 
             unwrapped_lists = unwrap_lists(target, calibrator, order, tag)
             for (name, sci_cal_flag, tag) in unwrapped_lists:
@@ -260,7 +259,7 @@ def create_obs_from_dict(night_plan: Dict,
                          password: str,
                          server: str,
                          output_dir: Optional[Path] = None) -> None:
-    """
+    """Creates the OBs from a night-plan parsed dictionary.
 
     Also automatically gets the operational mode, the array_config,
     the resolution and the run's program id from the run name and if
@@ -305,7 +304,7 @@ def create_obs_from_dict(night_plan: Dict,
     for run_key, run in night_plan.items():
         array_config = parse_array_config(run_key)
         operational_mode = parse_operational_mode(run_key)
-        options["resolution"] = parse_run_resolution(run_key)
+        OPTIONS["resolution"] = parse_run_resolution(run_key)
 
         if output_dir is None:
             run_dir = None
@@ -425,3 +424,4 @@ def create_obs(night_plan: Optional[Path] = None,
     else:
         raise IOError("Neither manul input list or input"
                       " night plan path has been detected!")
+    print("Done!")

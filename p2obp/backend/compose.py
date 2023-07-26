@@ -7,7 +7,7 @@ import toml
 from astropy.coordinates import SkyCoord
 
 from .query import query
-from .options import options
+from .options import OPTIONS
 from .utils import convert_proper_motions, remove_parenthesis
 
 # TODO: Exchange, possibly slow function?
@@ -120,15 +120,15 @@ def get_observation_settings(target: Dict,
     central_wl = f"w0.{operational_mode}.{array}.{resolution}"
     photometry = f"photometry.{operational_mode}.{array}"
 
-    if not options["resolution.overwrite"]:
+    if not OPTIONS["resolution.overwrite"]:
         if array == "uts" and "LResUT" in target:
             resolution = target["LResUT"]\
                     if target["LResUT"] != "TBD" else resolution
         elif array == "ats" and "LResAT" in target:
             resolution = target["LResAT"]\
                     if target["LResAT"] != "TBD" else resolution
-    return resolution.upper(), options[integration_time],\
-        options[central_wl], options[photometry]
+    return resolution.upper(), OPTIONS[integration_time],\
+        OPTIONS[central_wl], OPTIONS[photometry]
 
 
 def format_proper_motions(target: Dict) -> Tuple[float, float]:

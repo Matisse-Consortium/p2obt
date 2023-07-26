@@ -8,7 +8,7 @@ the `query`-function of p2obp to get information on a target.
 # %%
 from pprint import pprint
 
-from p2obp import options, query
+from p2obp import OPTIONS, query
 
 
 # %%
@@ -34,7 +34,7 @@ print(f"{'':-^50}")
 # also applies for the 'catalog' and the 'fields')
 # options["catalogs.tycho.catalog"] = "..."
 # options["catalogs.tycho.query"] = ["...", "..."]
-options["catalogs.tycho.fields"] = ["**"]
+OPTIONS["catalogs.tycho.fields"] = ["**"]
 
 # %%
 # Query with excluded catalogs
@@ -66,7 +66,7 @@ print(f"{'':-^50}")
 # ------------------------
 # The local catalog for the 'ciao offaxis'-observations can be activated
 # with the options
-options["catalogs.local.active"] = "ciao"
+OPTIONS["catalogs.local.active"] = "ciao"
 target = query("YLW 16A")
 print("Query of target present in local 'ciao' catalog:")
 print(f"{'':-^50}")

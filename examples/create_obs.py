@@ -8,7 +8,7 @@ fully automated pipeline of p2obp for ob-creation, namely the script
 """
 from pathlib import Path
 
-from p2obp import options, create_obs
+from p2obp import OPTIONS, create_obs
 
 # NOTE: The path in which the 'manualOBs'-directory will be created
 output_dir = Path("../assets/")
@@ -35,7 +35,7 @@ res_dict = {"Beta Leo": "med"}
 
 # NOTE: The resolution for all other targets will be 'low', but can be
 # set via the options.
-options["resolution"] = "low"
+OPTIONS["resolution"] = "low"
 
 # NOTE: The operational mode (either 'gr' for 'GRA4MAT' or 'st' for
 # 'MATISSE'-standalone specifies the obs' settings).

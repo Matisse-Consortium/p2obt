@@ -10,7 +10,7 @@ it to ESO's P2-environment.
 # %%
 from pathlib import Path
 
-from p2obp import options, create_ob
+from p2obp import OPTIONS, create_ob
 
 # %%
 # The path in which the 'manualOBs'-directory will be created.
@@ -44,7 +44,7 @@ create_ob("HD 100920", "cal", "uts",
 #
 # The standard resolution for all targets will be 'low', but can be
 # changed via the following.
-options["resolution"] = "med"
+OPTIONS["resolution"] = "med"
 
 # %%
 # Direct upload of an ob

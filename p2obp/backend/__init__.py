@@ -1,2 +1,2 @@
-from .options import options
+from .options import OPTIONS
 from .query import query
