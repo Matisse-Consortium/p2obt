@@ -117,8 +117,8 @@ def parse_run_prog_id(run_name: str) -> str:
         The run's program id in the form of
         <period>.<program>.<run> (e.g., 110.2474.004).
     """
-    pattern = r"\b\d{3}\.\w+?\.\d{3}\b"
-    run_prog_id = re.search(run_name, pattern)
+    pattern = r'\b[\w\d]+\.[\w\d]+\.[\w\d]+\b'
+    run_prog_id = re.findall(pattern, run_name)[0]
 
     if not run_prog_id:
         print("Run's program id could not be automatically detected!")
