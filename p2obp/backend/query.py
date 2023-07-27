@@ -70,6 +70,7 @@ def query_local_catalog(name: str):
     return {key: value for key, value in target.items() if value is not None}
 
 
+# TODO: Add query of the magnitude from Simbad?
 def get_best_match(target: Dict, catalog: str,
                    catalog_table: Table) -> Table:
     """Gets the best match from the catalog entries
