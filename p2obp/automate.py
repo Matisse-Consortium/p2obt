@@ -201,7 +201,7 @@ def create_obs_from_lists(targets: List[str],
     """
     for mode in OPERATIONAL_MODES[operational_mode.lower()]:
         print(f"Creating OBs in {mode}-mode and {OPTIONS['resolution']}"
-              f"-resolution for the {array_configuration}...")
+              f"-resolution for the {array_configuration} configuration...")
         print(f"{'':-^50}")
 
         if not calibrators:
