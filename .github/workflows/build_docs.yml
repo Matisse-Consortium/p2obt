@@ -54,5 +54,5 @@ jobs:
         git stash pop
         mv -f docs/build/* .
         rm -rf docs/build
-        git add *
+        git add .
         git commit -m "Auto update docs"
