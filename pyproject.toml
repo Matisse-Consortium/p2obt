@@ -45,7 +45,6 @@ dependencies = [
   "sphinx-autobuild == 2021.3.14",
   "sphinx-autodoc-typehints == 1.22",
   "pydata-sphinx-theme==0.13.3",
-  "myst-parser == 0.18.1",
   "numpydoc==1.5.0",
 ]
 
