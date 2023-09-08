@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>p2obp.backend.utils &#8212; p2obp 1.0.3 documentation</title>
+    <title>p2obp.backend.utils &#8212; p2obp 1.5.5 documentation</title>
   
   
   
@@ -103,7 +103,7 @@
   
   
   
-    <p class="title logo__title">p2obp 1.0.3 documentation</p>
+    <p class="title logo__title">p2obp 1.5.5 documentation</p>
   
 </a></div>
     
@@ -369,7 +369,7 @@ document.write(`
 <span id="p2obp-backend-utils"></span><h1>p2obp.backend.utils<a class="headerlink" href="#module-p2obp.backend.utils" title="Permalink to this heading">#</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="p2obp.backend.utils.add_space">
-<span class="sig-prename descclassname"><span class="pre">p2obp.backend.utils.</span></span><span class="sig-name descname"><span class="pre">add_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/p2obp/backend/utils.html#add_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p2obp.backend.utils.add_space" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">p2obp.backend.utils.</span></span><span class="sig-name descname"><span class="pre">add_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/p2obp/backend/utils.html#add_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p2obp.backend.utils.add_space" title="Permalink to this definition">#</a></dt>
 <dd><p>Adds a space to the “HD xxxxxx” targets,
 between the HD and the rest.</p>
 </dd></dl>
@@ -425,10 +425,16 @@ the associated value from the selection list.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="p2obp.backend.utils.remove_parenthesis">
-<span class="sig-prename descclassname"><span class="pre">p2obp.backend.utils.</span></span><span class="sig-name descname"><span class="pre">remove_parenthesis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/p2obp/backend/utils.html#remove_parenthesis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p2obp.backend.utils.remove_parenthesis" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">p2obp.backend.utils.</span></span><span class="sig-name descname"><span class="pre">remove_parenthesis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/p2obp/backend/utils.html#remove_parenthesis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p2obp.backend.utils.remove_parenthesis" title="Permalink to this definition">#</a></dt>
 <dd><p>Removes parenthesis from a string.</p>
 <p>This if for the ob’s name so it is elegible for upload
 (either manually after (.obx)-file creation or automatically.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="p2obp.backend.utils.remove_spaces">
+<span class="sig-prename descclassname"><span class="pre">p2obp.backend.utils.</span></span><span class="sig-name descname"><span class="pre">remove_spaces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/p2obp/backend/utils.html#remove_spaces"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#p2obp.backend.utils.remove_spaces" title="Permalink to this definition">#</a></dt>
+<dd><p>Removes multiple spaces in names (e.g., ‘HD  142666’).</p>
 </dd></dl>
 
 </section>
@@ -485,6 +491,7 @@ the associated value from the selection list.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#p2obp.backend.utils.convert_proper_motions"><code class="docutils literal notranslate"><span class="pre">convert_proper_motions()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#p2obp.backend.utils.prompt_user"><code class="docutils literal notranslate"><span class="pre">prompt_user()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#p2obp.backend.utils.remove_parenthesis"><code class="docutils literal notranslate"><span class="pre">remove_parenthesis()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#p2obp.backend.utils.remove_spaces"><code class="docutils literal notranslate"><span class="pre">remove_spaces()</span></code></a></li>
 </ul>
   </nav></div>
 

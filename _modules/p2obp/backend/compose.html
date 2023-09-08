@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>p2obp.backend.compose &#8212; p2obp 1.0.3 documentation</title>
+    <title>p2obp.backend.compose &#8212; p2obp 1.5.5 documentation</title>
   
   
   
@@ -100,7 +100,7 @@
   
   
   
-    <p class="title logo__title">p2obp 1.0.3 documentation</p>
+    <p class="title logo__title">p2obp 1.5.5 documentation</p>
   
 </a></div>
     
@@ -338,7 +338,8 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <h1>Source code for p2obp.backend.compose</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">astropy.units</span> <span class="k">as</span> <span class="nn">u</span>
@@ -347,11 +348,19 @@ document.write(`
 <span class="kn">from</span> <span class="nn">astropy.coordinates</span> <span class="kn">import</span> <span class="n">SkyCoord</span>
 
 <span class="kn">from</span> <span class="nn">.query</span> <span class="kn">import</span> <span class="n">query</span>
-<span class="kn">from</span> <span class="nn">.options</span> <span class="kn">import</span> <span class="n">options</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">convert_proper_motions</span><span class="p">,</span> <span class="n">remove_parenthesis</span>
+<span class="kn">from</span> <span class="nn">.options</span> <span class="kn">import</span> <span class="n">OPTIONS</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">convert_proper_motions</span><span class="p">,</span> <span class="n">remove_parenthesis</span><span class="p">,</span> <span class="n">remove_spaces</span>
 
 <span class="c1"># TODO: Exchange, possibly slow function?</span>
 <span class="n">TEMPLATE_FILE</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s2">&quot;p2obp&quot;</span><span class="p">,</span> <span class="s2">&quot;data/templates.toml&quot;</span><span class="p">))</span>
+
+<span class="n">TURBULENCE</span> <span class="o">=</span> <span class="p">{</span><span class="mi">10</span><span class="p">:</span> <span class="s2">&quot;10%  (Seeing &lt; 0.6 arcsec, t0 &gt; 5.2 ms)&quot;</span><span class="p">,</span>
+              <span class="mi">30</span><span class="p">:</span> <span class="s2">&quot;30%  (Seeing &lt; 0.8 arcsec, t0 &gt; 4.1 ms)&quot;</span><span class="p">,</span>
+              <span class="mi">70</span><span class="p">:</span> <span class="s2">&quot;70%  (Seeing &lt; 1.15 arcsec, t0 &gt; 2.2 ms)&quot;</span><span class="p">}</span>
+<span class="n">SKY_TRANSPARENCY</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;photometric&quot;</span><span class="p">:</span> <span class="s2">&quot;Photometric&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;clear&quot;</span><span class="p">:</span> <span class="s2">&quot;Clear&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;thin&quot;</span><span class="p">:</span> <span class="s2">&quot;Variable, thin cirrus&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;thick&quot;</span><span class="p">:</span> <span class="s2">&quot;Variable, thick cirrus&quot;</span><span class="p">}</span>
 
 
 <div class="viewcode-block" id="load_template"><a class="viewcode-back" href="../../../modules/compose.html#p2obp.backend.compose.load_template">[docs]</a><span class="k">def</span> <span class="nf">load_template</span><span class="p">(</span><span class="n">file</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
@@ -405,6 +414,7 @@ document.write(`
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created OB: &#39;</span><span class="si">{</span><span class="n">ob_name</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span></div>
 
 
+<span class="c1"># TODO: &#39;add_space&#39; makes to many spaces. Fix at some point.</span>
 <div class="viewcode-block" id="set_ob_name"><a class="viewcode-back" href="../../../modules/compose.html#p2obp.backend.compose.set_ob_name">[docs]</a><span class="k">def</span> <span class="nf">set_ob_name</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
                 <span class="n">observation_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                 <span class="n">sci_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -427,11 +437,13 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ob_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">observation_type</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="n">ob_name</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="n">target</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">target_name</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">ob_name</span> <span class="o">+=</span> <span class="n">remove_parenthesis</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="n">target</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">target_name</span> <span class="o">=</span> <span class="n">remove_parenthesis</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+    <span class="c1"># HACK: Removes multiple spaces.</span>
+    <span class="n">ob_name</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="n">remove_spaces</span><span class="p">(</span><span class="n">target_name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="k">if</span> <span class="n">sci_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">ob_name</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="n">sci_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">ob_name</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="n">remove_spaces</span><span class="p">(</span><span class="n">sci_name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="k">return</span> <span class="n">ob_name</span> <span class="k">if</span> <span class="n">tag</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ob_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">tag</span><span class="si">}</span><span class="s2">&quot;</span></div>
 
 
@@ -460,15 +472,15 @@ document.write(`
     <span class="n">central_wl</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;w0.</span><span class="si">{</span><span class="n">operational_mode</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">array</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">resolution</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="n">photometry</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;photometry.</span><span class="si">{</span><span class="n">operational_mode</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">array</span><span class="si">}</span><span class="s2">&quot;</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;resolution.overwrite&quot;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">OPTIONS</span><span class="p">[</span><span class="s2">&quot;resolution.overwrite&quot;</span><span class="p">]:</span>
         <span class="k">if</span> <span class="n">array</span> <span class="o">==</span> <span class="s2">&quot;uts&quot;</span> <span class="ow">and</span> <span class="s2">&quot;LResUT&quot;</span> <span class="ow">in</span> <span class="n">target</span><span class="p">:</span>
             <span class="n">resolution</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;LResUT&quot;</span><span class="p">]</span>\
                     <span class="k">if</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;LResUT&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;TBD&quot;</span> <span class="k">else</span> <span class="n">resolution</span>
         <span class="k">elif</span> <span class="n">array</span> <span class="o">==</span> <span class="s2">&quot;ats&quot;</span> <span class="ow">and</span> <span class="s2">&quot;LResAT&quot;</span> <span class="ow">in</span> <span class="n">target</span><span class="p">:</span>
             <span class="n">resolution</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;LResAT&quot;</span><span class="p">]</span>\
                     <span class="k">if</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;LResAT&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;TBD&quot;</span> <span class="k">else</span> <span class="n">resolution</span>
-    <span class="k">return</span> <span class="n">resolution</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">options</span><span class="p">[</span><span class="n">integration_time</span><span class="p">],</span>\
-        <span class="n">options</span><span class="p">[</span><span class="n">central_wl</span><span class="p">],</span> <span class="n">options</span><span class="p">[</span><span class="n">photometry</span><span class="p">]</span></div>
+    <span class="k">return</span> <span class="n">resolution</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">OPTIONS</span><span class="p">[</span><span class="n">integration_time</span><span class="p">],</span>\
+        <span class="n">OPTIONS</span><span class="p">[</span><span class="n">central_wl</span><span class="p">],</span> <span class="n">OPTIONS</span><span class="p">[</span><span class="n">photometry</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="format_proper_motions"><a class="viewcode-back" href="../../../modules/compose.html#p2obp.backend.compose.format_proper_motions">[docs]</a><span class="k">def</span> <span class="nf">format_proper_motions</span><span class="p">(</span><span class="n">target</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
@@ -565,8 +577,13 @@ document.write(`
     <span class="n">header_target</span><span class="p">[</span><span class="s2">&quot;ra&quot;</span><span class="p">],</span> <span class="n">header_target</span><span class="p">[</span><span class="s2">&quot;dec&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ra_hms</span><span class="p">,</span> <span class="n">dec_dms</span>
     <span class="n">header_target</span><span class="p">[</span><span class="s2">&quot;propRA&quot;</span><span class="p">],</span> <span class="n">header_target</span><span class="p">[</span><span class="s2">&quot;propDec&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prop_ra</span><span class="p">,</span> <span class="n">prop_dec</span>
     <span class="n">header_observation</span><span class="p">[</span><span class="s2">&quot;OBSERVATION.DESCRIPTION.NAME&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ob_name</span>
+
+    <span class="n">header_constraints</span><span class="p">[</span><span class="s2">&quot;atm&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">TURBULENCE</span><span class="p">[</span><span class="n">OPTIONS</span><span class="p">[</span><span class="s2">&quot;constraints.turbulence&quot;</span><span class="p">]]</span>
+    <span class="n">header_constraints</span><span class="p">[</span><span class="s2">&quot;sky_transparency&quot;</span><span class="p">]</span> <span class="o">=</span>\
+        <span class="n">SKY_TRANSPARENCY</span><span class="p">[</span><span class="n">OPTIONS</span><span class="p">[</span><span class="s2">&quot;constraints.transparency&quot;</span><span class="p">]]</span>
     <span class="k">if</span> <span class="s2">&quot;ut&quot;</span> <span class="ow">in</span> <span class="n">array_configuration</span><span class="p">:</span>
         <span class="n">header_constraints</span><span class="p">[</span><span class="s2">&quot;moon_angular_distance&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span>
+
     <span class="n">header</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">header_user</span>
     <span class="n">header</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">header_target</span>
     <span class="n">header</span><span class="p">[</span><span class="s2">&quot;constraints&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">header_constraints</span>

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>p2obp.backend.utils &#8212; p2obp 1.0.3 documentation</title>
+    <title>p2obp.backend.utils &#8212; p2obp 1.5.5 documentation</title>
   
   
   
@@ -100,7 +100,7 @@
   
   
   
-    <p class="title logo__title">p2obp 1.0.3 documentation</p>
+    <p class="title logo__title">p2obp 1.5.5 documentation</p>
   
 </a></div>
     
@@ -344,7 +344,7 @@ document.write(`
 <span class="kn">import</span> <span class="nn">astropy.units</span> <span class="k">as</span> <span class="nn">u</span>
 
 
-<div class="viewcode-block" id="add_space"><a class="viewcode-back" href="../../../modules/utils.html#p2obp.backend.utils.add_space">[docs]</a><span class="k">def</span> <span class="nf">add_space</span><span class="p">(</span><span class="n">input_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="add_space"><a class="viewcode-back" href="../../../modules/utils.html#p2obp.backend.utils.add_space">[docs]</a><span class="k">def</span> <span class="nf">add_space</span><span class="p">(</span><span class="n">input_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Adds a space to the &quot;HD xxxxxx&quot; targets,</span>
 <span class="sd">    between the HD and the rest. &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^HD\s*\d+&#39;</span><span class="p">,</span> <span class="n">input_str</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">):</span>
@@ -352,7 +352,12 @@ document.write(`
     <span class="k">return</span> <span class="n">input_str</span></div>
 
 
-<div class="viewcode-block" id="remove_parenthesis"><a class="viewcode-back" href="../../../modules/utils.html#p2obp.backend.utils.remove_parenthesis">[docs]</a><span class="k">def</span> <span class="nf">remove_parenthesis</span><span class="p">(</span><span class="n">input_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<div class="viewcode-block" id="remove_spaces"><a class="viewcode-back" href="../../../modules/utils.html#p2obp.backend.utils.remove_spaces">[docs]</a><span class="k">def</span> <span class="nf">remove_spaces</span><span class="p">(</span><span class="n">input_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Removes multiple spaces in names (e.g., &#39;HD  142666&#39;).&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39; +&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">input_str</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="remove_parenthesis"><a class="viewcode-back" href="../../../modules/utils.html#p2obp.backend.utils.remove_parenthesis">[docs]</a><span class="k">def</span> <span class="nf">remove_parenthesis</span><span class="p">(</span><span class="n">input_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Removes parenthesis from a string.</span>
 
 <span class="sd">    This if for the ob&#39;s name so it is elegible for upload</span>

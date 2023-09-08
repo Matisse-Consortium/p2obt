@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>p2obp.backend.parse &#8212; p2obp 1.0.3 documentation</title>
+    <title>p2obp.backend.parse &#8212; p2obp 1.5.5 documentation</title>
   
   
   
@@ -100,7 +100,7 @@
   
   
   
-    <p class="title logo__title">p2obp 1.0.3 documentation</p>
+    <p class="title logo__title">p2obp 1.5.5 documentation</p>
   
 </a></div>
     
@@ -350,7 +350,6 @@ document.write(`
 <span class="c1"># checking if there are integers for numbers higher than last calibrator and</span>
 <span class="c1"># then adding these</span>
 
-
 <span class="c1"># TODO: Maybe substiute with match and cases?</span>
 <div class="viewcode-block" id="parse_operational_mode"><a class="viewcode-back" href="../../../modules/parse.html#p2obp.backend.parse.parse_operational_mode">[docs]</a><span class="k">def</span> <span class="nf">parse_operational_mode</span><span class="p">(</span><span class="n">run_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parses the run&#39;s used instrument from string containing it,</span>
@@ -361,7 +360,7 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    run_name : str, optional</span>
+<span class="sd">    run_name : str</span>
 <span class="sd">        The name of the run.</span>
 
 <span class="sd">    Returns</span>
@@ -448,7 +447,7 @@ document.write(`
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    run_name : str, optional</span>
+<span class="sd">    run_name : str</span>
 <span class="sd">        The name of the run.</span>
 
 <span class="sd">    Returns</span>
@@ -457,8 +456,8 @@ document.write(`
 <span class="sd">        The run&#39;s program id in the form of</span>
 <span class="sd">        &lt;period&gt;.&lt;program&gt;.&lt;run&gt; (e.g., 110.2474.004).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;\b\d</span><span class="si">{3}</span><span class="s2">\.\w+?\.\d</span><span class="si">{3}</span><span class="s2">\b&quot;</span>
-    <span class="n">run_prog_id</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">run_name</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span>
+    <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;\b[\w\d]+\.[\w\d]+\.[\w\d]+\b&#39;</span>
+    <span class="n">run_prog_id</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">run_name</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">run_prog_id</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Run&#39;s program id could not be automatically detected!&quot;</span><span class="p">)</span>
@@ -605,8 +604,6 @@ document.write(`
     <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">sections</span><span class="p">))</span></div>
 
 
-<span class="c1"># TODO: Fix parsing of the first entry? -&gt; Is parsed wrongly</span>
-<span class="c1"># -&gt; Check parsing generally.</span>
 <div class="viewcode-block" id="parse_night_plan"><a class="viewcode-back" href="../../../modules/parse.html#p2obp.backend.parse.parse_night_plan">[docs]</a><span class="k">def</span> <span class="nf">parse_night_plan</span><span class="p">(</span><span class="n">night_plan</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
                      <span class="n">run_identifier</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;run&quot;</span><span class="p">,</span>
                      <span class="n">night_identifier</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;night&quot;</span>
@@ -659,6 +656,7 @@ document.write(`
             <span class="k">if</span> <span class="n">night_content</span><span class="p">:</span>
                 <span class="n">nights</span><span class="p">[</span><span class="n">night_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">night_content</span>
         <span class="n">runs</span><span class="p">[</span><span class="n">run_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">nights</span>
+    <span class="c1"># TODO: Raise error here if the parsed night plan is empty and suggest adding a white line at the end</span>
     <span class="k">return</span> <span class="n">runs</span></div>
 </pre></div>
 
