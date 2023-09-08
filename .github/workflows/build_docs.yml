@@ -26,16 +26,29 @@ jobs:
       run: |
         sphinx-build -b html docs/source docs/build/
 
+    - name: Commit and Stash Documentation
+      run: |
+        git add -f docs/build/
+        git stash
+
     - name: Checkout gh-pages
       uses: actions/checkout@v4
       with:
         ref: gh-pages
 
-    - name: Deploy to gh-pages
+    - name: Configure Git
       run: |
         git config user.name github-actions
         git config user.email github-actions@github.com
+
+    - name: Deploy to gh-pages
+      run: |
+        git stash pop
         mv docs/build/* .
+        rm -r docs/build
         git add *
         git commit -m "Auto update docs"
-        git push
+        
+    - name: Push to gh-pages
+      run: |
+        git push origin HEAD:target-branch  # Replace with the target branch nam
