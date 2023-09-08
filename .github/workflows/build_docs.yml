@@ -41,6 +41,14 @@ jobs:
         git config user.name github-actions
         git config user.email github-actions@github.com
 
+    - name: Cleanup Old Files
+      run: |
+        rm -rf _static/
+        rm -rf _modules/
+        rm -rf _sources/
+        rm -rf examples/
+        rm -rf modules/
+
     - name: Deploy to gh-pages
       run: |
         git stash pop
