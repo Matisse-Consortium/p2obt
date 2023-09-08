@@ -1,0 +1,42 @@
+name: Build and Deploy Documentation
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.9"
+        
+    - name: Install dependencies
+      run: |
+        pip install -e .
+
+    - name: Build Documentation
+      run: |
+        sphinx-build -b html docs/source docs/build/
+
+    - name: Checkout gh-pages
+      uses: actions/checkout@v4
+      with:
+        ref: gh-pages
+
+    - name: Deploy to gh-pages
+      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        mv docs/build/modules docs/build/examples docs/build/_static docs/build/_modules docs/build/_sources docs/build/*.html .
+        rm docs/build/
+        git add -f *
+        git commit -m "Auto update docs"
+        git push
