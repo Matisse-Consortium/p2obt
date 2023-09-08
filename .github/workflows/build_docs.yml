@@ -35,8 +35,7 @@ jobs:
       run: |
         git config user.name github-actions
         git config user.email github-actions@github.com
-        mv docs/build/modules docs/build/examples docs/build/_static docs/build/_modules docs/build/_sources docs/build/*.html .
-        rm docs/build/
-        git add -f *
+        mv docs/build/* .
+        git add *
         git commit -m "Auto update docs"
         git push
