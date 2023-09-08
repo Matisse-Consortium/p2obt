@@ -44,7 +44,7 @@ jobs:
     - name: Deploy to gh-pages
       run: |
         git stash pop
-        mv docs/build/* .
-        rm -r docs/build
+        mv -f docs/build/* .
+        rm -rf docs/build
         git add *
         git commit -m "Auto update docs"
