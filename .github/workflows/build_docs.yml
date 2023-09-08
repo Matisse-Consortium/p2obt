@@ -48,7 +48,3 @@ jobs:
         rm -r docs/build
         git add *
         git commit -m "Auto update docs"
-        
-    - name: Push to gh-pages
-      run: |
-        git push origin HEAD:target-branch  # Replace with the target branch nam
