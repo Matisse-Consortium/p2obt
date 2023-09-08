@@ -37,20 +37,16 @@ dependencies = [
   "toml >= 0.10.2",
   "p2api >= 1.0.5",
   "openpyxl >= 3.1.2",
-  "pandas >= 2.0.1"
-]
-
-[options.optional-dependencies]
-dev = [
-    "ipython >= 8.12.1",
-    "pytest >= 7.2.1",
-    "pytest-cov >= 4.0.0",
-    "sphinx == 7.0.0",
-    "sphinx-autobuild == 2021.3.14",
-    "sphinx-autodoc-typehints == 1.22",
-    "pydata-sphinx-theme==0.13.3",
-    "myst-parser == 0.18.1",
-    "numpydoc==1.5.0",
+  "pandas >= 2.0.1",
+  "ipython >= 8.12.1",
+  "pytest >= 7.2.1",
+  "pytest-cov >= 4.0.0",
+  "sphinx == 7.0.0",
+  "sphinx-autobuild == 2021.3.14",
+  "sphinx-autodoc-typehints == 1.22",
+  "pydata-sphinx-theme==0.13.3",
+  "myst-parser == 0.18.1",
+  "numpydoc==1.5.0",
 ]
 
 [tool.setuptools.dynamic]
