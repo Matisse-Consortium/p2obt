@@ -347,6 +347,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span>
 <span class="kn">from</span> <span class="nn">astroquery.simbad</span> <span class="kn">import</span> <span class="n">Simbad</span>
 <span class="kn">from</span> <span class="nn">astroquery.vizier</span> <span class="kn">import</span> <span class="n">Vizier</span>
+<span class="kn">from</span> <span class="nn">astroquery.ipac.irsa.irsa_dust</span> <span class="kn">import</span> <span class="n">IrsaDust</span>
 
 <span class="kn">from</span> <span class="nn">.options</span> <span class="kn">import</span> <span class="n">OPTIONS</span>
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">add_space</span><span class="p">,</span> <span class="n">remove_parenthesis</span>
@@ -372,6 +373,27 @@ document.write(`
                        <span class="s2">&quot;GSmag&quot;</span><span class="p">:</span> <span class="s2">&quot;GS mag&quot;</span><span class="p">,</span>
                        <span class="s2">&quot;LResAT&quot;</span><span class="p">:</span> <span class="s2">&quot;L-Resolution (AT)&quot;</span><span class="p">,</span>
                        <span class="s2">&quot;LResUT&quot;</span><span class="p">:</span> <span class="s2">&quot;L-Resolution (UT)&quot;</span><span class="p">}</span>
+
+
+<div class="viewcode-block" id="query_dust_extinction"><a class="viewcode-back" href="../../../modules/query.html#p2obp.backend.query.query_dust_extinction">[docs]</a><span class="k">def</span> <span class="nf">query_dust_extinction</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Queries the dust extinctions for the specified target.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        The target&#39;s name.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    target : dict</span>
+<span class="sd">        The target&#39;s queried information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">extinctions</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">IrsaDust</span><span class="o">.</span><span class="n">get_extinction_table</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">band</span> <span class="ow">in</span> <span class="n">OPTIONS</span><span class="p">[</span><span class="s2">&quot;catalogs.irsa.query&quot;</span><span class="p">]:</span>
+        <span class="n">extinction</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="n">OPTIONS</span><span class="p">[</span><span class="s2">&quot;catalogs.irsa.fields&quot;</span><span class="p">]][</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;Filter_name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">band</span><span class="p">]</span>
+        <span class="n">extinctions</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;A_</span><span class="si">{</span><span class="n">band</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">extinction</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">extinctions</span></div>
 
 
 <span class="c1"># TODO: Implement match statement here</span>
@@ -543,8 +565,10 @@ document.write(`
         <span class="n">catalog_table</span> <span class="o">=</span> <span class="n">get_catalog</span><span class="p">(</span><span class="n">target_name</span><span class="p">,</span> <span class="n">catalog</span><span class="p">,</span> <span class="n">match_radius</span><span class="p">)</span>
         <span class="n">best_matches</span> <span class="o">=</span> <span class="n">get_best_match</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">catalog</span><span class="p">,</span> <span class="n">catalog_table</span><span class="p">)</span>
         <span class="n">target</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">target</span><span class="p">,</span> <span class="o">**</span><span class="n">best_matches</span><span class="p">}</span>
+
     <span class="n">target</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">remove_parenthesis</span><span class="p">(</span><span class="n">target</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span>
-    <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="n">target</span><span class="p">,</span> <span class="o">**</span><span class="n">local_target</span><span class="p">}</span></div>
+    <span class="n">dust_target</span> <span class="o">=</span> <span class="n">query_dust_extinction</span><span class="p">(</span><span class="n">target</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="n">target</span><span class="p">,</span> <span class="o">**</span><span class="n">local_target</span><span class="p">,</span> <span class="o">**</span><span class="n">dust_target</span><span class="p">}</span></div>
 </pre></div>
 
                 </article>
