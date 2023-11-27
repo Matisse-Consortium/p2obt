@@ -105,6 +105,7 @@ OPTIONS["catalogs.simbad.fields"] = ["mk", "sp", "sptype", "fe_h",
                                      "flux(J)", "flux_error(J)",
                                      "flux(H)", "flux_error(H)",
                                      "flux(K)", "flux_error(K)"]
+OPTIONS["catalogs.irsa.fields"] = ["A_over_E_B_V_SandF"]
 
 # NOTE: The queries from each catalog.
 OPTIONS["catalogs.gaia.query"] = ["Gmag", "pmRA", "pmDE"]
@@ -113,5 +114,6 @@ OPTIONS["catalogs.2mass.query"] = ["Jmag", "Hmag", "Kmag"]
 OPTIONS["catalogs.nomad.query"] = ["Vmag"]
 OPTIONS["catalogs.wise.query"] = ["W1mag", "W3mag", "Hmag", "Kmag"]
 OPTIONS["catalogs.mdfc.query"] = ["med-Lflux", "med-Nflux", "Hmag", "Kmag"]
-OPTIONS["catalogs.simbad.query"] = ["RA", "DEC", "PMRA", "PMDEC",
+OPTIONS["catalogs.simbad.query"] = ["SP_TYPE", "RA", "DEC", "PMRA", "PMDEC",
                                     "FLUX_V", "FLUX_H", "FLUX_K"]
+OPTIONS["catalogs.irsa.query"] = ["UKIRT K", "2MASS J", "2MASS H"]

@@ -7,6 +7,7 @@ import pkg_resources
 from astropy.table import Table
 from astroquery.simbad import Simbad
 from astroquery.vizier import Vizier
+from astroquery.ipac.irsa.irsa_dust import IrsaDust
 
 from .options import OPTIONS
 from .utils import add_space, remove_parenthesis
@@ -32,6 +33,27 @@ TARGET_INFO_MAPPING = {"local.RA": "RA [hms]",
                        "GSmag": "GS mag",
                        "LResAT": "L-Resolution (AT)",
                        "LResUT": "L-Resolution (UT)"}
+
+
+def query_dust_extinction(name: str) -> Dict:
+    """Queries the dust extinctions for the specified target.
+
+    Parameters
+    ----------
+    name : str
+        The target's name.
+
+    Returns
+    -------
+    target : dict
+        The target's queried information.
+    """
+    extinctions = {}
+    table = IrsaDust.get_extinction_table(name)
+    for band in OPTIONS["catalogs.irsa.query"]:
+        extinction = table[OPTIONS["catalogs.irsa.fields"]][table["Filter_name"] == band]
+        extinctions[f"A_{band[-1]}"] = extinction[0][0]
+    return extinctions
 
 
 # TODO: Implement match statement here
@@ -203,5 +225,7 @@ def query(target_name: str,
         catalog_table = get_catalog(target_name, catalog, match_radius)
         best_matches = get_best_match(target, catalog, catalog_table)
         target = {**target, **best_matches}
+
     target["name"] = remove_parenthesis(target["name"])
-    return {**target, **local_target}
+    dust_target = query_dust_extinction(target["name"])
+    return {**target, **local_target, **dust_target}
