@@ -358,10 +358,12 @@ def create_obs(night_plan: Optional[Path] = None,
                resolution: Optional[Dict] = None,
                container_id: Optional[int] = None,
                username: Optional[str] = None,
-               password: Optional[str] = None,
+               store_password: Optional[bool] = True,
+               remove_password: Optional[bool] = False,
                server: Optional[str] = "production",
                output_dir: Optional[Path] = None) -> None:
-    """
+    """Creates the OBs from a night-plan parsed dictionary or from
+    a manual input of the four needed lists.
 
     Parameters
     ----------
@@ -391,8 +393,6 @@ def create_obs(night_plan: Optional[Path] = None,
         The id that specifies the ob on p2.
     username : str, optional
         The p2 user name.
-    password : str, optional
-        The p2 user password.
     server: str, optional
     output_dir: path, optional
         The output directory, where the (.obx)-files will be created in.
@@ -416,7 +416,7 @@ def create_obs(night_plan: Optional[Path] = None,
                              " (science_targets, calibrators, orders, tag)"
                              " must be given!") from exc
         if container_id is not None:
-            connection = login(username, password, server)
+            connection = login(username, store_password, remove_password, server)
         else:
             connection = None
 
