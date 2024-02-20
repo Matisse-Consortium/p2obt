@@ -68,4 +68,4 @@ OPTIONS["constraints.transparency"] = "clear"
 create_ob("HD 100920", "cal", "uts",
           sci_name="HD 142666", operational_mode="gr",
           container_id=3001786, server="demo",
-          username="52052", password="tutorial")
+          user_name="52052", password="tutorial")

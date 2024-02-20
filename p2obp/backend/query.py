@@ -184,7 +184,8 @@ def get_catalog(name: str, catalog: str,
 def query(target_name: str,
           catalogs: Optional[List] = None,
           exclude_catalogs: Optional[List] = None,
-          match_radius: Optional[float] = 5.) -> Dict:
+          match_radius: Optional[float] = 5.,
+          query_exinction: Optional[bool] = False) -> Dict:
     """Queries information for an astronomical target by its name from
     various catalogs.
 
@@ -227,5 +228,5 @@ def query(target_name: str,
         target = {**target, **best_matches}
 
     target["name"] = remove_parenthesis(target["name"])
-    dust_target = query_dust_extinction(target["name"])
+    dust_target = query_dust_extinction(target["name"]) if query_exinction else {}
     return {**target, **local_target, **dust_target}

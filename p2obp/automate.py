@@ -108,7 +108,7 @@ def create_ob(target: str,
               resolution: Optional[str] = "low",
               connection: Optional = None,
               container_id: Optional[int] = None,
-              username: Optional[str] = None,
+              user_name: Optional[str] = None,
               password: Optional[str] = None,
               server: Optional[str] = "production",
               output_dir: Optional[Path] = None) -> None:
@@ -130,7 +130,7 @@ def create_ob(target: str,
     resolution : str, optional
     connection : p2api, optional
     container_id : int, optional
-    username : str, optional
+    user_name : str, optional
     password : str, optional
     server : str, optional
     output_dir : path, optional
@@ -146,7 +146,7 @@ def create_ob(target: str,
                         sci_name, tag, resolution)
         if container_id is not None:
             if connection is None:
-                connection = login(username, password, server)
+                connection = login(user_name, password, server)
             upload_ob(connection, ob, container_id)
 
         if output_dir is not None:
@@ -263,9 +263,10 @@ def create_obs_from_dict(night_plan: Dict,
                          observational_mode: str,
                          resolution: Dict,
                          container_id: str,
-                         username: str,
-                         password: str,
-                         server: str,
+                         user_name: str,
+                         store_password: Optional[bool] = False,
+                         remove_password: Optional[bool] = False,
+                         server: Optional[str] = "demo",
                          output_dir: Optional[Path] = None) -> None:
     """Creates the OBs from a night-plan parsed dictionary.
 
@@ -294,17 +295,20 @@ def create_obs_from_dict(night_plan: Dict,
         or "high". Default resolution is "low" and can be set via
         options["resolution"].
     container_id : int
-    username : str
+    user_name : str
         The p2 user name.
-    password : str
-        The p2 user password.
+    store_password : bool, optional
+        If the password should be stored.
+    remove_password : bool, optional
+        If the password should be removed from the stored password.
     server: str, optional
+        The server to connect to. Either "production" or "demo".
     output_dir : path
         The output directory, where the (.obx)-files will be created in.
         If left at "None" no files will be created.
     """
     if output_dir is None:
-        connection = login(username, password, server)
+        connection = login(user_name, store_password, remove_password, server)
     else:
         connection = None
         run_id = None
@@ -357,7 +361,7 @@ def create_obs(night_plan: Optional[Path] = None,
                observational_mode: Optional[str] = "vm",
                resolution: Optional[Dict] = None,
                container_id: Optional[int] = None,
-               username: Optional[str] = None,
+               user_name: Optional[str] = None,
                store_password: Optional[bool] = True,
                remove_password: Optional[bool] = False,
                server: Optional[str] = "production",
@@ -391,7 +395,7 @@ def create_obs(night_plan: Optional[Path] = None,
         options["resolution"].
     container_id : int, optional
         The id that specifies the ob on p2.
-    username : str, optional
+    user_name : str, optional
         The p2 user name.
     server: str, optional
     output_dir: path, optional
@@ -416,7 +420,7 @@ def create_obs(night_plan: Optional[Path] = None,
                              " (science_targets, calibrators, orders, tag)"
                              " must be given!") from exc
         if container_id is not None:
-            connection = login(username, store_password, remove_password, server)
+            connection = login(user_name, store_password, remove_password, server)
         else:
             connection = None
 
@@ -428,7 +432,8 @@ def create_obs(night_plan: Optional[Path] = None,
         night_plan = parse_night_plan(night_plan)
         create_obs_from_dict(night_plan, operational_mode,
                              observational_mode, resolution, container_id,
-                             username, password, server, output_dir)
+                             user_name, store_password, remove_password,
+                             server, output_dir)
     else:
         raise IOError("Neither manul input list or input"
                       " night plan path has been detected!")

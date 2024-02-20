@@ -116,6 +116,7 @@ def login(user_name: Optional[str] = None,
 
     password = keyring.get_password(api_url, user_name)
     if password is None:
+        print("[INFO]: Password not found in keyring.")
         password_prompt = "Input your ESO-password: "
         password = getpass.getpass(password_prompt)
         if store_password:
