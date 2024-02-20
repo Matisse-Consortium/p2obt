@@ -479,6 +479,7 @@ document.write(`
         <span class="k">elif</span> <span class="n">array</span> <span class="o">==</span> <span class="s2">&quot;ats&quot;</span> <span class="ow">and</span> <span class="s2">&quot;LResAT&quot;</span> <span class="ow">in</span> <span class="n">target</span><span class="p">:</span>
             <span class="n">resolution</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;LResAT&quot;</span><span class="p">]</span>\
                     <span class="k">if</span> <span class="n">target</span><span class="p">[</span><span class="s2">&quot;LResAT&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;TBD&quot;</span> <span class="k">else</span> <span class="n">resolution</span>
+
     <span class="k">return</span> <span class="n">resolution</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">OPTIONS</span><span class="p">[</span><span class="n">integration_time</span><span class="p">],</span>\
         <span class="n">OPTIONS</span><span class="p">[</span><span class="n">central_wl</span><span class="p">],</span> <span class="n">OPTIONS</span><span class="p">[</span><span class="n">photometry</span><span class="p">]</span></div>
 
@@ -674,10 +675,8 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">observation</span> <span class="o">=</span> <span class="n">load_template</span><span class="p">(</span><span class="n">TEMPLATE_FILE</span><span class="p">,</span> <span class="s2">&quot;observation&quot;</span><span class="p">,</span>
                                 <span class="n">operational_mode</span><span class="o">=</span><span class="n">operational_mode</span><span class="p">)</span>
-    <span class="n">resolution</span><span class="p">,</span> <span class="n">dit</span><span class="p">,</span>\
-        <span class="n">w0</span><span class="p">,</span> <span class="n">photometry</span> <span class="o">=</span> <span class="n">get_observation_settings</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span>
-                                                  <span class="n">operational_mode</span><span class="p">,</span>
-                                                  <span class="n">array_configuration</span><span class="p">)</span>
+    <span class="n">resolution</span><span class="p">,</span> <span class="n">dit</span><span class="p">,</span> <span class="n">w0</span><span class="p">,</span> <span class="n">photometry</span> <span class="o">=</span> <span class="n">get_observation_settings</span><span class="p">(</span>
+            <span class="n">target</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">operational_mode</span><span class="p">,</span> <span class="n">array_configuration</span><span class="p">)</span>
     <span class="n">observation_type</span> <span class="o">=</span> <span class="s2">&quot;SCIENCE&quot;</span> <span class="k">if</span> <span class="n">observation_type</span> <span class="o">==</span> <span class="s2">&quot;sci&quot;</span> <span class="k">else</span> <span class="s2">&quot;CALIB&quot;</span>
     <span class="n">observation</span><span class="p">[</span><span class="s2">&quot;DPR.CATG&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">observation_type</span>
     <span class="n">observation</span><span class="p">[</span><span class="s2">&quot;INS.DIL.NAME&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">resolution</span>
