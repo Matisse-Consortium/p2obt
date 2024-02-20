@@ -339,8 +339,8 @@ document.write(`
                   
   <h1>Source code for p2obp.backend.upload</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">getpass</span>
+<span class="kn">import</span> <span class="nn">keyring</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -426,41 +426,55 @@ document.write(`
         <span class="n">content</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
 
 
-<div class="viewcode-block" id="login"><a class="viewcode-back" href="../../../modules/upload.html#p2obp.backend.upload.login">[docs]</a><span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="n">username</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-          <span class="n">password</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="login"><a class="viewcode-back" href="../../../modules/upload.html#p2obp.backend.upload.login">[docs]</a><span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="n">user_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+          <span class="n">store_password</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+          <span class="n">remove_password</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
           <span class="n">server</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;demo&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Login to the p2 API with the given username. Return the API connection.</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    username : str, optional</span>
 <span class="sd">        The p2 user name.</span>
-<span class="sd">    password : str, optional</span>
-<span class="sd">        The p2 user password.</span>
 <span class="sd">    server: str, optional</span>
 <span class="sd">        Either &quot;demo&quot;, &quot;production&quot; for paranal or &quot;production_lasilla&quot; for la</span>
 <span class="sd">        silla.</span>
+<span class="sd">    store_password: bool, optional</span>
+<span class="sd">        If &#39;True&#39; the password will be stored in the keyring.</span>
+<span class="sd">    remove_password: bool, optional</span>
+<span class="sd">        If &#39;True&#39; the password will be removed from the keyring.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">password_prompt</span> <span class="o">=</span> <span class="s2">&quot;Input your ESO-password: &quot;</span>
-    <span class="k">if</span> <span class="n">username</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">username</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Input your ESO-username: &quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">server</span> <span class="o">==</span> <span class="s2">&quot;demo&quot;</span><span class="p">:</span>
+        <span class="n">api_url</span> <span class="o">=</span> <span class="s2">&quot;https://www.eso.org/p2demo&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">api_url</span> <span class="o">=</span> <span class="s2">&quot;https://www.eso.org/p2&quot;</span>
 
+    <span class="k">if</span> <span class="n">user_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">user_name</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Input your ESO-username: &quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">remove_password</span><span class="p">:</span>
+        <span class="n">keyring</span><span class="o">.</span><span class="n">delete_password</span><span class="p">(</span><span class="n">api_url</span><span class="p">,</span> <span class="n">user_name</span><span class="p">)</span>
+
+    <span class="n">password</span> <span class="o">=</span> <span class="n">keyring</span><span class="o">.</span><span class="n">get_password</span><span class="p">(</span><span class="n">api_url</span><span class="p">,</span> <span class="n">user_name</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">password</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s1">&#39;ios&#39;</span><span class="p">:</span>
-            <span class="kn">import</span> <span class="nn">console</span>
-            <span class="n">password</span> <span class="o">=</span> <span class="n">console</span><span class="o">.</span><span class="n">password_alert</span><span class="p">(</span><span class="n">password_prompt</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">isatty</span><span class="p">():</span>
-            <span class="n">password</span> <span class="o">=</span> <span class="n">getpass</span><span class="o">.</span><span class="n">getpass</span><span class="p">(</span><span class="n">password_prompt</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">p2api</span><span class="o">.</span><span class="n">ApiConnection</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span></div>
+        <span class="n">password_prompt</span> <span class="o">=</span> <span class="s2">&quot;Input your ESO-password: &quot;</span>
+        <span class="n">password</span> <span class="o">=</span> <span class="n">getpass</span><span class="o">.</span><span class="n">getpass</span><span class="p">(</span><span class="n">password_prompt</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">store_password</span><span class="p">:</span>
+            <span class="n">keyring</span><span class="o">.</span><span class="n">set_password</span><span class="p">(</span><span class="n">api_url</span><span class="p">,</span> <span class="n">user_name</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[INFO]: Password stored in keyring.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[INFO]: Password retrieved from keyring.&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">p2api</span><span class="o">.</span><span class="n">ApiConnection</span><span class="p">(</span><span class="n">server</span><span class="p">,</span> <span class="n">user_name</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_remote_run"><a class="viewcode-back" href="../../../modules/upload.html#p2obp.backend.upload.get_remote_run">[docs]</a><span class="k">def</span> <span class="nf">get_remote_run</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">p2api</span><span class="p">,</span> <span class="n">run_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<div class="viewcode-block" id="get_remote_run"><a class="viewcode-back" href="../../../modules/upload.html#p2obp.backend.upload.get_remote_run">[docs]</a><span class="k">def</span> <span class="nf">get_remote_run</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">p2api</span><span class="o">.</span><span class="n">p2api</span><span class="o">.</span><span class="n">ApiConnection</span><span class="p">,</span> <span class="n">run_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets the run that corresponds to the period, proposal and the number and</span>
 <span class="sd">    returns its runId.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    connection : p2api</span>
-<span class="sd">        The p2ui python api.</span>
+<span class="sd">    connection : p2api.p2api.ApiConnection</span>
+<span class="sd">        The P2 python api connection.</span>
 <span class="sd">    run_id : str</span>
 <span class="sd">        The id that specifies the run on p2.</span>
 
@@ -476,12 +490,12 @@ document.write(`
     <span class="k">return</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="remote_container_exists"><a class="viewcode-back" href="../../../modules/upload.html#p2obp.backend.upload.remote_container_exists">[docs]</a><span class="k">def</span> <span class="nf">remote_container_exists</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">p2api</span><span class="p">,</span> <span class="n">container_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="remote_container_exists"><a class="viewcode-back" href="../../../modules/upload.html#p2obp.backend.upload.remote_container_exists">[docs]</a><span class="k">def</span> <span class="nf">remote_container_exists</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">p2api</span><span class="o">.</span><span class="n">p2api</span><span class="o">.</span><span class="n">ApiConnection</span><span class="p">,</span> <span class="n">container_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks if the container with this id exists on p2.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    connection : p2api</span>
+<span class="sd">    connection : p2api.p2api.ApiConnection</span>
 <span class="sd">        The p2ui python api.</span>
 <span class="sd">    container_id : int</span>
 <span class="sd">        The id that specifies the container on p2.</span>
@@ -499,15 +513,15 @@ document.write(`
     <span class="k">return</span> <span class="kc">False</span></div>
 
 
-<div class="viewcode-block" id="create_remote_container"><a class="viewcode-back" href="../../../modules/upload.html#p2obp.backend.upload.create_remote_container">[docs]</a><span class="k">def</span> <span class="nf">create_remote_container</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">p2api</span><span class="p">,</span>
+<div class="viewcode-block" id="create_remote_container"><a class="viewcode-back" href="../../../modules/upload.html#p2obp.backend.upload.create_remote_container">[docs]</a><span class="k">def</span> <span class="nf">create_remote_container</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">p2api</span><span class="o">.</span><span class="n">p2api</span><span class="o">.</span><span class="n">ApiConnection</span><span class="p">,</span>
                             <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">container_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                             <span class="n">observational_mode</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;vm&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a container on p2.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    connection : p2api</span>
-<span class="sd">        The P2 python api.</span>
+<span class="sd">    connection : p2api.p2api.ApiConnection</span>
+<span class="sd">        The P2 python api connection.</span>
 <span class="sd">    name: str</span>
 <span class="sd">        The container&#39;s name.</span>
 <span class="sd">    container_id : int</span>
@@ -530,16 +544,18 @@ document.write(`
     <span class="k">return</span> <span class="n">container</span><span class="p">[</span><span class="s2">&quot;containerId&quot;</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="create_ob"><a class="viewcode-back" href="../../../modules/upload.html#p2obp.backend.upload.create_ob">[docs]</a><span class="k">def</span> <span class="nf">create_ob</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">p2api</span><span class="p">,</span> <span class="n">container_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">header</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="create_ob"><a class="viewcode-back" href="../../../modules/upload.html#p2obp.backend.upload.create_ob">[docs]</a><span class="k">def</span> <span class="nf">create_ob</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">p2api</span><span class="o">.</span><span class="n">p2api</span><span class="o">.</span><span class="n">ApiConnection</span><span class="p">,</span>
+              <span class="n">container_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">header</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates an OB on p2.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    connection : p2api</span>
-<span class="sd">        The P2 python api.</span>
+<span class="sd">    connection : p2api.p2api.ApiConnection</span>
+<span class="sd">        The P2 python api connection.</span>
 <span class="sd">    container_id : int</span>
 <span class="sd">        The id that specifies the container on p2.</span>
 <span class="sd">    header : Dict</span>
+<span class="sd">        The header of the OB.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -564,13 +580,14 @@ document.write(`
     <span class="k">return</span> <span class="n">ob</span><span class="p">[</span><span class="s2">&quot;obId&quot;</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="add_template"><a class="viewcode-back" href="../../../modules/upload.html#p2obp.backend.upload.add_template">[docs]</a><span class="k">def</span> <span class="nf">add_template</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">p2api</span><span class="p">,</span> <span class="n">ob_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ob</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">template_kind</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="add_template"><a class="viewcode-back" href="../../../modules/upload.html#p2obp.backend.upload.add_template">[docs]</a><span class="k">def</span> <span class="nf">add_template</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">p2api</span><span class="o">.</span><span class="n">p2api</span><span class="o">.</span><span class="n">ApiConnection</span><span class="p">,</span>
+                 <span class="n">ob_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ob</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">template_kind</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Adds template to an (.obx)-file on the p2.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    connection : p2api</span>
-<span class="sd">        The P2 python api.</span>
+<span class="sd">    connection : p2api.p2api.ApiConnection</span>
+<span class="sd">        The P2 python api connection.</span>
 <span class="sd">    ob_id : int</span>
 <span class="sd">        The id that specifies the ob on p2.</span>
 <span class="sd">    ob : dict</span>
@@ -586,14 +603,14 @@ document.write(`
     <span class="n">template</span><span class="p">,</span> <span class="n">version</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">setTemplateParams</span><span class="p">(</span><span class="n">ob_id</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="upload_ob"><a class="viewcode-back" href="../../../modules/upload.html#p2obp.backend.upload.upload_ob">[docs]</a><span class="k">def</span> <span class="nf">upload_ob</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">p2api</span><span class="p">,</span>
+<div class="viewcode-block" id="upload_ob"><a class="viewcode-back" href="../../../modules/upload.html#p2obp.backend.upload.upload_ob">[docs]</a><span class="k">def</span> <span class="nf">upload_ob</span><span class="p">(</span><span class="n">connection</span><span class="p">:</span> <span class="n">p2api</span><span class="o">.</span><span class="n">p2api</span><span class="o">.</span><span class="n">ApiConnection</span><span class="p">,</span>
               <span class="n">ob</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">container_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    connection : p2api</span>
-<span class="sd">        The P2 python api.</span>
+<span class="sd">    connection : p2api.p2api.ApiConnection</span>
+<span class="sd">        The P2 python api connection.</span>
 <span class="sd">    ob : dict</span>
 <span class="sd">    container_id : int</span>
 <span class="sd">        The id that specifies the container on p2.</span>
