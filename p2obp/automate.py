@@ -437,4 +437,4 @@ def create_obs(night_plan: Optional[Path] = None,
     else:
         raise IOError("Neither manul input list or input"
                       " night plan path has been detected!")
-    print("Done!")
+    print("[INFO]: Done!")
