@@ -1,6 +1,6 @@
 import getpass
+import keyring
 import logging
-import sys
 from typing import Optional, Dict
 
 import numpy as np
@@ -86,41 +86,55 @@ def apply_mapping(content: Dict, mapping: Dict) -> None:
         content[key] = value
 
 
-def login(username: Optional[str] = None,
-          password: Optional[str] = None,
+def login(user_name: Optional[str] = None,
+          store_password: Optional[bool] = False,
+          remove_password: Optional[bool] = False,
           server: Optional[str] = "demo"):
     """Login to the p2 API with the given username. Return the API connection.
     Parameters
     ----------
     username : str, optional
         The p2 user name.
-    password : str, optional
-        The p2 user password.
     server: str, optional
         Either "demo", "production" for paranal or "production_lasilla" for la
         silla.
+    store_password: bool, optional
+        If 'True' the password will be stored in the keyring.
+    remove_password: bool, optional
+        If 'True' the password will be removed from the keyring.
     """
-    password_prompt = "Input your ESO-password: "
-    if username is None:
-        username = input("Input your ESO-username: ")
+    if server == "demo":
+        api_url = "https://www.eso.org/p2demo"
+    else:
+        api_url = "https://www.eso.org/p2"
 
+    if user_name is None:
+        user_name = input("Input your ESO-username: ")
+
+    if remove_password:
+        keyring.delete_password(api_url, user_name)
+
+    password = keyring.get_password(api_url, user_name)
     if password is None:
-        if sys.platform == 'ios':
-            import console
-            password = console.password_alert(password_prompt)
-        elif sys.stdin.isatty():
-            password = getpass.getpass(password_prompt)
-    return p2api.ApiConnection(server, username, password)
+        password_prompt = "Input your ESO-password: "
+        password = getpass.getpass(password_prompt)
+        if store_password:
+            keyring.set_password(api_url, user_name, password)
+            print("[INFO]: Password stored in keyring.")
+    else:
+        print("[INFO]: Password retrieved from keyring.")
+
+    return p2api.ApiConnection(server, user_name, password)
 
 
-def get_remote_run(connection: p2api, run_id: str) -> Optional[int]:
+def get_remote_run(connection: p2api.p2api.ApiConnection, run_id: str) -> Optional[int]:
     """Gets the run that corresponds to the period, proposal and the number and
     returns its runId.
 
     Parameters
     ----------
-    connection : p2api
-        The p2ui python api.
+    connection : p2api.p2api.ApiConnection
+        The P2 python api connection.
     run_id : str
         The id that specifies the run on p2.
 
@@ -136,12 +150,12 @@ def get_remote_run(connection: p2api, run_id: str) -> Optional[int]:
     return None
 
 
-def remote_container_exists(connection: p2api, container_id: int) -> bool:
+def remote_container_exists(connection: p2api.p2api.ApiConnection, container_id: int) -> bool:
     """Checks if the container with this id exists on p2.
 
     Parameters
     ----------
-    connection : p2api
+    connection : p2api.p2api.ApiConnection
         The p2ui python api.
     container_id : int
         The id that specifies the container on p2.
@@ -159,15 +173,15 @@ def remote_container_exists(connection: p2api, container_id: int) -> bool:
     return False
 
 
-def create_remote_container(connection: p2api,
+def create_remote_container(connection: p2api.p2api.ApiConnection,
                             name: str, container_id: int,
                             observational_mode: Optional[str] = "vm") -> int:
     """Creates a container on p2.
 
     Parameters
     ----------
-    connection : p2api
-        The P2 python api.
+    connection : p2api.p2api.ApiConnection
+        The P2 python api connection.
     name: str
         The container's name.
     container_id : int
@@ -190,16 +204,18 @@ def create_remote_container(connection: p2api,
     return container["containerId"]
 
 
-def create_ob(connection: p2api, container_id: int, header: Dict) -> int:
-    """
+def create_ob(connection: p2api.p2api.ApiConnection,
+              container_id: int, header: Dict) -> int:
+    """Creates an OB on p2.
 
     Parameters
     ----------
-    connection : p2api
-        The P2 python api.
+    connection : p2api.p2api.ApiConnection
+        The P2 python api connection.
     container_id : int
         The id that specifies the container on p2.
     header : Dict
+        The header of the OB.
 
     Returns
     -------
@@ -224,13 +240,14 @@ def create_ob(connection: p2api, container_id: int, header: Dict) -> int:
     return ob["obId"]
 
 
-def add_template(connection: p2api, ob_id: int, ob: Dict, template_kind: str) -> None:
+def add_template(connection: p2api.p2api.ApiConnection,
+                 ob_id: int, ob: Dict, template_kind: str) -> None:
     """Adds template to an (.obx)-file on the p2.
 
     Parameters
     ----------
-    connection : p2api
-        The P2 python api.
+    connection : p2api.p2api.ApiConnection
+        The P2 python api connection.
     ob_id : int
         The id that specifies the ob on p2.
     ob : dict
@@ -246,14 +263,14 @@ def add_template(connection: p2api, ob_id: int, ob: Dict, template_kind: str) ->
     template, version = connection.setTemplateParams(ob_id, template, content, version)
 
 
-def upload_ob(connection: p2api,
+def upload_ob(connection: p2api.p2api.ApiConnection,
               ob: Dict, container_id: int) -> None:
     """
 
     Parameters
     ----------
-    connection : p2api
-        The P2 python api.
+    connection : p2api.p2api.ApiConnection
+        The P2 python api connection.
     ob : dict
     container_id : int
         The id that specifies the container on p2.
