@@ -152,7 +152,7 @@ def create_ob(target: str,
         if output_dir is not None:
             ob_name = set_ob_name(target, observational_type, sci_name, tag)
             write_ob(ob, ob_name, output_dir)
-    except KeyError as e:
+    except KeyError:
         print(f"[ERROR]: Failed creating OB '{target}'! See 'p2obp.log'.")
         logging.error("[ERROR]: Failed creating OB '{target}'!", exc_info=True)
 
@@ -199,6 +199,9 @@ def create_obs_from_lists(targets: List[str],
         The output directory, where the (.obx)-files will be created in.
         If left at "None" no files will be created.
     """
+    if observational_type == "sm":
+        OPTIONS["resolution.overwrite"] = True
+
     for mode in OPERATIONAL_MODES[operational_mode.lower()]:
         print(f"Creating OBs in {mode}-mode and {OPTIONS['resolution']}"
               f"-resolution for the {array_configuration} configuration...")
@@ -219,8 +222,8 @@ def create_obs_from_lists(targets: List[str],
             mode_out_dir = output_dir
 
         if observational_type == "vm" and container_id is not None:
-            mode_id = create_remote_container(connection, mode,
-                                              container_id, observational_type)
+            mode_id = create_remote_container(
+                    connection, mode, container_id, observational_type)
         else:
             mode_id = None
 
@@ -235,18 +238,19 @@ def create_obs_from_lists(targets: List[str],
 
             if container_id is not None:
                 if mode_id is not None:
-                    target_id = create_remote_container(connection, target,
-                                                        mode_id, observational_type)
+                    target_id = create_remote_container(
+                            connection, target, mode_id, observational_type)
                 else:
-                    target_id = create_remote_container(connection, target,
-                                                        container_id, observational_type)
+                    target_id = create_remote_container(
+                            connection, target, container_id, observational_type)
             else:
                 target_id = None
 
-            if resolution is not None and target in resolution:
-                res = resolution[target]
-            else:
+            if observational_type == "sm":
                 res = OPTIONS["resolution"]
+            else:
+                if resolution is not None and target in resolution:
+                    res = resolution[target]
 
             unwrapped_lists = unwrap_lists(target, calibrator, order, tag)
             for (name, sci_cal_flag, tag) in unwrapped_lists:

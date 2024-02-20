@@ -139,6 +139,7 @@ def get_observation_settings(target: Dict,
         elif array == "ats" and "LResAT" in target:
             resolution = target["LResAT"]\
                     if target["LResAT"] != "TBD" else resolution
+
     return resolution.upper(), OPTIONS[integration_time],\
         OPTIONS[central_wl], OPTIONS[photometry]
 
@@ -334,10 +335,8 @@ def fill_observation(target: Dict,
     """
     observation = load_template(TEMPLATE_FILE, "observation",
                                 operational_mode=operational_mode)
-    resolution, dit,\
-        w0, photometry = get_observation_settings(target, resolution,
-                                                  operational_mode,
-                                                  array_configuration)
+    resolution, dit, w0, photometry = get_observation_settings(
+            target, resolution, operational_mode, array_configuration)
     observation_type = "SCIENCE" if observation_type == "sci" else "CALIB"
     observation["DPR.CATG"] = observation_type
     observation["INS.DIL.NAME"] = resolution
