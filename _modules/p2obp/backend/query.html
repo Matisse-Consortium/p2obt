@@ -524,7 +524,8 @@ document.write(`
 <div class="viewcode-block" id="query"><a class="viewcode-back" href="../../../modules/query.html#p2obp.backend.query.query">[docs]</a><span class="k">def</span> <span class="nf">query</span><span class="p">(</span><span class="n">target_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
           <span class="n">catalogs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
           <span class="n">exclude_catalogs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-          <span class="n">match_radius</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">5.</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+          <span class="n">match_radius</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">5.</span><span class="p">,</span>
+          <span class="n">query_exinction</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Queries information for an astronomical target by its name from</span>
 <span class="sd">    various catalogs.</span>
 
@@ -567,7 +568,7 @@ document.write(`
         <span class="n">target</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">target</span><span class="p">,</span> <span class="o">**</span><span class="n">best_matches</span><span class="p">}</span>
 
     <span class="n">target</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">remove_parenthesis</span><span class="p">(</span><span class="n">target</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span>
-    <span class="n">dust_target</span> <span class="o">=</span> <span class="n">query_dust_extinction</span><span class="p">(</span><span class="n">target</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span>
+    <span class="n">dust_target</span> <span class="o">=</span> <span class="n">query_dust_extinction</span><span class="p">(</span><span class="n">target</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span> <span class="k">if</span> <span class="n">query_exinction</span> <span class="k">else</span> <span class="p">{}</span>
     <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="n">target</span><span class="p">,</span> <span class="o">**</span><span class="n">local_target</span><span class="p">,</span> <span class="o">**</span><span class="n">dust_target</span><span class="p">}</span></div>
 </pre></div>
 

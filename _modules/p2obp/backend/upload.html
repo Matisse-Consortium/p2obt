@@ -456,6 +456,7 @@ document.write(`
 
     <span class="n">password</span> <span class="o">=</span> <span class="n">keyring</span><span class="o">.</span><span class="n">get_password</span><span class="p">(</span><span class="n">api_url</span><span class="p">,</span> <span class="n">user_name</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">password</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[INFO]: Password not found in keyring.&quot;</span><span class="p">)</span>
         <span class="n">password_prompt</span> <span class="o">=</span> <span class="s2">&quot;Input your ESO-password: &quot;</span>
         <span class="n">password</span> <span class="o">=</span> <span class="n">getpass</span><span class="o">.</span><span class="n">getpass</span><span class="p">(</span><span class="n">password_prompt</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">store_password</span><span class="p">:</span>
