@@ -108,8 +108,9 @@ def create_ob(target: str,
               resolution: Optional[str] = "low",
               connection: Optional = None,
               container_id: Optional[int] = None,
+              store_password: Optional[bool] = True,
+              remove_password: Optional[bool] = False,
               user_name: Optional[str] = None,
-              password: Optional[str] = None,
               server: Optional[str] = "production",
               output_dir: Optional[Path] = None) -> None:
     """Creates a singular OB either locally or on P2.
@@ -131,7 +132,6 @@ def create_ob(target: str,
     connection : p2api, optional
     container_id : int, optional
     user_name : str, optional
-    password : str, optional
     server : str, optional
     output_dir : path, optional
     """
@@ -146,7 +146,7 @@ def create_ob(target: str,
                         sci_name, tag, resolution)
         if container_id is not None:
             if connection is None:
-                connection = login(user_name, password, server)
+                connection = login(user_name, store_password, remove_password, server)
             upload_ob(connection, ob, container_id)
 
         if output_dir is not None:
@@ -268,9 +268,9 @@ def create_obs_from_dict(night_plan: Dict,
                          resolution: Dict,
                          container_id: str,
                          user_name: str,
-                         store_password: Optional[bool] = False,
+                         store_password: Optional[bool] = True,
                          remove_password: Optional[bool] = False,
-                         server: Optional[str] = "demo",
+                         server: Optional[str] = "production",
                          output_dir: Optional[Path] = None) -> None:
     """Creates the OBs from a night-plan parsed dictionary.
 
