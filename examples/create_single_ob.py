@@ -16,9 +16,8 @@ from p2obp import OPTIONS, create_ob
 # The path in which the 'manualOBs'-directory will be created.
 output_dir = Path("../assets") / "obs"
 
-# Create the folder if it does not exist
-if not output_dir.exists():
-    output_dir.mkdir(parents=True)
+# Create the folder
+output_dir.mkdir(parents=True, exist_ok=True)
 
 # %%
 # Locally creating an (.obx)-file
@@ -42,17 +41,17 @@ create_ob("HD 100920", "cal", "uts",
 # Changing the global resolution settings
 # ------------------------
 #
-# The standard resolution for all targets will be 'low', but can be
+# NOTE: The standard resolution for all targets will be 'low', but can be
 # changed via the following.
-OPTIONS["resolution"] = "med"
+OPTIONS.resolution.active = "med"
 
 # NOTE: Change constraint settings
-# Turbulence can be choosen from 10%, 30% or 70%. Default is 70%.
-OPTIONS["constraints.turbulence"] = 30
+# Turbulence can be choosen from 10%, 30% or 70%. Default is 30%.
+OPTIONS.constraints.turbulence = 70
 
 # NOTE: Change sky-transparency settings. Can be choosen from 'photometric',
-# 'clear', 'thin' and 'variable'. Default is 'thin'.
-OPTIONS["constraints.transparency"] = "clear"
+# 'clear', 'thin' and 'variable'. Default is 'clear'.
+OPTIONS.constraints.transparency = "thin"
 
 # %%
 # Direct upload of an ob
@@ -67,5 +66,4 @@ OPTIONS["constraints.transparency"] = "clear"
 # Tutorial server: username - '52052' , password - 'tutorial'
 create_ob("HD 100920", "cal", "uts",
           sci_name="HD 142666", operational_mode="gr",
-          container_id=3001786, server="demo",
-          user_name="52052", password="tutorial")
+          container_id=3001786, server="demo", user_name="52052")

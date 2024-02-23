@@ -265,7 +265,7 @@ def add_template(connection: p2api.p2api.ApiConnection,
 
 
 def upload_ob(connection: p2api.p2api.ApiConnection,
-              ob: Dict, container_id: int) -> None:
+              ob: Dict, container_id: Optional[int] = None) -> None:
     """
 
     Parameters
@@ -276,6 +276,9 @@ def upload_ob(connection: p2api.p2api.ApiConnection,
     container_id : int
         The id that specifies the container on p2.
     """
+    if connection is None or container_id is None:
+        return
+
     ob_name = ob['header']['user']['name']
     print(f"\tCreating OB '{ob_name}'...")
     try:

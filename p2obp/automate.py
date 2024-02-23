@@ -136,6 +136,9 @@ def create_ob(target: str,
     output_dir : path, optional
     """
     try:
+        if container_id is not None:
+            if connection is None:
+                connection = login(user_name, store_password, remove_password, server)
         if sci_name is not None and observational_type == "sci":
             warn("[WARNING]: The ob was specified as a science ob,"
                  " but a science target name was specified."
@@ -144,10 +147,7 @@ def create_ob(target: str,
         ob = compose_ob(target, observational_type,
                         array_configuration, operational_mode,
                         sci_name, tag, resolution)
-        if container_id is not None:
-            if connection is None:
-                connection = login(user_name, store_password, remove_password, server)
-            upload_ob(connection, ob, container_id)
+        upload_ob(connection, ob, container_id)
 
         if output_dir is not None:
             ob_name = set_ob_name(target, observational_type, sci_name, tag)
@@ -200,10 +200,10 @@ def create_obs_from_lists(targets: List[str],
         If left at "None" no files will be created.
     """
     if observational_type == "sm":
-        OPTIONS["resolution.overwrite"] = True
+        OPTIONS.resolution.overwrite = True
 
     for mode in OPERATIONAL_MODES[operational_mode.lower()]:
-        print(f"Creating OBs in {mode}-mode and {OPTIONS['resolution']}"
+        print(f"Creating OBs in {mode}-mode and {OPTIONS.resolution.active}"
               f"-resolution for the {array_configuration} configuration...")
         print(f"{'':-^50}")
 
@@ -247,7 +247,7 @@ def create_obs_from_lists(targets: List[str],
                 target_id = None
 
             if observational_type == "sm":
-                res = OPTIONS["resolution"]
+                res = OPTIONS.resolution.active
             else:
                 if resolution is not None and target in resolution:
                     res = resolution[target]
@@ -320,7 +320,7 @@ def create_obs_from_dict(night_plan: Dict,
     for run_key, run in night_plan.items():
         array_config = parse_array_config(run_key)
         operational_mode = parse_operational_mode(run_key)
-        OPTIONS["resolution"] = parse_run_resolution(run_key)
+        OPTIONS.resolution.active = parse_run_resolution(run_key)
 
         if output_dir is None:
             run_dir = None

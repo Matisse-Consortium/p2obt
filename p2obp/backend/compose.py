@@ -128,11 +128,9 @@ def get_observation_settings(target: Dict,
     central_wl : float
     """
     array = "uts" if "ut" in array_configuration else "ats"
-    integration_time = f"dit.{operational_mode}.{array}.{resolution}"
-    central_wl = f"w0.{operational_mode}.{array}.{resolution}"
-    photometry = f"photometry.{operational_mode}.{array}"
+    photometry = getattr(getattr(OPTIONS.photometry, operational_mode), array)
 
-    if not OPTIONS["resolution.overwrite"]:
+    if not OPTIONS.resolution.overwrite:
         if array == "uts" and "LResUT" in target:
             resolution = target["LResUT"]\
                     if target["LResUT"] != "TBD" else resolution
@@ -140,8 +138,12 @@ def get_observation_settings(target: Dict,
             resolution = target["LResAT"]\
                     if target["LResAT"] != "TBD" else resolution
 
-    return resolution.upper(), OPTIONS[integration_time],\
-        OPTIONS[central_wl], OPTIONS[photometry]
+    integration_time = getattr(getattr(
+        getattr(OPTIONS.dit, operational_mode), array), resolution)
+    central_wl = getattr(getattr(
+        getattr(OPTIONS.w0, operational_mode), array), resolution)
+
+    return resolution.upper(), integration_time, central_wl, photometry
 
 
 def format_proper_motions(target: Dict) -> Tuple[float, float]:
@@ -239,10 +241,10 @@ def fill_header(target: Dict,
     header_target["propRA"], header_target["propDec"] = prop_ra, prop_dec
     header_observation["OBSERVATION.DESCRIPTION.NAME"] = ob_name
 
-    header_constraints["atm"] = TURBULENCE[OPTIONS["constraints.turbulence"]]
+    header_constraints["atm"] = TURBULENCE[OPTIONS.constraints.turbulence]
     header_constraints["sky_transparency"] =\
-        SKY_TRANSPARENCY[OPTIONS["constraints.transparency"]]
-    header_constraints["watervapour"] = OPTIONS["constraints.pwv"]
+        SKY_TRANSPARENCY[OPTIONS.constraints.transparency]
+    header_constraints["watervapour"] = OPTIONS.constraints.pwv
     if "ut" in array_configuration:
         header_constraints["moon_angular_distance"] = 10
 
