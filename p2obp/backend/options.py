@@ -128,6 +128,11 @@ OPTIONS = SimpleNamespace(
         log=log, resolution=resolution, photometry=photometry,
         w0=w0, dit=dit, constraints=constraints, catalogs=catalogs)
 
+
+OPTIONS.log.path.mkdir(parents=True, exist_ok=True)
+with open(OPTIONS.log.path / "p2obp.log", "w+") as log_file:
+    log_file.write("Start of log:")
+
 logging.basicConfig(filename=OPTIONS.log.path / "p2obp.log",
                     filemode="w", level=OPTIONS.log.level,
                     format=OPTIONS.log.format)
