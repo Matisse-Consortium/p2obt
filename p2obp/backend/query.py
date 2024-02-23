@@ -50,8 +50,8 @@ def query_dust_extinction(name: str) -> Dict:
     """
     extinctions = {}
     table = IrsaDust.get_extinction_table(name)
-    for band in OPTIONS["catalogs.irsa.query"]:
-        extinction = table[OPTIONS["catalogs.irsa.fields"]][table["Filter_name"] == band]
+    for band in OPTIONS.catalogs.irsa.query:
+        extinction = table[OPTIONS.catalogs.irsa.fields][table["Filter_name"] == band]
         extinctions[f"A_{band[-1]}"] = extinction[0][0]
     return extinctions
 
@@ -69,10 +69,10 @@ def query_local_catalog(name: str):
     -------
     target : Dict
     """
-    if OPTIONS["catalogs.local.active"] == "standard":
-        sheet_name = OPTIONS["catalogs.local.standard"]
-    elif OPTIONS["catalogs.local.active"] == "ciao":
-        sheet_name = OPTIONS["catalogs.local.ciao"]
+    if OPTIONS.catalogs.local.active == "standard":
+        sheet_name = OPTIONS.catalogs.local.standard
+    elif OPTIONS.catalogs.local.active == "ciao":
+        sheet_name = OPTIONS.catalogs.local.ciao
 
     catalog = pd.read_excel(TARGET_INFO_FILE, sheet_name=sheet_name)
     catalog = Table.from_pandas(catalog)
@@ -114,8 +114,8 @@ def get_best_match(target: Dict, catalog: str,
     best_matches = {}
     if not catalog_table:
         return best_matches
-
-    for query_key in OPTIONS[f"catalogs.{catalog}.query"]:
+        
+    for query_key in getattr(OPTIONS.catalogs, catalog).query:
         if query_key in catalog_table.columns:
             if len(catalog_table) == 1:
                 value = catalog_table[query_key][0]
@@ -166,12 +166,12 @@ def get_catalog(name: str, catalog: str,
 
     if catalog == "simbad":
         query_site = Simbad()
-        simbad_fields = OPTIONS["catalogs.simbad.fields"]
+        simbad_fields = OPTIONS.catalogs.simbad.fields
         query_site.add_votable_fields(*simbad_fields)
         catalog_table = query_site.query_object(name)
     else:
-        query_site = Vizier(catalog=OPTIONS[f"catalogs.{catalog}.catalog"],
-                            columns=OPTIONS[f"catalogs.{catalog}.fields"])
+        data = getattr(OPTIONS.catalogs, catalog)
+        query_site = Vizier(catalog=data.catalog, columns=data.fields)
         catalog_table = query_site.query_object(name, radius=match_radius)
 
         # NOTE: Only get table from TableList if not empty
@@ -211,7 +211,7 @@ def query(target_name: str,
     target_name = add_space(target_name)
     target = {"name": target_name}
     if catalogs is None:
-        catalogs = OPTIONS["catalogs"][:]
+        catalogs = OPTIONS.catalogs.available[:]
 
     if exclude_catalogs is not None:
         catalogs = [catalog for catalog in catalogs

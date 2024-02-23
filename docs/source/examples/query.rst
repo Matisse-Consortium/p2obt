@@ -55,14 +55,14 @@ In the following, some examples of these are presented.
 Specifying accessed fields
 ==========================
 
-The accessed fields can be modified with the :python:`options` dictionary (this
+The accessed fields can be modified with the :python:`OPTIONS` :python:`SimpleNamespace` (this
 also applies for the :python:`"catalog"` and the :python:`"queries"`).
 
 .. code-block:: python
 
-  options["catalogs.tycho.catalog"] = "..."
-  options["catalogs.tycho.query"] = ["...", "..."]
-  options["catalogs.tycho.fields"] = ["**"]
+  OPTIONS.catalogs.tycho.catalog = "..."
+  OPTIONS.catalogs.tycho.query = ["...", "..."]
+  OPTIONS.catalogs.tycho.fields = ["**"]
 
 Query with excluded catalogs
 ==========================
@@ -109,7 +109,7 @@ In order to change the active local catalog, to, in this case, the one used for 
 
 .. code-block:: python
 
-  options["catalogs.local.active"] = "ciao"
+  OPTIONS.catalogs.local.active = "ciao"
 
 
 And now the target :python:`"YLW 16A`, which is not present in the :python:`"standard"` catalog
