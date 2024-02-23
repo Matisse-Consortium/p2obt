@@ -19,7 +19,6 @@ The logging settings that are used for logging errors.
 
 .. code-block:: python
 
-   OPTIONS.log.folder = "logs"
    OPTIONS.log.path = Path(__file__).parent.parent / "logs"
    OPTIONS.log.level = logging.DEBUG
    OPTIONS.log.format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"

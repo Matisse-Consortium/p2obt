@@ -4,8 +4,7 @@ from pathlib import Path
 
 # NOTE: General settings for the logging
 log = SimpleNamespace(
-        folder="logs",
-        path=Path(__file__).parent.parent / "logs",
+        path=Path.home() / "Documents" / "logs",
         level=logging.DEBUG,
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
         )
