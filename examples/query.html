@@ -411,11 +411,11 @@ In the following, some examples of these are presented.</p>
 </div>
 <section id="specifying-accessed-fields">
 <h3>Specifying accessed fields<a class="headerlink" href="#specifying-accessed-fields" title="Permalink to this heading">#</a></h3>
-<p>The accessed fields can be modified with the <code class="code highlight python docutils literal highlight-python"><span class="n">options</span></code> dictionary (this
+<p>The accessed fields can be modified with the <code class="code highlight python docutils literal highlight-python"><span class="n">OPTIONS</span></code> <code class="code highlight python docutils literal highlight-python"><span class="n">SimpleNamespace</span></code> (this
 also applies for the <code class="code highlight python docutils literal highlight-python"><span class="s2">&quot;catalog&quot;</span></code> and the <code class="code highlight python docutils literal highlight-python"><span class="s2">&quot;queries&quot;</span></code>).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.tycho.catalog&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;...&quot;</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.tycho.query&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;...&quot;</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">]</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.tycho.fields&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;**&quot;</span><span class="p">]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">tycho</span><span class="o">.</span><span class="n">catalog</span> <span class="o">=</span> <span class="s2">&quot;...&quot;</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">tycho</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;...&quot;</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">]</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">tycho</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;**&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
 </section>
@@ -454,7 +454,7 @@ result in query errors, if the target is also not found in an online catalog.</p
 <h4>Changing the local catalog<a class="headerlink" href="#changing-the-local-catalog" title="Permalink to this heading">#</a></h4>
 <p>In order to change the active local catalog, to, in this case, the one used for the CIAO Offaxis observations
 <code class="code highlight python docutils literal highlight-python"><span class="s2">&quot;ciao&quot;</span></code> one needs to change the following setting:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.local.active&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;ciao&quot;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="s2">&quot;ciao&quot;</span>
 </pre></div>
 </div>
 <p>And now the target <code class="code highlight python docutils literal highlight-python"><span class="s2">&quot;YLW 16A</span></code>, which is not present in the <code class="code highlight python docutils literal highlight-python"><span class="s2">&quot;standard&quot;</span></code> catalog

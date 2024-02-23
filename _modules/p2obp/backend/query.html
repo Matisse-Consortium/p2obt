@@ -390,8 +390,8 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">extinctions</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">table</span> <span class="o">=</span> <span class="n">IrsaDust</span><span class="o">.</span><span class="n">get_extinction_table</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">band</span> <span class="ow">in</span> <span class="n">OPTIONS</span><span class="p">[</span><span class="s2">&quot;catalogs.irsa.query&quot;</span><span class="p">]:</span>
-        <span class="n">extinction</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="n">OPTIONS</span><span class="p">[</span><span class="s2">&quot;catalogs.irsa.fields&quot;</span><span class="p">]][</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;Filter_name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">band</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">band</span> <span class="ow">in</span> <span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">irsa</span><span class="o">.</span><span class="n">query</span><span class="p">:</span>
+        <span class="n">extinction</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">irsa</span><span class="o">.</span><span class="n">fields</span><span class="p">][</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;Filter_name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">band</span><span class="p">]</span>
         <span class="n">extinctions</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;A_</span><span class="si">{</span><span class="n">band</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">extinction</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">extinctions</span></div>
 
@@ -409,10 +409,10 @@ document.write(`
 <span class="sd">    -------</span>
 <span class="sd">    target : Dict</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">OPTIONS</span><span class="p">[</span><span class="s2">&quot;catalogs.local.active&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;standard&quot;</span><span class="p">:</span>
-        <span class="n">sheet_name</span> <span class="o">=</span> <span class="n">OPTIONS</span><span class="p">[</span><span class="s2">&quot;catalogs.local.standard&quot;</span><span class="p">]</span>
-    <span class="k">elif</span> <span class="n">OPTIONS</span><span class="p">[</span><span class="s2">&quot;catalogs.local.active&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ciao&quot;</span><span class="p">:</span>
-        <span class="n">sheet_name</span> <span class="o">=</span> <span class="n">OPTIONS</span><span class="p">[</span><span class="s2">&quot;catalogs.local.ciao&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">active</span> <span class="o">==</span> <span class="s2">&quot;standard&quot;</span><span class="p">:</span>
+        <span class="n">sheet_name</span> <span class="o">=</span> <span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">standard</span>
+    <span class="k">elif</span> <span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">active</span> <span class="o">==</span> <span class="s2">&quot;ciao&quot;</span><span class="p">:</span>
+        <span class="n">sheet_name</span> <span class="o">=</span> <span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">ciao</span>
 
     <span class="n">catalog</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">TARGET_INFO_FILE</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">sheet_name</span><span class="p">)</span>
     <span class="n">catalog</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">catalog</span><span class="p">)</span>
@@ -454,8 +454,8 @@ document.write(`
     <span class="n">best_matches</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">catalog_table</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">best_matches</span>
-
-    <span class="k">for</span> <span class="n">query_key</span> <span class="ow">in</span> <span class="n">OPTIONS</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;catalogs.</span><span class="si">{</span><span class="n">catalog</span><span class="si">}</span><span class="s2">.query&quot;</span><span class="p">]:</span>
+        
+    <span class="k">for</span> <span class="n">query_key</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="p">,</span> <span class="n">catalog</span><span class="p">)</span><span class="o">.</span><span class="n">query</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">query_key</span> <span class="ow">in</span> <span class="n">catalog_table</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">catalog_table</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">value</span> <span class="o">=</span> <span class="n">catalog_table</span><span class="p">[</span><span class="n">query_key</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
@@ -506,12 +506,12 @@ document.write(`
 
     <span class="k">if</span> <span class="n">catalog</span> <span class="o">==</span> <span class="s2">&quot;simbad&quot;</span><span class="p">:</span>
         <span class="n">query_site</span> <span class="o">=</span> <span class="n">Simbad</span><span class="p">()</span>
-        <span class="n">simbad_fields</span> <span class="o">=</span> <span class="n">OPTIONS</span><span class="p">[</span><span class="s2">&quot;catalogs.simbad.fields&quot;</span><span class="p">]</span>
+        <span class="n">simbad_fields</span> <span class="o">=</span> <span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">simbad</span><span class="o">.</span><span class="n">fields</span>
         <span class="n">query_site</span><span class="o">.</span><span class="n">add_votable_fields</span><span class="p">(</span><span class="o">*</span><span class="n">simbad_fields</span><span class="p">)</span>
         <span class="n">catalog_table</span> <span class="o">=</span> <span class="n">query_site</span><span class="o">.</span><span class="n">query_object</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">query_site</span> <span class="o">=</span> <span class="n">Vizier</span><span class="p">(</span><span class="n">catalog</span><span class="o">=</span><span class="n">OPTIONS</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;catalogs.</span><span class="si">{</span><span class="n">catalog</span><span class="si">}</span><span class="s2">.catalog&quot;</span><span class="p">],</span>
-                            <span class="n">columns</span><span class="o">=</span><span class="n">OPTIONS</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;catalogs.</span><span class="si">{</span><span class="n">catalog</span><span class="si">}</span><span class="s2">.fields&quot;</span><span class="p">])</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="p">,</span> <span class="n">catalog</span><span class="p">)</span>
+        <span class="n">query_site</span> <span class="o">=</span> <span class="n">Vizier</span><span class="p">(</span><span class="n">catalog</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">catalog</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">fields</span><span class="p">)</span>
         <span class="n">catalog_table</span> <span class="o">=</span> <span class="n">query_site</span><span class="o">.</span><span class="n">query_object</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">match_radius</span><span class="p">)</span>
 
         <span class="c1"># NOTE: Only get table from TableList if not empty</span>
@@ -551,7 +551,7 @@ document.write(`
     <span class="n">target_name</span> <span class="o">=</span> <span class="n">add_space</span><span class="p">(</span><span class="n">target_name</span><span class="p">)</span>
     <span class="n">target</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">target_name</span><span class="p">}</span>
     <span class="k">if</span> <span class="n">catalogs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">catalogs</span> <span class="o">=</span> <span class="n">OPTIONS</span><span class="p">[</span><span class="s2">&quot;catalogs&quot;</span><span class="p">][:]</span>
+        <span class="n">catalogs</span> <span class="o">=</span> <span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">available</span><span class="p">[:]</span>
 
     <span class="k">if</span> <span class="n">exclude_catalogs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">catalogs</span> <span class="o">=</span> <span class="p">[</span><span class="n">catalog</span> <span class="k">for</span> <span class="n">catalog</span> <span class="ow">in</span> <span class="n">catalogs</span>

@@ -60,17 +60,19 @@ tagged as an L band calibrator can be created like this.
 
   .. code-block:: python
 
-    options["resolution"] = "med"
+    OPTIONS.resolution.active = "med"
 
   This also applies for the :ref:`OB Creation Pipeline` as well.
 
   .. warning::
 
      The global resolution will be overwritten if a local catalog 
-     is activated/queried and contains the target.
+     is activated/queried and contains the target with a resolution specified.
 
-     To avoid this set the overwrite option :python:`options["resolution.overwrite"]`
+     To avoid this set the overwrite option :python:`OPTIONS.resolution.overwrite`
      to :python:`True`.
+
+     This will also be automatically set for service mode.
 
 
 Direct Upload
@@ -160,7 +162,7 @@ These lists then need to be passed as a combined list :python:`manual_input` to 
      The global resolution as well as the :python:`resolution` dictionary 
      will be overwritten if a local catalog is activated/queried and contains the target.
      
-     To avoid this set the overwrite option :python:`options["resolution.overwrite"]`
+     To avoid this set the overwrite option :python:`OPTIONS.resolution.overwrite`
      to :python:`True`.
 
      For more information see :ref:`options <p2obp.backend.options>`
@@ -217,7 +219,7 @@ The code to create the (.obx)-files locally, is similar to before
    The parser, if the guidelines in :ref:`Features - Night Plan Parsing <features>` for
    the night plan are taken care of, can automatically determine the :python:`run_id`, 
    which is a run's :python:`container_id`, the :python:`array_configuration`, the 
-   standard resolution :python:`options["resolution"]` as well as the :python:`operational_mode`.
+   standard resolution :python:`OPTIONS.resolution.active` as well as the :python:`operational_mode`.
    
    If any of these cannot be automatically determined, the parser will prompt the user for
    each detected run and every not detected keyword.

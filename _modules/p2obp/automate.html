@@ -476,6 +476,9 @@ document.write(`
 <span class="sd">    output_dir : path, optional</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">container_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">connection</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">connection</span> <span class="o">=</span> <span class="n">login</span><span class="p">(</span><span class="n">user_name</span><span class="p">,</span> <span class="n">store_password</span><span class="p">,</span> <span class="n">remove_password</span><span class="p">,</span> <span class="n">server</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">sci_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">observational_type</span> <span class="o">==</span> <span class="s2">&quot;sci&quot;</span><span class="p">:</span>
             <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;[WARNING]: The ob was specified as a science ob,&quot;</span>
                  <span class="s2">&quot; but a science target name was specified.&quot;</span>
@@ -484,10 +487,7 @@ document.write(`
         <span class="n">ob</span> <span class="o">=</span> <span class="n">compose_ob</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">observational_type</span><span class="p">,</span>
                         <span class="n">array_configuration</span><span class="p">,</span> <span class="n">operational_mode</span><span class="p">,</span>
                         <span class="n">sci_name</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">resolution</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">container_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">connection</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">connection</span> <span class="o">=</span> <span class="n">login</span><span class="p">(</span><span class="n">user_name</span><span class="p">,</span> <span class="n">store_password</span><span class="p">,</span> <span class="n">remove_password</span><span class="p">,</span> <span class="n">server</span><span class="p">)</span>
-            <span class="n">upload_ob</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">ob</span><span class="p">,</span> <span class="n">container_id</span><span class="p">)</span>
+        <span class="n">upload_ob</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">ob</span><span class="p">,</span> <span class="n">container_id</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">ob_name</span> <span class="o">=</span> <span class="n">set_ob_name</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">observational_type</span><span class="p">,</span> <span class="n">sci_name</span><span class="p">,</span> <span class="n">tag</span><span class="p">)</span>
@@ -540,10 +540,10 @@ document.write(`
 <span class="sd">        If left at &quot;None&quot; no files will be created.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">observational_type</span> <span class="o">==</span> <span class="s2">&quot;sm&quot;</span><span class="p">:</span>
-        <span class="n">OPTIONS</span><span class="p">[</span><span class="s2">&quot;resolution.overwrite&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">OPTIONS</span><span class="o">.</span><span class="n">resolution</span><span class="o">.</span><span class="n">overwrite</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="k">for</span> <span class="n">mode</span> <span class="ow">in</span> <span class="n">OPERATIONAL_MODES</span><span class="p">[</span><span class="n">operational_mode</span><span class="o">.</span><span class="n">lower</span><span class="p">()]:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating OBs in </span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">-mode and </span><span class="si">{</span><span class="n">OPTIONS</span><span class="p">[</span><span class="s1">&#39;resolution&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating OBs in </span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">-mode and </span><span class="si">{</span><span class="n">OPTIONS</span><span class="o">.</span><span class="n">resolution</span><span class="o">.</span><span class="n">active</span><span class="si">}</span><span class="s2">&quot;</span>
               <span class="sa">f</span><span class="s2">&quot;-resolution for the </span><span class="si">{</span><span class="n">array_configuration</span><span class="si">}</span><span class="s2"> configuration...&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;&#39;</span><span class="si">:</span><span class="s2">-^50</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
@@ -587,7 +587,7 @@ document.write(`
                 <span class="n">target_id</span> <span class="o">=</span> <span class="kc">None</span>
 
             <span class="k">if</span> <span class="n">observational_type</span> <span class="o">==</span> <span class="s2">&quot;sm&quot;</span><span class="p">:</span>
-                <span class="n">res</span> <span class="o">=</span> <span class="n">OPTIONS</span><span class="p">[</span><span class="s2">&quot;resolution&quot;</span><span class="p">]</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">OPTIONS</span><span class="o">.</span><span class="n">resolution</span><span class="o">.</span><span class="n">active</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">resolution</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">resolution</span><span class="p">:</span>
                     <span class="n">res</span> <span class="o">=</span> <span class="n">resolution</span><span class="p">[</span><span class="n">target</span><span class="p">]</span>
@@ -660,7 +660,7 @@ document.write(`
     <span class="k">for</span> <span class="n">run_key</span><span class="p">,</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">night_plan</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">array_config</span> <span class="o">=</span> <span class="n">parse_array_config</span><span class="p">(</span><span class="n">run_key</span><span class="p">)</span>
         <span class="n">operational_mode</span> <span class="o">=</span> <span class="n">parse_operational_mode</span><span class="p">(</span><span class="n">run_key</span><span class="p">)</span>
-        <span class="n">OPTIONS</span><span class="p">[</span><span class="s2">&quot;resolution&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parse_run_resolution</span><span class="p">(</span><span class="n">run_key</span><span class="p">)</span>
+        <span class="n">OPTIONS</span><span class="o">.</span><span class="n">resolution</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="n">parse_run_resolution</span><span class="p">(</span><span class="n">run_key</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">run_dir</span> <span class="o">=</span> <span class="kc">None</span>

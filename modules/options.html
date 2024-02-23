@@ -373,10 +373,9 @@ that can be changed and their default values as seen in the script <code class="
 <section id="logger-settings">
 <h2>Logger Settings<a class="headerlink" href="#logger-settings" title="Permalink to this heading">#</a></h2>
 <p>The logging settings that are used for logging errors.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;logging.folder&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;logs&quot;</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;logging.path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="n">options</span><span class="p">[</span><span class="s2">&quot;loggging.folder&quot;</span><span class="p">]</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;logging.level&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;logging.format&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> - </span><span class="si">%(name)s</span><span class="s2"> - </span><span class="si">%(levelname)s</span><span class="s2"> - </span><span class="si">%(message)s</span><span class="s2">&quot;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">OPTIONS</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;logs&quot;</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> - </span><span class="si">%(name)s</span><span class="s2"> - </span><span class="si">%(levelname)s</span><span class="s2"> - </span><span class="si">%(message)s</span><span class="s2">&quot;</span>
 </pre></div>
 </div>
 </section>
@@ -386,80 +385,80 @@ that can be changed and their default values as seen in the script <code class="
 <section id="resolution">
 <h3>Resolution<a class="headerlink" href="#resolution" title="Permalink to this heading">#</a></h3>
 <p>This options sets the standard resolution for all created obs.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;resolution&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;low&quot;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">OPTIONS</span><span class="o">.</span><span class="n">resolution</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="s2">&quot;low&quot;</span>
 </pre></div>
 </div>
 <p>With this option one can override the resolutions queried from the local catalogs
 (see <a class="reference internal" href="#used-catalogs"><span class="std std-ref">Used Catalogs</span></a>), which, as a standard, would overwrite the standard resolution
 or any resolution set in an input dictionary for the <a class="reference internal" href="../automate.html#p2obp.automate.create_obs" title="p2obp.automate.create_obs"><code class="xref py py-func docutils literal notranslate"><span class="pre">create_obs</span></code></a> function.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;resolution.overwrite&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">OPTIONS</span><span class="o">.</span><span class="n">resolution</span><span class="o">.</span><span class="n">overwrite</span> <span class="o">=</span> <span class="kc">False</span>
 </pre></div>
 </div>
 </section>
 <section id="photometry">
 <h3>Photometry<a class="headerlink" href="#photometry" title="Permalink to this heading">#</a></h3>
 <p>The default photometry settings for MATISSE-standalone</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;photometry.matisse.ats&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;photometry.matisse.uts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">OPTIONS</span><span class="o">.</span><span class="n">photometry</span><span class="o">.</span><span class="n">matisse</span><span class="o">.</span><span class="n">ats</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">photometry</span><span class="o">.</span><span class="n">matisse</span><span class="o">.</span><span class="n">uts</span> <span class="o">=</span> <span class="kc">True</span>
 </pre></div>
 </div>
 <p>The photometry settings for GRA4MAT</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;photometry.gra4mat.ats&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;photometry.gra4mat.uts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">OPTIONS</span><span class="o">.</span><span class="n">photometry</span><span class="o">.</span><span class="n">gra4mat</span><span class="o">.</span><span class="n">ats</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">photometry</span><span class="o">.</span><span class="n">gra4mat</span><span class="o">.</span><span class="n">uts</span> <span class="o">=</span> <span class="kc">False</span>
 </pre></div>
 </div>
 </section>
 <section id="integration-time">
 <h3>Integration time<a class="headerlink" href="#integration-time" title="Permalink to this heading">#</a></h3>
 <p>The default integration times for MATISSE-standalone for the ATs.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.matisse.ats.low&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.111</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.matisse.ats.med&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.111</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.matisse.ats.high&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.111</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">OPTIONS</span><span class="o">.</span><span class="n">dit</span><span class="o">.</span><span class="n">matisse</span><span class="o">.</span><span class="n">ats</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="mf">0.111</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">dit</span><span class="o">.</span><span class="n">matisse</span><span class="o">.</span><span class="n">ats</span><span class="o">.</span><span class="n">med</span> <span class="o">=</span> <span class="mf">0.111</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">dit</span><span class="o">.</span><span class="n">matisse</span><span class="o">.</span><span class="n">ats</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="mf">0.111</span>
 </pre></div>
 </div>
 <p>The default integration times for MATISSE-standalone for the UTs.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.matisse.uts.low&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.111</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.matisse.uts.med&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.111</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.matisse.uts.high&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.111</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">OPTIONS</span><span class="o">.</span><span class="n">dit</span><span class="o">.</span><span class="n">matisse</span><span class="o">.</span><span class="n">uts</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="mf">0.111</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">dit</span><span class="o">.</span><span class="n">matisse</span><span class="o">.</span><span class="n">uts</span><span class="o">.</span><span class="n">med</span> <span class="o">=</span> <span class="mf">0.111</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">dit</span><span class="o">.</span><span class="n">matisse</span><span class="o">.</span><span class="n">uts</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="mf">0.111</span>
 </pre></div>
 </div>
 <p>The default integration times for GRA4MAT for the ATs.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.gra4mat.ats.low&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.6</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.gra4mat.ats.med&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.3</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.gra4mat.ats.high&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">3.</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">OPTIONS</span><span class="o">.</span><span class="n">dit</span><span class="o">.</span><span class="n">gra4mat</span><span class="o">.</span><span class="n">ats</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="mf">0.6</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">dit</span><span class="o">.</span><span class="n">gra4mat</span><span class="o">.</span><span class="n">ats</span><span class="o">.</span><span class="n">med</span> <span class="o">=</span> <span class="mf">1.3</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">dit</span><span class="o">.</span><span class="n">gra4mat</span><span class="o">.</span><span class="n">ats</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="mf">3.</span>
 </pre></div>
 </div>
 <p>The default integration times for GRA4MAT for the UTs.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.gra4mat.uts.low&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.6</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.gra4mat.uts.med&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.6</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;dit.gra4mat.uts.high&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.6</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">OPTIONS</span><span class="o">.</span><span class="n">dit</span><span class="o">.</span><span class="n">gra4mat</span><span class="o">.</span><span class="n">uts</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="mf">0.6</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">dit</span><span class="o">.</span><span class="n">gra4mat</span><span class="o">.</span><span class="n">uts</span><span class="o">.</span><span class="n">med</span> <span class="o">=</span> <span class="mf">0.6</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">dit</span><span class="o">.</span><span class="n">gra4mat</span><span class="o">.</span><span class="n">uts</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="mf">0.6</span>
 </pre></div>
 </div>
 </section>
 <section id="central-wavelength">
 <h3>Central wavelength<a class="headerlink" href="#central-wavelength" title="Permalink to this heading">#</a></h3>
 <p>The default central wavelengths for MATISSE-standalone for the ATs.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;w0.matisse.ats.low&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">4.1</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;w0.matisse.ats.med&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">4.1</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;w0.matisse.ats.high&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">4.1</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">OPTIONS</span><span class="o">.</span><span class="n">w0</span><span class="o">.</span><span class="n">matisse</span><span class="o">.</span><span class="n">ats</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="mf">4.1</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">w0</span><span class="o">.</span><span class="n">matisse</span><span class="o">.</span><span class="n">ats</span><span class="o">.</span><span class="n">med</span> <span class="o">=</span> <span class="mf">4.1</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">w0</span><span class="o">.</span><span class="n">matisse</span><span class="o">.</span><span class="n">ats</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="mf">4.1</span>
 </pre></div>
 </div>
 <p>The default central wavelengths for MATISSE-standalone for the UTs.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;w0.matisse.uts.low&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">4.1</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;w0.matisse.uts.med&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">4.1</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;w0.matisse.uts.high&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">4.1</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">OPTIONS</span><span class="o">.</span><span class="n">w0</span><span class="o">.</span><span class="n">matisse</span><span class="o">.</span><span class="n">uts</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="mf">4.1</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">w0</span><span class="o">.</span><span class="n">matisse</span><span class="o">.</span><span class="n">uts</span><span class="o">.</span><span class="n">med</span> <span class="o">=</span> <span class="mf">4.1</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">w0</span><span class="o">.</span><span class="n">matisse</span><span class="o">.</span><span class="n">uts</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="mf">4.1</span>
 </pre></div>
 </div>
 <p>The default central wavelengths for GRA4MAT for the ATs.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;w0.gra4mat.ats.low&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">4.1</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;w0.gra4mat.ats.med&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">4.1</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;w0.gra4mat.ats.high&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">4.1</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">OPTIONS</span><span class="o">.</span><span class="n">w0</span><span class="o">.</span><span class="n">gra4mat</span><span class="o">.</span><span class="n">ats</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="mf">4.1</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">w0</span><span class="o">.</span><span class="n">gra4mat</span><span class="o">.</span><span class="n">ats</span><span class="o">.</span><span class="n">med</span> <span class="o">=</span> <span class="mf">4.1</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">w0</span><span class="o">.</span><span class="n">gra4mat</span><span class="o">.</span><span class="n">ats</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="mf">4.1</span>
 </pre></div>
 </div>
 <p>The default central wavelengths for GRA4MAT for the UTs.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;w0.gra4mat.uts.low&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">3.52</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;w0.gra4mat.uts.med&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">3.52</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;w0.gra4mat.uts.high&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">3.52</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">OPTIONS</span><span class="o">.</span><span class="n">w0</span><span class="o">.</span><span class="n">gra4mat</span><span class="o">.</span><span class="n">uts</span><span class="o">.</span><span class="n">low</span> <span class="o">=</span> <span class="mf">4.1</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">w0</span><span class="o">.</span><span class="n">gra4mat</span><span class="o">.</span><span class="n">uts</span><span class="o">.</span><span class="n">med</span> <span class="o">=</span> <span class="mf">3.52</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">w0</span><span class="o">.</span><span class="n">gra4mat</span><span class="o">.</span><span class="n">uts</span><span class="o">.</span><span class="n">high</span> <span class="o">=</span> <span class="mf">3.52</span>
 </pre></div>
 </div>
 </section>
@@ -469,66 +468,66 @@ or any resolution set in an input dictionary for the <a class="reference interna
 <p>The settings used for the <a class="reference internal" href="query.html#p2obp.backend.query.query" title="p2obp.backend.query.query"><code class="xref py py-func docutils literal notranslate"><span class="pre">query</span></code></a> function.</p>
 <section id="used-catalogs">
 <h3>Used Catalogs<a class="headerlink" href="#used-catalogs" title="Permalink to this heading">#</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;gaia&quot;</span><span class="p">,</span> <span class="s2">&quot;tycho&quot;</span><span class="p">,</span> <span class="s2">&quot;nomad&quot;</span><span class="p">,</span>
-                       <span class="s2">&quot;2mass&quot;</span><span class="p">,</span> <span class="s2">&quot;wise&quot;</span><span class="p">,</span> <span class="s2">&quot;mdfc&quot;</span><span class="p">,</span>
-                       <span class="s2">&quot;simbad&quot;</span><span class="p">,</span> <span class="s2">&quot;local&quot;</span><span class="p">]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;gaia&quot;</span><span class="p">,</span> <span class="s2">&quot;tycho&quot;</span><span class="p">,</span> <span class="s2">&quot;nomad&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;two_mass&quot;</span><span class="p">,</span> <span class="s2">&quot;wise&quot;</span><span class="p">,</span> <span class="s2">&quot;mdfc&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;simbad&quot;</span><span class="p">,</span> <span class="s2">&quot;local&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>The local catalogs/databases queried.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.local.standard&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Targets&quot;</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.local.ciao&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;CIAO Offaxis Targets&quot;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">standard</span> <span class="o">=</span> <span class="s2">&quot;Targets&quot;</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">ciao</span> <span class="o">=</span> <span class="s2">&quot;CIAO Offaxis Targets&quot;</span>
 </pre></div>
 </div>
 <p>Setting the following option to either <code class="code highlight python docutils literal highlight-python"><span class="n">ciao</span></code> or <code class="code highlight python docutils literal highlight-python"><span class="n">standard</span></code> will query one of
-the above catalogs. If the options is set to <code class="code highlight python docutils literal highlight-python"><span class="n">none</span></code>, no local catalog will be queried.
+the above catalogs. If the option is set to <code class="code highlight python docutils literal highlight-python"><span class="n">none</span></code>, no local catalog will be queried.
 But this can be easier done with the <a class="reference internal" href="query.html#p2obp.backend.query.query" title="p2obp.backend.query.query"><code class="xref py py-func docutils literal notranslate"><span class="pre">query</span></code></a> function by excluding
 the <code class="code highlight python docutils literal highlight-python"><span class="n">local</span></code> catalog.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.local.active&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;standard&quot;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="s2">&quot;standard&quot;</span>
 </pre></div>
 </div>
 <p>The online catalogs queried.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.gaia.catalog&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;I/345/gaia2&quot;</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.tycho.catalog&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;I/350/tyc2tdsc&quot;</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.nomad.catalog&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;I/297/out&quot;</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.2mass.catalog&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;II/246/out&quot;</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.wise.catalog&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;II/311/wise&quot;</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.mdfc.catalog&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;II/361/mdfc-v10&quot;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">gaia</span><span class="o">.</span><span class="n">catalog</span> <span class="o">=</span> <span class="s2">&quot;I/345/gaia2&quot;</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">tycho</span><span class="o">.</span><span class="n">catalog</span> <span class="o">=</span> <span class="s2">&quot;I/350/tyc2tdsc&quot;</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">nomad</span><span class="o">.</span><span class="n">catalog</span> <span class="o">=</span> <span class="s2">&quot;I/297/out&quot;</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">two_mass</span><span class="o">.</span><span class="n">catalog</span> <span class="o">=</span> <span class="s2">&quot;II/246/out&quot;</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">wise</span><span class="o">.</span><span class="n">catalog</span> <span class="o">=</span> <span class="s2">&quot;II/311/wise&quot;</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">mdfc</span><span class="o">.</span><span class="n">catalog</span> <span class="o">=</span> <span class="s2">&quot;II/361/mdfc-v10&quot;</span>
 </pre></div>
 </div>
 </section>
 <section id="catalog-fields">
 <h3>Catalog fields<a class="headerlink" href="#catalog-fields" title="Permalink to this heading">#</a></h3>
 <p>Set the fields accessed in each catalog.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.gaia.fields&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">]</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.tycho.fields&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="s2">&quot;e_BTmag&quot;</span><span class="p">,</span> <span class="s2">&quot;e_VTmag&quot;</span><span class="p">]</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.nomad.fields&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">]</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.2mass.fields&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">]</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.wise.fields&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">]</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.mdfc.fields&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;**&quot;</span><span class="p">]</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.simbad.fields&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;mk&quot;</span><span class="p">,</span> <span class="s2">&quot;sp&quot;</span><span class="p">,</span> <span class="s2">&quot;sptype&quot;</span><span class="p">,</span> <span class="s2">&quot;fe_h&quot;</span><span class="p">,</span>
-                                     <span class="s2">&quot;pm&quot;</span><span class="p">,</span> <span class="s2">&quot;plx&quot;</span><span class="p">,</span> <span class="s2">&quot;rv_value&quot;</span><span class="p">,</span>
-                                     <span class="s2">&quot;flux(U)&quot;</span><span class="p">,</span> <span class="s2">&quot;flux_error(U)&quot;</span><span class="p">,</span>
-                                     <span class="s2">&quot;flux(B)&quot;</span><span class="p">,</span> <span class="s2">&quot;flux_error(B)&quot;</span><span class="p">,</span>
-                                     <span class="s2">&quot;flux(V)&quot;</span><span class="p">,</span> <span class="s2">&quot;flux_error(V)&quot;</span><span class="p">,</span>
-                                     <span class="s2">&quot;flux(R)&quot;</span><span class="p">,</span> <span class="s2">&quot;flux_error(R)&quot;</span><span class="p">,</span>
-                                     <span class="s2">&quot;flux(I)&quot;</span><span class="p">,</span> <span class="s2">&quot;flux_error(I)&quot;</span><span class="p">,</span>
-                                     <span class="s2">&quot;flux(J)&quot;</span><span class="p">,</span> <span class="s2">&quot;flux_error(J)&quot;</span><span class="p">,</span>
-                                     <span class="s2">&quot;flux(H)&quot;</span><span class="p">,</span> <span class="s2">&quot;flux_error(H)&quot;</span><span class="p">,</span>
-                                     <span class="s2">&quot;flux(K)&quot;</span><span class="p">,</span> <span class="s2">&quot;flux_error(K)&quot;</span><span class="p">]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">gaia</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">]</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">tycho</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="s2">&quot;e_BTmag&quot;</span><span class="p">,</span> <span class="s2">&quot;e_VTmag&quot;</span><span class="p">]</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">nomad</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">]</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">two_mass</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">]</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">wise</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">]</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">mdfc</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;**&quot;</span><span class="p">]</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">simbad</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;mk&quot;</span><span class="p">,</span> <span class="s2">&quot;sp&quot;</span><span class="p">,</span> <span class="s2">&quot;sptype&quot;</span><span class="p">,</span> <span class="s2">&quot;fe_h&quot;</span><span class="p">,</span>
+                                  <span class="s2">&quot;pm&quot;</span><span class="p">,</span> <span class="s2">&quot;plx&quot;</span><span class="p">,</span> <span class="s2">&quot;rv_value&quot;</span><span class="p">,</span>
+                                  <span class="s2">&quot;flux(U)&quot;</span><span class="p">,</span> <span class="s2">&quot;flux_error(U)&quot;</span><span class="p">,</span>
+                                  <span class="s2">&quot;flux(B)&quot;</span><span class="p">,</span> <span class="s2">&quot;flux_error(B)&quot;</span><span class="p">,</span>
+                                  <span class="s2">&quot;flux(V)&quot;</span><span class="p">,</span> <span class="s2">&quot;flux_error(V)&quot;</span><span class="p">,</span>
+                                  <span class="s2">&quot;flux(R)&quot;</span><span class="p">,</span> <span class="s2">&quot;flux_error(R)&quot;</span><span class="p">,</span>
+                                  <span class="s2">&quot;flux(I)&quot;</span><span class="p">,</span> <span class="s2">&quot;flux_error(I)&quot;</span><span class="p">,</span>
+                                  <span class="s2">&quot;flux(J)&quot;</span><span class="p">,</span> <span class="s2">&quot;flux_error(J)&quot;</span><span class="p">,</span>
+                                  <span class="s2">&quot;flux(H)&quot;</span><span class="p">,</span> <span class="s2">&quot;flux_error(H)&quot;</span><span class="p">,</span>
+                                  <span class="s2">&quot;flux(K)&quot;</span><span class="p">,</span> <span class="s2">&quot;flux_error(K)&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
 </section>
 <section id="catalog-queries">
 <h3>Catalog queries<a class="headerlink" href="#catalog-queries" title="Permalink to this heading">#</a></h3>
 <p>The queries that are collected from each catalog.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.gaia.query&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Gmag&quot;</span><span class="p">,</span> <span class="s2">&quot;pmRA&quot;</span><span class="p">,</span> <span class="s2">&quot;pmDE&quot;</span><span class="p">]</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.tycho.query&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;VTmag&quot;</span><span class="p">]</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.2mass.query&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Jmag&quot;</span><span class="p">,</span> <span class="s2">&quot;Hmag&quot;</span><span class="p">,</span> <span class="s2">&quot;Kmag&quot;</span><span class="p">]</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.nomad.query&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Vmag&quot;</span><span class="p">]</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.wise.query&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;W1mag&quot;</span><span class="p">,</span> <span class="s2">&quot;W3mag&quot;</span><span class="p">,</span> <span class="s2">&quot;Hmag&quot;</span><span class="p">,</span> <span class="s2">&quot;Kmag&quot;</span><span class="p">]</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.mdfc.query&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;med-Lflux&quot;</span><span class="p">,</span> <span class="s2">&quot;med-Nflux&quot;</span><span class="p">,</span> <span class="s2">&quot;Hmag&quot;</span><span class="p">,</span> <span class="s2">&quot;Kmag&quot;</span><span class="p">]</span>
-<span class="n">options</span><span class="p">[</span><span class="s2">&quot;catalogs.simbad.query&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;RA&quot;</span><span class="p">,</span> <span class="s2">&quot;DEC&quot;</span><span class="p">,</span> <span class="s2">&quot;PMRA&quot;</span><span class="p">,</span> <span class="s2">&quot;PMDEC&quot;</span><span class="p">,</span>
-                                    <span class="s2">&quot;FLUX_V&quot;</span><span class="p">,</span> <span class="s2">&quot;FLUX_H&quot;</span><span class="p">,</span> <span class="s2">&quot;FLUX_K&quot;</span><span class="p">]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">gaia</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Gmag&quot;</span><span class="p">,</span> <span class="s2">&quot;pmRA&quot;</span><span class="p">,</span> <span class="s2">&quot;pmDE&quot;</span><span class="p">]</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">tycho</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;VTmag&quot;</span><span class="p">]</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">two_mass</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Jmag&quot;</span><span class="p">,</span> <span class="s2">&quot;Hmag&quot;</span><span class="p">,</span> <span class="s2">&quot;Kmag&quot;</span><span class="p">]</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">nomad</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Vmag&quot;</span><span class="p">]</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">wise</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;W1mag&quot;</span><span class="p">,</span> <span class="s2">&quot;W3mag&quot;</span><span class="p">,</span> <span class="s2">&quot;Hmag&quot;</span><span class="p">,</span> <span class="s2">&quot;Kmag&quot;</span><span class="p">]</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">mdfc</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;med-Lflux&quot;</span><span class="p">,</span> <span class="s2">&quot;med-Nflux&quot;</span><span class="p">,</span> <span class="s2">&quot;Hmag&quot;</span><span class="p">,</span> <span class="s2">&quot;Kmag&quot;</span><span class="p">]</span>
+<span class="n">OPTIONS</span><span class="o">.</span><span class="n">catalogs</span><span class="o">.</span><span class="n">simbad</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;RA&quot;</span><span class="p">,</span> <span class="s2">&quot;DEC&quot;</span><span class="p">,</span> <span class="s2">&quot;PMRA&quot;</span><span class="p">,</span> <span class="s2">&quot;PMDEC&quot;</span><span class="p">,</span>
+                                 <span class="s2">&quot;FLUX_V&quot;</span><span class="p">,</span> <span class="s2">&quot;FLUX_H&quot;</span><span class="p">,</span> <span class="s2">&quot;FLUX_K&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
 <div class="admonition note">

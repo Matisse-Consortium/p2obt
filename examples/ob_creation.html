@@ -407,16 +407,17 @@ tagged as an L band calibrator can be created like this.</p>
 <p class="admonition-title">Note</p>
 <p>The resolution for all other targets will be <code class="code highlight python docutils literal highlight-python"><span class="s2">&quot;low&quot;</span></code>, but can be
 set via the options (see <a class="reference internal" href="../modules/options.html#p2obp-backend-options"><span class="std std-ref">options</span></a> for a more comprehensive listing).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;resolution&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;med&quot;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">OPTIONS</span><span class="o">.</span><span class="n">resolution</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="s2">&quot;med&quot;</span>
 </pre></div>
 </div>
 <p>This also applies for the <a class="reference internal" href="#ob-creation-pipeline"><span class="std std-ref">OB Creation Pipeline</span></a> as well.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>The global resolution will be overwritten if a local catalog
-is activated/queried and contains the target.</p>
-<p>To avoid this set the overwrite option <code class="code highlight python docutils literal highlight-python"><span class="n">options</span><span class="p">[</span><span class="s2">&quot;resolution.overwrite&quot;</span><span class="p">]</span></code>
+is activated/queried and contains the target with a resolution specified.</p>
+<p>To avoid this set the overwrite option <code class="code highlight python docutils literal highlight-python"><span class="n">OPTIONS</span><span class="o">.</span><span class="n">resolution</span><span class="o">.</span><span class="n">overwrite</span></code>
 to <code class="code highlight python docutils literal highlight-python"><span class="kc">True</span></code>.</p>
+<p>This will also be automatically set for service mode.</p>
 </div>
 </div>
 </section>
@@ -490,7 +491,7 @@ for specific targets as keys, with the resolution as values (either <em>low, med
 <p class="admonition-title">Warning</p>
 <p>The global resolution as well as the <code class="code highlight python docutils literal highlight-python"><span class="n">resolution</span></code> dictionary
 will be overwritten if a local catalog is activated/queried and contains the target.</p>
-<p>To avoid this set the overwrite option <code class="code highlight python docutils literal highlight-python"><span class="n">options</span><span class="p">[</span><span class="s2">&quot;resolution.overwrite&quot;</span><span class="p">]</span></code>
+<p>To avoid this set the overwrite option <code class="code highlight python docutils literal highlight-python"><span class="n">OPTIONS</span><span class="o">.</span><span class="n">resolution</span><span class="o">.</span><span class="n">overwrite</span></code>
 to <code class="code highlight python docutils literal highlight-python"><span class="kc">True</span></code>.</p>
 <p>For more information see <a class="reference internal" href="../modules/options.html#p2obp-backend-options"><span class="std std-ref">options</span></a></p>
 </div>
@@ -538,7 +539,7 @@ some sort of science target and calibrator(s) arrangements.</p>
 <p>The parser, if the guidelines in <a class="reference internal" href="../features.html#features"><span class="std std-ref">Features - Night Plan Parsing</span></a> for
 the night plan are taken care of, can automatically determine the <code class="code highlight python docutils literal highlight-python"><span class="n">run_id</span></code>,
 which is a run’s <code class="code highlight python docutils literal highlight-python"><span class="n">container_id</span></code>, the <code class="code highlight python docutils literal highlight-python"><span class="n">array_configuration</span></code>, the
-standard resolution <code class="code highlight python docutils literal highlight-python"><span class="n">options</span><span class="p">[</span><span class="s2">&quot;resolution&quot;</span><span class="p">]</span></code> as well as the <code class="code highlight python docutils literal highlight-python"><span class="n">operational_mode</span></code>.</p>
+standard resolution <code class="code highlight python docutils literal highlight-python"><span class="n">OPTIONS</span><span class="o">.</span><span class="n">resolution</span><span class="o">.</span><span class="n">active</span></code> as well as the <code class="code highlight python docutils literal highlight-python"><span class="n">operational_mode</span></code>.</p>
 <p>If any of these cannot be automatically determined, the parser will prompt the user for
 each detected run and every not detected keyword.</p>
 <p>One can also directly provide a <code class="code highlight python docutils literal highlight-python"><span class="n">container_id</span></code>, then the automatically created
