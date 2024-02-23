@@ -66,8 +66,9 @@ OPTIONS["dit.gra4mat.uts.med"] = 0.6
 OPTIONS["dit.gra4mat.uts.high"] = 0.6
 
 # NOTE: Set the weather constraints.
-OPTIONS["constraints.turbulence"] = 70
-OPTIONS["constraints.transparency"] = "thin"
+OPTIONS["constraints.pwv"] = 10
+OPTIONS["constraints.turbulence"] = 30
+OPTIONS["constraints.transparency"] = "clear"
 
 # NOTE: The settings for the `query`-script.
 OPTIONS["catalogs"] = ["gaia", "tycho", "nomad",

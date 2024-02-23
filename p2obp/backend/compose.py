@@ -214,14 +214,14 @@ def fill_header(target: Dict,
     header : dict
     """
     header = {}
-    header_user = load_template(TEMPLATE_FILE,
-                                "header", sub_header="user")
-    header_target = load_template(TEMPLATE_FILE,
-                                  "header", sub_header="target")
-    header_constraints = load_template(TEMPLATE_FILE,
-                                       "header", sub_header="constraints")
-    header_observation = load_template(TEMPLATE_FILE,
-                                       "header", sub_header="observation")
+    header_user = load_template(
+            TEMPLATE_FILE, "header", sub_header="user")
+    header_target = load_template(
+            TEMPLATE_FILE, "header", sub_header="target")
+    header_constraints = load_template(
+            TEMPLATE_FILE, "header", sub_header="constraints")
+    header_observation = load_template(
+            TEMPLATE_FILE, "header", sub_header="observation")
     ob_name = set_ob_name(target, observation_type, sci_name, tag)
     ra_hms, dec_dms = format_ra_and_dec(target)
     prop_ra, prop_dec = format_proper_motions(target)
@@ -242,6 +242,7 @@ def fill_header(target: Dict,
     header_constraints["atm"] = TURBULENCE[OPTIONS["constraints.turbulence"]]
     header_constraints["sky_transparency"] =\
         SKY_TRANSPARENCY[OPTIONS["constraints.transparency"]]
+    header_constraints["watervapour"] = OPTIONS["constraints.pwv"]
     if "ut" in array_configuration:
         header_constraints["moon_angular_distance"] = 10
 
