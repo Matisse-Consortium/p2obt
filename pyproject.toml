@@ -35,7 +35,7 @@ dependencies = [
 ]
 
 [project.urls]
-repository = "https://github.com/MBSck/p2obp"
+repository = "https://github.com/MBSck/p2obt"
 
 [build-system]
 requires = ["setuptools >= 61.0"]
