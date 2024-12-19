@@ -24,11 +24,11 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip numpydoc
-        pip pydata-sphinx-theme
-        pip sphinx
-        pip sphinx-autobuild
-        pip sphinx-autodoc-typehints
+        pip install numpydoc
+        pip install pydata-sphinx-theme
+        pip install sphinx
+        pip install sphinx-autobuild
+        pip install sphinx-autodoc-typehints
 
     - name: Build documentation
       run: |
