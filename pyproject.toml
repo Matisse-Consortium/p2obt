@@ -1,7 +1,7 @@
 [project]
-name = "p2obp"
+name = "p2obt"
 dynamic = ["version"]
-description = "The Phase 2 OB Pipeline (p2obp) an automation tool for the MATISSE observation preparation."
+description = "The Phase 2 OB tools (p2obt) automate the MATISSE observation preparation/upload."
 requires-python = ">=3.9"
 readme = "README.md"
 license = {file = "LICENSE"}
