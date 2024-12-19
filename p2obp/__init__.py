@@ -4,4 +4,4 @@ from .automate import create_ob, create_obs
 from .backend import *
 
 
-__version__ = "2.1.0"
+__version__ = "2.1.1"
