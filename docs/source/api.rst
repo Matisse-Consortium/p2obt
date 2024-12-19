@@ -5,7 +5,7 @@
 API
 ===
 
-The in-depth description of :bash:`p2obp`'s api.
+The in-depth description of :bash:`p2obt`'s api.
 
 
 .. toctree::

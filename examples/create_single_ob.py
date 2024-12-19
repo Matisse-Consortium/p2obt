@@ -3,14 +3,14 @@ Create singular ob
 ==================
 
 This script is meant to give an example on how to use the
-the `create_ob`-function of p2obp to create a single ob and
+the `create_ob`-function of p2obt to create a single ob and
 either create it locally as an (.obx)-file or directly upload
 it to ESO's P2-environment.
 """
 # %%
 from pathlib import Path
 
-from p2obp import OPTIONS, create_ob
+from p2obt import OPTIONS, create_ob
 
 # %%
 # The path in which the 'manualOBs'-directory will be created.
@@ -61,7 +61,7 @@ OPTIONS.constraints.transparency = "thin"
 # uploaded and if the 'connection'-keyword is none it will ask for your login
 # data.
 # For this example the ob will be uploaded to ESO's demo environment
-# (https://www.eso.org/p2demo/home) to the subfolder "p2obp" of the
+# (https://www.eso.org/p2demo/home) to the subfolder "p2obt" of the
 # run "60.A-9252(N) MATISSE".
 # Tutorial server: username - '52052' , password - 'tutorial'
 create_ob("HD 100920", "cal", "uts",

@@ -9,9 +9,8 @@ Installation
 
 .. sourcecode:: bash
   
-  git clone git@github.com:MBSck/p2obp.git
-  cd p2obp
-  pip install -e .
+  git clone git@github.com:MBSck/p2obt.git
+  cd p2obt && pip install -e .
 
 Optional
 ========
@@ -20,5 +19,5 @@ An optional dependency is R. van Boekel's :bash:`calibrator_find.pro`.
 This is an IDL software used for calibrator finding, from which 
 night_plans can be manually created.
 
-These are then used to feed the :mod:`parse <p2obp.backend.parse>` module of :bash:`p2obp`
-used within the :func:`create_obs <p2obp.automate.create_obs>` (see :ref:`features`).
+These are then used to feed the :mod:`parse <p2obt.backend.parse>` module of :bash:`p2obt`
+used within the :func:`create_obs <p2obt.automate.create_obs>` (see :ref:`features`).

@@ -15,12 +15,12 @@ Getting Started
 
 To start out, check the examples below and for the scripts that accompany those.
 
-To try them out yourself, find the `examples/ <https://github.com/MBSck/p2obp/tree/main/examples>`_ in :python:`p2obp`'s
+To try them out yourself, find the `examples/ <https://github.com/MBSck/p2obt/tree/main/examples>`_ in :python:`p2obt`'s
 repository.
 
 .. note::
 
- For the global settings of the :python:`p2obp` package see :ref:`options <options>`.
+ For the global settings of the :python:`p2obt` package see :ref:`options <options>`.
  
 .. toctree::
  :maxdepth: -1

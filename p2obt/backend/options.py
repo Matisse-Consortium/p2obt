@@ -130,9 +130,9 @@ OPTIONS = SimpleNamespace(
 
 
 OPTIONS.log.path.mkdir(parents=True, exist_ok=True)
-with open(OPTIONS.log.path / "p2obp.log", "w+") as log_file:
+with open(OPTIONS.log.path / "p2obt.log", "w+") as log_file:
     log_file.write("Start of log:")
 
-logging.basicConfig(filename=OPTIONS.log.path / "p2obp.log",
+logging.basicConfig(filename=OPTIONS.log.path / "p2obt.log",
                     filemode="w", level=OPTIONS.log.level,
                     format=OPTIONS.log.format)

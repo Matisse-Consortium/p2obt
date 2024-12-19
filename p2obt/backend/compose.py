@@ -12,7 +12,7 @@ from .options import OPTIONS
 from .utils import convert_proper_motions, remove_parenthesis, remove_spaces
 
 # TODO: Exchange, possibly slow function?
-TEMPLATE_FILE = Path(pkg_resources.resource_filename("p2obp", "data/templates.toml"))
+TEMPLATE_FILE = Path(pkg_resources.resource_filename("p2obt", "data/templates.toml"))
 
 TURBULENCE = {10: "10%  (Seeing < 0.6 arcsec, t0 > 5.2 ms)",
               30: "30%  (Seeing < 0.8 arcsec, t0 > 4.1 ms)",

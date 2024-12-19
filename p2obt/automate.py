@@ -153,7 +153,7 @@ def create_ob(target: str,
             ob_name = set_ob_name(target, observational_type, sci_name, tag)
             write_ob(ob, ob_name, output_dir)
     except KeyError:
-        print(f"[ERROR]: Failed creating OB '{target}'! See 'p2obp.log'.")
+        print(f"[ERROR]: Failed creating OB '{target}'! See 'p2obt.log'.")
         logging.error("[ERROR]: Failed creating OB '{target}'!", exc_info=True)
 
 

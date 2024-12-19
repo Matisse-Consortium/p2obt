@@ -13,7 +13,7 @@ from .options import OPTIONS
 from .utils import add_space, remove_parenthesis
 
 
-TARGET_INFO_FILE = Path(pkg_resources.resource_filename("p2obp", "data/Extensive Target Information.xlsx"))
+TARGET_INFO_FILE = Path(pkg_resources.resource_filename("p2obt", "data/Extensive Target Information.xlsx"))
 TARGET_INFO_MAPPING = {"local.RA": "RA [hms]",
                        "local.DEC": "DEC [dms]",
                        "local.propRa": "PMA [arcsec/yr]",

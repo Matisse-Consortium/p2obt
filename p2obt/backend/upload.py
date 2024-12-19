@@ -286,5 +286,5 @@ def upload_ob(connection: p2api.p2api.ApiConnection,
         add_template(connection, ob_id, ob, "acquisition")
         add_template(connection, ob_id, ob, "observation")
     except p2api.P2Error:
-        print(f"[ERROR]: Failed uploading OB '{ob_name}'! See 'p2obp.log'.")
+        print(f"[ERROR]: Failed uploading OB '{ob_name}'! See 'p2obt.log'.")
         logging.error(f"[ERROR]: Failed uploading OB '{ob_name}'!", exc_info=True)

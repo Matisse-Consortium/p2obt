@@ -1,8 +1,8 @@
-p2obp.backend.utils
+p2obt.backend.utils
 ===================
 
 
-.. automodule:: p2obp.backend.utils
+.. automodule:: p2obt.backend.utils
    :members:
    :undoc-members:
    :show-inheritance:

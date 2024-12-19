@@ -10,7 +10,7 @@
 OB Creation
 ===========
 
-:bash:`p2obp` supports various ways of local or online (on P2) ob creation.
+:bash:`p2obt` supports various ways of local or online (on P2) ob creation.
 In addition to a single ob creating script (:ref:`Single OB Creation`), there is a fully automated pipeline
 that can make multiple obs at once (:ref:`OB Creation Pipeline`).
 
@@ -19,9 +19,9 @@ Single OB Creation
 ------------------
 
 This is meant to give some examples on how to use the
-:func:`create_ob <p2obp.automate.create_ob>` for singular ob creation.
+:func:`create_ob <p2obt.automate.create_ob>` for singular ob creation.
 
-A full example script can be found in `examples/create_ob <https://github.com/MBSck/p2obp/blob/main/examples/create_single_ob.py>`_.
+A full example script can be found in `examples/create_ob <https://github.com/MBSck/p2obt/blob/main/examples/create_single_ob.py>`_.
 
 One can either locally create an (.obx)-file (see :ref:`Local Creation`) or
 directly upload the content of a dictionary to the P2 environment (see :ref:`Direct Upload`).
@@ -56,7 +56,7 @@ tagged as an L band calibrator can be created like this.
 .. note::
 
   The resolution for all other targets will be :python:`"low"`, but can be
-  set via the options (see :ref:`options <p2obp.backend.options>` for a more comprehensive listing).
+  set via the options (see :ref:`options <p2obt.backend.options>` for a more comprehensive listing).
 
   .. code-block:: python
 
@@ -98,7 +98,7 @@ Now an ob for the target :python:`"HD 100920"` as a calibrator for the science t
 
 .. note::
   For this example the ob will be uploaded to ESO's demo environment
-  (https://www.eso.org/p2demo/home) to the subfolder :bash:`p2obp` of the
+  (https://www.eso.org/p2demo/home) to the subfolder :bash:`p2obt` of the
   run :bash:`60.A-9252(N) MATISSE`.
 
 --------------------
@@ -106,8 +106,8 @@ OB Creation Pipeline
 --------------------
 
 This is meant to give an example on how to use the
-fully automated pipeline, :func:`create_obs <p2obp.automate.create_obs>`, of p2obp for ob-creation.
-The full example script can be found in `examples/create_obs <https://github.com/MBSck/p2obp/blob/main/examples/create_obs.py>`_.
+fully automated pipeline, :func:`create_obs <p2obt.automate.create_obs>`, of p2obt for ob-creation.
+The full example script can be found in `examples/create_obs <https://github.com/MBSck/p2obt/blob/main/examples/create_obs.py>`_.
 
 Manual Creation
 ===============
@@ -165,7 +165,7 @@ These lists then need to be passed as a combined list :python:`manual_input` to 
      To avoid this set the overwrite option :python:`OPTIONS.resolution.overwrite`
      to :python:`True`.
 
-     For more information see :ref:`options <p2obp.backend.options>`
+     For more information see :ref:`options <p2obt.backend.options>`
 
 The operational mode (either :python:`"gr"` for GRA4MAT or
 :python:`"st"` for MATISSE-standalone specifies the obs' settings).
@@ -188,7 +188,7 @@ or make them locally as (.obx)-files, if an :python:`output_dir` is specified.
 .. note::
 
   For this example the ob will be uploaded to ESO's demo environment
-  (https://www.eso.org/p2demo/home) to the subfolder :bash:`p2obp/` of the
+  (https://www.eso.org/p2demo/home) to the subfolder :bash:`p2obt/` of the
   run :bash:`60.A-9252(N) MATISSE`.
 
 
@@ -196,14 +196,14 @@ Night Plan Based Creation
 =========================
 
 In addition to the manual creation, there is also a more automated way - The
-core aspect of :bash:`p2obp` - the night plan parsing, automatic ob creation and upload.
+core aspect of :bash:`p2obt` - the night plan parsing, automatic ob creation and upload.
 
 .. note::
 
   For the specifics on the parser and examples for night plans
   see :ref:`Features - Night Plan Parsing <features>`.
 
-After a night plan has been provided, the :func:`parse_night_plan <p2obp.backend.parse.parse_night_plan>`
+After a night plan has been provided, the :func:`parse_night_plan <p2obt.backend.parse.parse_night_plan>`
 function will parse this into chuncks of runs that have subsections for nights and in those
 some sort of science target and calibrator(s) arrangements.
 

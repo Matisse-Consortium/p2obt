@@ -26,7 +26,7 @@ The parser
 * looks for the **runs** and splits them into individual keys/sections (see :ref:`Run Names`).
 * looks for the **nights** and then splits them into keys/sections as well (see :ref:`Night Names`).
 * ignores comments and other things in between the lines and automatically creates the 
-* in conjunction with the :func:`create_obs <p2obp.automate.create_obs>`-function, can autodetect many things (see :ref:`Formatting Guidelines`).
+* in conjunction with the :func:`create_obs <p2obt.automate.create_obs>`-function, can autodetect many things (see :ref:`Formatting Guidelines`).
 
 The **night** sections are ended as soon as a line containing the **cal_find**
 software name is detected.
@@ -66,7 +66,7 @@ Run Names
    attributed to be a **full_run**.
 
 Additionally, if the run name has a certain shape/format, then the 
-:func:`create_obs <p2obp.automate.create_obs>` function
+:func:`create_obs <p2obt.automate.create_obs>` function
 can automatically determine the following things about the run:
 
 * The **array configuration** (*UTs, small, medium, large, extended*)
@@ -163,13 +163,13 @@ Night Plan Example
 OB-Creation
 -----------
 
-The ob-creation scripts (for multiple obs :func:`create_obs <p2obp.automate.create_obs>`
-or for singular obs :func:`create_ob <p2obp.automate.create_ob>`).
+The ob-creation scripts (for multiple obs :func:`create_obs <p2obt.automate.create_obs>`
+or for singular obs :func:`create_ob <p2obt.automate.create_ob>`).
 These scripts automatically...
 
 * queries different catalogs (*simbad, gaia, tycho, 2mass, mdfc, and the local catalogs*).
 * sort them into folders in the order given (either CAL-SCI or SCI-CAL or CAL-SCI-CAL) locally.
 * sort them into containers during the upload, directly to P2.
 
-For more details see the documentation or scripts in the `examples/ <https://github.com/MBSck/p2obp/tree/main/examples>`_ directory.
+For more details see the documentation or scripts in the `examples/ <https://github.com/MBSck/p2obt/tree/main/examples>`_ directory.
 To add new local query targets add them to the :bash:`data/Extensive Target Information` excel sheet.

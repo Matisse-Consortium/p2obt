@@ -1,8 +1,8 @@
 ==============
-p2obp.automate
+p2obt.automate
 ==============
 
-.. automodule:: p2obp.automate
+.. automodule:: p2obt.automate
    :members:
    :undoc-members:
    :show-inheritance:

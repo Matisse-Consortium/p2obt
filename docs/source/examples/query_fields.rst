@@ -3,7 +3,7 @@ Query Fields
 ============
 
 This is a list of all the queryable fields for the different catalogs, that can be
-specified by the user in the :ref:`options <p2obp.backend.options>`.
+specified by the user in the :ref:`options <p2obt.backend.options>`.
 
 Simbad
 ======

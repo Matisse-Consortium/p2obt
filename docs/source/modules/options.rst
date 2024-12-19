@@ -4,10 +4,10 @@
    :language: python
 
 =====================
-p2obp.backend.options
+p2obt.backend.options
 =====================
 
-The global settings for :python:`p2obp` are contained in a dictionary and can be
+The global settings for :python:`p2obt` are contained in a dictionary and can be
 changed by the user. Hereafter follows a list of all the availabe options 
 that can be changed and their default values as seen in the script :python:`options`.
 
@@ -27,7 +27,7 @@ The logging settings that are used for logging errors.
 OB Creation
 -----------
 
-General settings for the pipeline-function :func:`create_obs <p2obp.automate.create_obs>`.
+General settings for the pipeline-function :func:`create_obs <p2obt.automate.create_obs>`.
 
 Resolution
 ==========
@@ -40,7 +40,7 @@ This options sets the standard resolution for all created obs.
 
 With this option one can override the resolutions queried from the local catalogs
 (see :ref:`Used Catalogs`), which, as a standard, would overwrite the standard resolution
-or any resolution set in an input dictionary for the :func:`create_obs <p2obp.automate.create_obs>` function.
+or any resolution set in an input dictionary for the :func:`create_obs <p2obt.automate.create_obs>` function.
 
 .. code-block:: python
 
@@ -139,7 +139,7 @@ The default central wavelengths for GRA4MAT for the UTs.
 Query
 -----
 
-The settings used for the :func:`query <p2obp.backend.query.query>` function.
+The settings used for the :func:`query <p2obt.backend.query.query>` function.
 
 Used Catalogs
 =============
@@ -159,7 +159,7 @@ The local catalogs/databases queried.
 
 Setting the following option to either :python:`ciao` or :python:`standard` will query one of
 the above catalogs. If the option is set to :python:`none`, no local catalog will be queried.
-But this can be easier done with the :func:`query <p2obp.backend.query.query>` function by excluding
+But this can be easier done with the :func:`query <p2obt.backend.query.query>` function by excluding
 the :python:`local` catalog.
 
 .. code-block:: python

@@ -11,11 +11,11 @@ Query
    query_fields
 
 This script is meant to give an example on how to use the
-the `query`-function of p2obp to get information on a target.
+the `query`-function of p2obt to get information on a target.
 
 .. note::
 
-   The :func:`query <p2obp.backend.query.query>` function is based on a local
+   The :func:`query <p2obt.backend.query.query>` function is based on a local
    catalog query (see `Querying Local Catalogs`) as well as a query of :python:`Vizier`
    based catalogs (see `Simple Query` and `Vizier Queries <https://astroquery.readthedocs.io/en/latest/vizier/vizier.html>`_).
 
@@ -37,7 +37,7 @@ a list as input). Further can the 'match_radius' be determined (in arcsec).
 .. note::
 
    Some astronomical objects can have their object type as a prefix.
-   :python:`p2obp` takes care of that by automatically adding this prefix if the
+   :python:`p2obt` takes care of that by automatically adding this prefix if the
    target can not be found in, for instance, :python:`simbad`.
    For a comprehensive list see `simbad object types <https://simbad.cds.unistra.fr/guide/otypes.htx>`_.
 
@@ -50,7 +50,7 @@ In the following, some examples of these are presented.
 
 .. note::
 
-  For more information on the all the available settings see :ref:`options <p2obp.backend.options>`.
+  For more information on the all the available settings see :ref:`options <p2obt.backend.options>`.
 
 Specifying accessed fields
 ==========================
@@ -80,7 +80,7 @@ Catalogs can also be excluded via the :python:`exclude_catalogs` keyword.
 Querying Local Catalogs
 =======================
 
-There are also two local catalogs present in :python:`p2obp`, which exists in order
+There are also two local catalogs present in :python:`p2obt`, which exists in order
 to provide either better/more accurate data on a target, or any data at all if the target
 is not listed in the online catalogs, or listed under another name.
 
@@ -88,7 +88,7 @@ is not listed in the online catalogs, or listed under another name.
 
    These are the catalogs :python:`"standard"` and :python:`"ciao"`, which are
    separated, as there exists target overlaps with different values.
-   (For more information on the local and all catalogs see :ref:`options <p2obp.backend.options>`)
+   (For more information on the local and all catalogs see :ref:`options <p2obt.backend.options>`)
 
    .. warning::
 

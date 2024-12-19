@@ -664,7 +664,7 @@ wheels = [
 ]
 
 [[package]]
-name = "p2obp"
+name = "p2obt"
 version = "2.1.0"
 source = { editable = "." }
 dependencies = [

@@ -3,12 +3,12 @@ Automatic ob creation pipeline
 ==============================
 
 This is meant to give an example on how to use the
-fully automated pipeline of p2obp for ob-creation, namely the script
+fully automated pipeline of p2obt for ob-creation, namely the script
 "create_obs".
 """
 from pathlib import Path
 
-from p2obp import OPTIONS, create_obs
+from p2obt import OPTIONS, create_obs
 
 # NOTE: The path in which the 'manualOBs'-directory will be created
 output_dir = Path("../assets/")

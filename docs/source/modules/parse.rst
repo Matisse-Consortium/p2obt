@@ -1,9 +1,9 @@
 ===================
-p2obp.backend.parse
+p2obt.backend.parse
 ===================
 
 
-.. automodule:: p2obp.backend.parse
+.. automodule:: p2obt.backend.parse
    :members:
    :undoc-members:
    :show-inheritance:
