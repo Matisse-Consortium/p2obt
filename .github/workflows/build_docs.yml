@@ -17,7 +17,20 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Build Documentation
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.9"
+
+    - name: Install dependencies
+      run: |
+        pip numpydoc
+        pip pydata-sphinx-theme
+        pip sphinx
+        pip sphinx-autobuild
+        pip sphinx-autodoc-typehints
+
+    - name: Build documentation
       run: |
         sphinx-build -b html docs/source docs/build/
 
