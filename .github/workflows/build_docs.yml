@@ -9,10 +9,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        python-version: [3.9, 3.10, 3.11]
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -22,13 +18,9 @@ jobs:
       with:
         python-version: "3.9"
 
-    - name: Install dependencies
+    - name: Install package
       run: |
-        pip install numpydoc
-        pip install pydata-sphinx-theme
-        pip install sphinx
-        pip install sphinx-autobuild
-        pip install sphinx-autodoc-typehints
+        pip install -e .
 
     - name: Build documentation
       run: |
