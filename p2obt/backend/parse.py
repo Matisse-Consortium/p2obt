@@ -39,7 +39,6 @@ def parse_operational_mode(run_name: str) -> str:
     return prompt_user("instrument", operational_modes)
 
 
-# TODO: Maybe substitute with match and cases?
 def parse_array_config(run_name: Optional[str] = None) -> str:
     """Parses the array configuration from string containing it.
 
@@ -62,14 +61,15 @@ def parse_array_config(run_name: Optional[str] = None) -> str:
         if "uts" in run_name:
             return "UTs"
         if any(config in run_name for config in at_configs):
-            if "small" in run_name:
-                return "small"
-            if "medium" in run_name:
-                return "medium"
-            if "large" in run_name:
-                return "large"
-            if "extended" in run_name:
-                return "extended"
+            match run_name:
+                case "small":
+                    return "small"
+                case "medium":
+                    return "medium"
+                case "large":
+                    return "large"
+                case "extended":
+                    return "extended"
     return prompt_user("array_configuration", ["UTs"]+at_configs[1:])
 
 
