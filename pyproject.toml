@@ -31,7 +31,6 @@ dependencies = [
     "openpyxl>=3.1.5",
     "p2api>=1.0.10",
     "pandas>=2.2.3",
-    "setuptools>=75.8.0",
     "toml>=0.10.2",
 ]
 

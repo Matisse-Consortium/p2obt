@@ -3,7 +3,6 @@ from typing import Dict, List, Optional
 
 import astropy.units as u
 import pandas as pd
-import pkg_resources
 from astropy.table import Table
 from astroquery.ipac.irsa.irsa_dust import IrsaDust
 from astroquery.simbad import Simbad
@@ -12,8 +11,9 @@ from astroquery.vizier import Vizier
 from .options import OPTIONS
 from .utils import add_space, remove_parenthesis
 
-TARGET_INFO_FILE = Path(
-    pkg_resources.resource_filename("p2obt", "data/Extensive Target Information.xlsx")
+
+TARGET_INFO_FILE = (
+    Path(__file__).parent.parent / "config" / "Extensive Target\ Information.xlsx"
 )
 TARGET_INFO_MAPPING = {
     "local.RA": "RA [hms]",

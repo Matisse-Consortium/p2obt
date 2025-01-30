@@ -2,7 +2,6 @@ from pathlib import Path
 from typing import Dict, Optional, Tuple, Union
 
 import astropy.units as u
-import pkg_resources
 import toml
 from astropy.coordinates import SkyCoord
 
@@ -11,9 +10,7 @@ from .query import query
 from .utils import convert_proper_motions, remove_parenthesis, remove_spaces
 
 
-# TODO: Exchange, possibly slow function?
-TEMPLATE_FILE = Path(pkg_resources.resource_filename("p2obt", "data/templates.toml"))
-
+TEMPLATE_FILE = Path(__file__).parent.parent / "config" / "templates.toml"
 TURBULENCE = {
     10: "10%  (Seeing < 0.6 arcsec, t0 > 5.2 ms)",
     30: "30%  (Seeing < 0.8 arcsec, t0 > 4.1 ms)",

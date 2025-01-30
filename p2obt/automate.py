@@ -61,22 +61,25 @@ def read_dict_to_lists(
     """Reads the data of the night plan contained in a dictionary
     into the four lists (targets, calibrators, order and tags)."""
     targets, calibrators, orders, tags = [], [], [], []
-    for target, calibrator in night.items():
-        targets.append(target)
-        if len(calibrator) == 1:
-            calibrators.append(calibrator[0]["name"])
-            orders.append(calibrator[0]["order"])
-            tags.append(calibrator[0]["tag"])
+    for entry in night:
+        targets.append(entry["name"])
+        calibrators = entry["cals"]
+
+        if len(calibrators) == 1:
+            calibrators.append(calibrators[0]["name"])
+            orders.append(calibrators[0]["order"])
+            tags.append(calibrators[0]["tag"])
         else:
             cal_info = np.array(
                 [
                     (calibrator["name"], calibrator["order"], calibrator["tag"])
-                    for calibrator in calibrator
+                    for calibrator in calibrators
                 ]
             )
             calibrators.append(cal_info[:, 0].tolist())
             orders.append(cal_info[:, 1].tolist())
             tags.append(cal_info[:, 2].tolist())
+
     return targets, calibrators, orders, tags
 
 
@@ -158,8 +161,8 @@ def create_ob(
                 connection = login(user_name, store_password, remove_password, server)
         if sci_name is not None and observational_type == "sci":
             warn(
-                "[WARNING]: The ob was specified as a science ob,"
-                " but a science target name was specified."
+                "[WARNING]: The OB was specified as a science OB,"
+                " but a science target name was separately specified."
                 " It will be changed to a calibrator."
             )
             observational_type = "cal"
@@ -358,10 +361,14 @@ def create_obs_from_dict(
     else:
         connection, run_id = None, None
 
-    for run_key, run in night_plan.items():
+    for run_key, run_entry in night_plan.items():
         array_config = parse_array_config(run_key)
         operational_mode = parse_operational_mode(run_key)
-        OPTIONS.resolution.active = parse_run_resolution(run_key)
+        resolution = parse_run_resolution(run_key)
+        for entry in list(run_entry.values())[0]:
+            entry["array"] = array_config if array_config else entry["array"]
+            entry["op_mode"] = operational_mode if operational_mode else entry["op_mode"]
+            entry["res"] = resolution if resolution else entry["res"]
 
         if output_dir is None:
             run_dir = None
@@ -378,7 +385,7 @@ def create_obs_from_dict(
 
         print(f"{'':-^50}")
         print(f"Creating OBs for {run_key}...")
-        for night_key, night in run.items():
+        for night_key, night in run_entry.items():
             print(f"{'':-^50}")
             night_name = parse_night_name(night_key)
             if observational_mode == "vm" and connection is not None:
