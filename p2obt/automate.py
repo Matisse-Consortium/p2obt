@@ -8,16 +8,25 @@ import p2api
 
 from .backend import OPTIONS
 from .backend.compose import set_ob_name, write_ob, compose_ob
-from .backend.parse import parse_array_config, parse_operational_mode,\
-    parse_run_resolution, parse_run_prog_id, parse_night_name, parse_night_plan
-from .backend.upload import login, get_remote_run,\
-    create_remote_container, upload_ob
+from .backend.parse import (
+    parse_array_config,
+    parse_operational_mode,
+    parse_run_resolution,
+    parse_run_prog_id,
+    parse_night_name,
+    parse_night_plan,
+)
+from .backend.upload import login, get_remote_run, create_remote_container, upload_ob
 
 
 # TODO: Make this shorter? Or into an option even?
-OPERATIONAL_MODES = {"both": ["standalone", "GRA4MAT"],
-                     "st": ["standalone"], "gr": ["GRA4MAT"],
-                     "matisse": ["standalone"], "gra4mat": ["GRA4MAT"]}
+OPERATIONAL_MODES = {
+    "both": ["standalone", "GRA4MAT"],
+    "st": ["standalone"],
+    "gr": ["GRA4MAT"],
+    "matisse": ["standalone"],
+    "gra4mat": ["GRA4MAT"],
+}
 
 
 def copy_list_and_replace_values(input_list: List[Any], value: Any) -> List:
@@ -46,7 +55,9 @@ def copy_list_and_replace_values(input_list: List[Any], value: Any) -> List:
     return output_list
 
 
-def read_dict_to_lists(night: Dict) -> Tuple[List[Any]]:
+def read_dict_to_lists(
+    night: Dict,
+) -> Tuple[List[Any], List[Any], List[Any], List[Any]]:
     """Reads the data of the night plan contained in a dictionary
     into the four lists (targets, calibrators, order and tags)."""
     targets, calibrators, orders, tags = [], [], [], []
@@ -57,20 +68,24 @@ def read_dict_to_lists(night: Dict) -> Tuple[List[Any]]:
             orders.append(calibrator[0]["order"])
             tags.append(calibrator[0]["tag"])
         else:
-            cal_info = np.array([(calibrator["name"],
-                                  calibrator["order"],
-                                  calibrator["tag"])
-                                for calibrator in calibrator])
+            cal_info = np.array(
+                [
+                    (calibrator["name"], calibrator["order"], calibrator["tag"])
+                    for calibrator in calibrator
+                ]
+            )
             calibrators.append(cal_info[:, 0].tolist())
             orders.append(cal_info[:, 1].tolist())
             tags.append(cal_info[:, 2].tolist())
     return targets, calibrators, orders, tags
 
 
-def unwrap_lists(target: str,
-                 calibrator: Union[str, List[str]],
-                 order: Union[str, List[str]],
-                 tag: Union[str, List[str]]):
+def unwrap_lists(
+    target: str,
+    calibrator: Union[str, List[str]],
+    order: Union[str, List[str]],
+    tag: Union[str, List[str]],
+):
     """This untangles the calibrators, orders and tags
     lists into a sequential lists that has the target at
     its centre.
@@ -99,20 +114,22 @@ def unwrap_lists(target: str,
     return calibrators_before + [(target, "sci", None)] + calibrators_after
 
 
-def create_ob(target: str,
-              observational_type: str,
-              array_configuration: str,
-              operational_mode: Optional[str] = "st",
-              sci_name: Optional[str] = None,
-              tag: Optional[str] = None,
-              resolution: Optional[str] = "low",
-              connection: Optional = None,
-              container_id: Optional[int] = None,
-              store_password: Optional[bool] = True,
-              remove_password: Optional[bool] = False,
-              user_name: Optional[str] = None,
-              server: Optional[str] = "production",
-              output_dir: Optional[Path] = None) -> None:
+def create_ob(
+    target: str,
+    observational_type: str,
+    array_configuration: str,
+    operational_mode: Optional[str] = "st",
+    sci_name: Optional[str] = None,
+    tag: Optional[str] = None,
+    resolution: Optional[str] = "low",
+    connection: Optional = None,
+    container_id: Optional[int] = None,
+    store_password: Optional[bool] = True,
+    remove_password: Optional[bool] = False,
+    user_name: Optional[str] = None,
+    server: Optional[str] = "production",
+    output_dir: Optional[Path] = None,
+) -> None:
     """Creates a singular OB either locally or on P2.
 
     Parameters
@@ -140,13 +157,21 @@ def create_ob(target: str,
             if connection is None:
                 connection = login(user_name, store_password, remove_password, server)
         if sci_name is not None and observational_type == "sci":
-            warn("[WARNING]: The ob was specified as a science ob,"
-                 " but a science target name was specified."
-                 " It will be changed to a calibrator.")
+            warn(
+                "[WARNING]: The ob was specified as a science ob,"
+                " but a science target name was specified."
+                " It will be changed to a calibrator."
+            )
             observational_type = "cal"
-        ob = compose_ob(target, observational_type,
-                        array_configuration, operational_mode,
-                        sci_name, tag, resolution)
+        ob = compose_ob(
+            target,
+            observational_type,
+            array_configuration,
+            operational_mode,
+            sci_name,
+            tag,
+            resolution,
+        )
         upload_ob(connection, ob, container_id)
 
         if output_dir is not None:
@@ -157,17 +182,19 @@ def create_ob(target: str,
         logging.error("[ERROR]: Failed creating OB '{target}'!", exc_info=True)
 
 
-def create_obs_from_lists(targets: List[str],
-                          calibrators: Union[List[str], List[List[str]]],
-                          orders: Union[List[str], List[List[str]]],
-                          tags: Union[List[str], List[List[str]]],
-                          operational_mode: str,
-                          observational_type: str,
-                          array_configuration: str,
-                          resolution: Dict,
-                          connection: p2api,
-                          container_id: int,
-                          output_dir: Path) -> None:
+def create_obs_from_lists(
+    targets: List[str],
+    calibrators: Union[List[str], List[List[str]]],
+    orders: Union[List[str], List[List[str]]],
+    tags: Union[List[str], List[List[str]]],
+    operational_mode: str,
+    observational_type: str,
+    array_configuration: str,
+    resolution: Dict,
+    connection: p2api,
+    container_id: int,
+    output_dir: Path,
+) -> None:
     """
 
     Parameters
@@ -203,8 +230,10 @@ def create_obs_from_lists(targets: List[str],
         OPTIONS.resolution.overwrite = True
 
     for mode in OPERATIONAL_MODES[operational_mode.lower()]:
-        print(f"Creating OBs in {mode}-mode and {OPTIONS.resolution.active}"
-              f"-resolution for the {array_configuration} configuration...")
+        print(
+            f"Creating OBs in {mode}-mode and {OPTIONS.resolution.active}"
+            f"-resolution for the {array_configuration} configuration..."
+        )
         print(f"{'':-^50}")
 
         if not calibrators:
@@ -223,12 +252,12 @@ def create_obs_from_lists(targets: List[str],
 
         if observational_type == "vm" and container_id is not None:
             mode_id = create_remote_container(
-                    connection, mode, container_id, observational_type)
+                connection, mode, container_id, observational_type
+            )
         else:
             mode_id = None
 
-        for target, calibrator, order, tag \
-                in zip(targets, calibrators, orders, tags):
+        for target, calibrator, order, tag in zip(targets, calibrators, orders, tags):
             if mode_out_dir is not None:
                 target_dir = mode_out_dir / target
                 if not target_dir.exists():
@@ -239,10 +268,12 @@ def create_obs_from_lists(targets: List[str],
             if container_id is not None:
                 if mode_id is not None:
                     target_id = create_remote_container(
-                            connection, target, mode_id, observational_type)
+                        connection, target, mode_id, observational_type
+                    )
                 else:
                     target_id = create_remote_container(
-                            connection, target, container_id, observational_type)
+                        connection, target, container_id, observational_type
+                    )
             else:
                 target_id = None
 
@@ -253,25 +284,36 @@ def create_obs_from_lists(targets: List[str],
                     res = resolution[target]
 
             unwrapped_lists = unwrap_lists(target, calibrator, order, tag)
-            for (name, sci_cal_flag, tag) in unwrapped_lists:
+            for name, sci_cal_flag, tag in unwrapped_lists:
                 sci_name = target if sci_cal_flag == "cal" else None
                 if not name:
                     continue
-                create_ob(name, sci_cal_flag, array_configuration,
-                          mode, sci_name, tag, res,
-                          connection, target_id, output_dir=target_dir)
+                create_ob(
+                    name,
+                    sci_cal_flag,
+                    array_configuration,
+                    mode,
+                    sci_name,
+                    tag,
+                    res,
+                    connection,
+                    target_id,
+                    output_dir=target_dir,
+                )
 
 
-def create_obs_from_dict(night_plan: Dict,
-                         operational_mode: str,
-                         observational_mode: str,
-                         resolution: Dict,
-                         container_id: str,
-                         user_name: str,
-                         store_password: Optional[bool] = True,
-                         remove_password: Optional[bool] = False,
-                         server: Optional[str] = "production",
-                         output_dir: Optional[Path] = None) -> None:
+def create_obs_from_dict(
+    night_plan: Dict,
+    operational_mode: str,
+    observational_mode: str,
+    resolution: Dict,
+    user_name: str,
+    container_id: str | None = None,
+    store_password: Optional[bool] = True,
+    remove_password: Optional[bool] = False,
+    server: Optional[str] = "production",
+    output_dir: Optional[Path] = None,
+) -> None:
     """Creates the OBs from a night-plan parsed dictionary.
 
     Also automatically gets the operational mode, the array_config,
@@ -314,8 +356,7 @@ def create_obs_from_dict(night_plan: Dict,
     if output_dir is None:
         connection = login(user_name, store_password, remove_password, server)
     else:
-        connection = None
-        run_id = None
+        connection, run_id = None, None
 
     for run_key, run in night_plan.items():
         array_config = parse_array_config(run_key)
@@ -330,7 +371,7 @@ def create_obs_from_dict(night_plan: Dict,
             else:
                 run_id = container_id
         else:
-            run_name = ''.join(run_key.split(",")[0].strip().split())
+            run_name = "".join(run_key.split(",")[0].strip().split())
             run_dir = output_dir / run_name
             if not run_dir.exists():
                 run_dir.mkdir(parents=True, exist_ok=True)
@@ -341,8 +382,9 @@ def create_obs_from_dict(night_plan: Dict,
             print(f"{'':-^50}")
             night_name = parse_night_name(night_key)
             if observational_mode == "vm" and connection is not None:
-                night_id = create_remote_container(connection, night_name,
-                                                   run_id, observational_mode)
+                night_id = create_remote_container(
+                    connection, night_name, run_id, observational_mode
+                )
             else:
                 night_id = run_id
 
@@ -354,22 +396,31 @@ def create_obs_from_dict(night_plan: Dict,
             else:
                 night_dir = None
 
-            create_obs_from_lists(*read_dict_to_lists(night), operational_mode,
-                                  observational_mode, array_config, resolution,
-                                  connection, night_id, night_dir)
+            create_obs_from_lists(
+                *read_dict_to_lists(night),
+                operational_mode,
+                observational_mode,
+                array_config,
+                resolution,
+                connection,
+                night_id,
+                night_dir,
+            )
 
 
-def create_obs(night_plan: Optional[Path] = None,
-               manual_input: Optional[List[List]] = None,
-               operational_mode: str = "st",
-               observational_mode: Optional[str] = "vm",
-               resolution: Optional[Dict] = None,
-               container_id: Optional[int] = None,
-               user_name: Optional[str] = None,
-               store_password: Optional[bool] = True,
-               remove_password: Optional[bool] = False,
-               server: Optional[str] = "production",
-               output_dir: Optional[Path] = None) -> None:
+def create_obs(
+    night_plan: Optional[Path] = None,
+    manual_input: Optional[List[List]] = None,
+    operational_mode: str = "st",
+    observational_mode: Optional[str] = "sm",
+    resolution: Optional[Dict] = None,
+    container_id: Optional[int] = None,
+    user_name: Optional[str] = None,
+    store_password: Optional[bool] = True,
+    remove_password: Optional[bool] = False,
+    server: Optional[str] = "production",
+    output_dir: Optional[Path] = None,
+) -> None:
     """Creates the OBs from a night-plan parsed dictionary or from
     a manual input of the four needed lists.
 
@@ -407,12 +458,16 @@ def create_obs(night_plan: Optional[Path] = None,
         If left at "None" no files will be created.
     """
     if night_plan is None and output_dir is None and container_id is None:
-        raise IOError("Either output directory, container id or"
-                      " night plan must be set!")
+        raise IOError(
+            "Either output directory, container id or" " night plan must be set!"
+        )
 
     if output_dir is not None:
-        output_dir = Path(output_dir, "manualOBs")\
-                if manual_input else Path(output_dir, "automaticOBs")
+        output_dir = (
+            Path(output_dir, "manualOBs")
+            if manual_input
+            else Path(output_dir, "automaticOBs")
+        )
         # TODO: Apply here a removal of the old files
 
     if manual_input is not None:
@@ -420,25 +475,46 @@ def create_obs(night_plan: Optional[Path] = None,
         try:
             targets, calibrators, orders, tags = manual_input
         except ValueError as exc:
-            raise ValueError("In case of manual input four lists "
-                             " (science_targets, calibrators, orders, tag)"
-                             " must be given!") from exc
+            raise ValueError(
+                "In case of manual input four lists "
+                " (science_targets, calibrators, orders, tag)"
+                " must be given!"
+            ) from exc
         if container_id is not None:
             connection = login(user_name, store_password, remove_password, server)
         else:
             connection = None
 
-        create_obs_from_lists(targets, calibrators, orders, tags,
-                              operational_mode, observational_mode, array_config,
-                              resolution, connection, container_id, output_dir)
+        create_obs_from_lists(
+            targets,
+            calibrators,
+            orders,
+            tags,
+            operational_mode,
+            observational_mode,
+            array_config,
+            resolution,
+            connection,
+            container_id,
+            output_dir,
+        )
 
     elif night_plan is not None:
         night_plan = parse_night_plan(night_plan)
-        create_obs_from_dict(night_plan, operational_mode,
-                             observational_mode, resolution, container_id,
-                             user_name, store_password, remove_password,
-                             server, output_dir)
+        create_obs_from_dict(
+            night_plan,
+            operational_mode,
+            observational_mode,
+            resolution,
+            container_id,
+            user_name,
+            store_password,
+            remove_password,
+            server,
+            output_dir,
+        )
     else:
-        raise IOError("Neither manul input list or input"
-                      " night plan path has been detected!")
+        raise IOError(
+            "Neither manul input list or input" " night plan path has been detected!"
+        )
     print("[INFO]: Done!")

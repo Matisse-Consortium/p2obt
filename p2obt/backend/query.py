@@ -1,38 +1,41 @@
 from pathlib import Path
-from typing import Optional, Dict, List
+from typing import Dict, List, Optional
 
 import astropy.units as u
 import pandas as pd
 import pkg_resources
 from astropy.table import Table
+from astroquery.ipac.irsa.irsa_dust import IrsaDust
 from astroquery.simbad import Simbad
 from astroquery.vizier import Vizier
-from astroquery.ipac.irsa.irsa_dust import IrsaDust
 
 from .options import OPTIONS
 from .utils import add_space, remove_parenthesis
 
-
-TARGET_INFO_FILE = Path(pkg_resources.resource_filename("p2obt", "data/Extensive Target Information.xlsx"))
-TARGET_INFO_MAPPING = {"local.RA": "RA [hms]",
-                       "local.DEC": "DEC [dms]",
-                       "local.propRa": "PMA [arcsec/yr]",
-                       "local.propDec": "PMD [arcsec/yr]",
-                       "Lflux": "Flux L-band [Jy]",
-                       "Nflux": "Flux N-band [Jy]",
-                       "Hmag": "H mag",
-                       "Kmag": "K mag",
-                       "GSname": "GS Name",
-                       "GSdist": 'GS Distance (")',
-                       "GSRa": "GS RA [hms]",
-                       "GSDec": "GS DEC [dms]",
-                       "GSpropRa": "GS Off-axis Coude PMA [arcsec/yr]",
-                       "GSpropDec": "GS Off-axis Coude PMD [arcsec/yr]",
-                       "GSepoch": "GS Epoch",
-                       "GSequinox": "GS Equinox",
-                       "GSmag": "GS mag",
-                       "LResAT": "L-Resolution (AT)",
-                       "LResUT": "L-Resolution (UT)"}
+TARGET_INFO_FILE = Path(
+    pkg_resources.resource_filename("p2obt", "data/Extensive Target Information.xlsx")
+)
+TARGET_INFO_MAPPING = {
+    "local.RA": "RA [hms]",
+    "local.DEC": "DEC [dms]",
+    "local.propRa": "PMA [arcsec/yr]",
+    "local.propDec": "PMD [arcsec/yr]",
+    "Lflux": "Flux L-band [Jy]",
+    "Nflux": "Flux N-band [Jy]",
+    "Hmag": "H mag",
+    "Kmag": "K mag",
+    "GSname": "GS Name",
+    "GSdist": 'GS Distance (")',
+    "GSRa": "GS RA [hms]",
+    "GSDec": "GS DEC [dms]",
+    "GSpropRa": "GS Off-axis Coude PMA [arcsec/yr]",
+    "GSpropDec": "GS Off-axis Coude PMD [arcsec/yr]",
+    "GSepoch": "GS Epoch",
+    "GSequinox": "GS Equinox",
+    "GSmag": "GS mag",
+    "LResAT": "L-Resolution (AT)",
+    "LResUT": "L-Resolution (UT)",
+}
 
 
 def query_dust_extinction(name: str) -> Dict:
@@ -76,8 +79,9 @@ def query_local_catalog(name: str):
 
     catalog = pd.read_excel(TARGET_INFO_FILE, sheet_name=sheet_name)
     catalog = Table.from_pandas(catalog)
-    if not any(name in catalog[column_name]
-               for column_name in ["Target Name", "Other Names"]):
+    if not any(
+        name in catalog[column_name] for column_name in ["Target Name", "Other Names"]
+    ):
         return {}
 
     if name in catalog["Target Name"]:
@@ -93,8 +97,7 @@ def query_local_catalog(name: str):
 
 
 # TODO: Add query of the magnitude from Simbad?
-def get_best_match(target: Dict, catalog: str,
-                   catalog_table: Table) -> Table:
+def get_best_match(target: Dict, catalog: str, catalog_table: Table) -> Table:
     """Gets the best match from the catalog entries
 
     Parameters
@@ -114,7 +117,7 @@ def get_best_match(target: Dict, catalog: str,
     best_matches = {}
     if not catalog_table:
         return best_matches
-        
+
     for query_key in getattr(OPTIONS.catalogs, catalog).query:
         if query_key in catalog_table.columns:
             if len(catalog_table) == 1:
@@ -138,8 +141,7 @@ def get_best_match(target: Dict, catalog: str,
     return best_matches
 
 
-def get_catalog(name: str, catalog: str,
-                match_radius: u.arcsec = 5.):
+def get_catalog(name: str, catalog: str, match_radius: u.arcsec = 5.0):
     """Queries the specified catalog.
 
     Parameters
@@ -161,8 +163,9 @@ def get_catalog(name: str, catalog: str,
         match_radius *= u.arcsec
     else:
         if match_radius.unit != u.arcsec:
-            raise ValueError("The match radius has to be in"
-                             " astropy.units.arcsecond.")
+            raise ValueError(
+                "The match radius has to be in" " astropy.units.arcsecond."
+            )
 
     if catalog == "simbad":
         query_site = Simbad()
@@ -181,11 +184,13 @@ def get_catalog(name: str, catalog: str,
 
 
 # TODO: Make a pretty print built in functionality for the dictionary.
-def query(target_name: str,
-          catalogs: Optional[List] = None,
-          exclude_catalogs: Optional[List] = None,
-          match_radius: Optional[float] = 5.,
-          query_exinction: Optional[bool] = False) -> Dict:
+def query(
+    target_name: str,
+    catalogs: Optional[List] = None,
+    exclude_catalogs: Optional[List] = None,
+    match_radius: Optional[float] = 5.0,
+    query_exinction: Optional[bool] = False,
+) -> Dict:
     """Queries information for an astronomical target by its name from
     various catalogs.
 
@@ -214,8 +219,7 @@ def query(target_name: str,
         catalogs = OPTIONS.catalogs.available[:]
 
     if exclude_catalogs is not None:
-        catalogs = [catalog for catalog in catalogs
-                    if catalog not in exclude_catalogs]
+        catalogs = [catalog for catalog in catalogs if catalog not in exclude_catalogs]
     if "local" in catalogs:
         local_target = query_local_catalog(target_name)
         catalogs.remove("local")

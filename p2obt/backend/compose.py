@@ -1,32 +1,38 @@
-import re
 from pathlib import Path
-from typing import Union, Optional, Dict, Tuple
+from typing import Dict, Optional, Tuple, Union
 
 import astropy.units as u
 import pkg_resources
 import toml
 from astropy.coordinates import SkyCoord
 
-from .query import query
 from .options import OPTIONS
+from .query import query
 from .utils import convert_proper_motions, remove_parenthesis, remove_spaces
+
 
 # TODO: Exchange, possibly slow function?
 TEMPLATE_FILE = Path(pkg_resources.resource_filename("p2obt", "data/templates.toml"))
 
-TURBULENCE = {10: "10%  (Seeing < 0.6 arcsec, t0 > 5.2 ms)",
-              30: "30%  (Seeing < 0.8 arcsec, t0 > 4.1 ms)",
-              70: "70%  (Seeing < 1.15 arcsec, t0 > 2.2 ms)"}
-SKY_TRANSPARENCY = {"photometric": "Photometric",
-                    "clear": "Clear",
-                    "thin": "Variable, thin cirrus",
-                    "thick": "Variable, thick cirrus"}
+TURBULENCE = {
+    10: "10%  (Seeing < 0.6 arcsec, t0 > 5.2 ms)",
+    30: "30%  (Seeing < 0.8 arcsec, t0 > 4.1 ms)",
+    70: "70%  (Seeing < 1.15 arcsec, t0 > 2.2 ms)",
+}
+SKY_TRANSPARENCY = {
+    "photometric": "Photometric",
+    "clear": "Clear",
+    "thin": "Variable, thin cirrus",
+    "thick": "Variable, thick cirrus",
+}
 
 
-def load_template(file: Path,
-                  header: str,
-                  sub_header: Optional[str] = None,
-                  operational_mode: Optional[str] = None) -> Dict:
+def load_template(
+    file: Path,
+    header: str,
+    sub_header: Optional[str] = None,
+    operational_mode: Optional[str] = None,
+) -> Dict:
     """Loads a template from a (.toml)-file.
 
     Parameters
@@ -56,7 +62,7 @@ def write_dict(file, dictionary: Dict):
     """Iterates over the key and value pairs of a
     dictionary and writes them."""
     for key, value in dictionary.items():
-        file.write(f'{key.ljust(40)}"{str(value)}"'+"\n")
+        file.write(f'{key.ljust(40)}"{str(value)}"' + "\n")
 
 
 def write_ob(ob: Dict, ob_name: str, output_dir: Path) -> None:
@@ -75,10 +81,12 @@ def write_ob(ob: Dict, ob_name: str, output_dir: Path) -> None:
 
 
 # TODO: 'add_space' makes to many spaces. Fix at some point.
-def set_ob_name(target: Union[Dict, str],
-                observation_type: str,
-                sci_name: Optional[str] = None,
-                tag: Optional[str] = None) -> str:
+def set_ob_name(
+    target: Union[Dict, str],
+    observation_type: str,
+    sci_name: Optional[str] = None,
+    tag: Optional[str] = None,
+) -> str:
     """Sets the OB's name.
 
     Parameters
@@ -97,7 +105,7 @@ def set_ob_name(target: Union[Dict, str],
     """
     ob_name = f"{observation_type.upper()}"
     if isinstance(target, dict):
-        target_name = target['name']
+        target_name = target["name"]
     else:
         target_name = remove_parenthesis(target)
     # HACK: Removes multiple spaces.
@@ -107,10 +115,9 @@ def set_ob_name(target: Union[Dict, str],
     return ob_name if tag is None else f"{ob_name}_{tag}"
 
 
-def get_observation_settings(target: Dict,
-                             resolution: str,
-                             operational_mode: str,
-                             array_configuration: str) -> Tuple[str, float]:
+def get_observation_settings(
+    target: Dict, resolution: str, operational_mode: str, array_configuration: str
+) -> Tuple[str, float]:
     """Gets the observation settings from the `options` corresponding
     to the resolution, operational mode and array configuration.
 
@@ -132,16 +139,16 @@ def get_observation_settings(target: Dict,
 
     if not OPTIONS.resolution.overwrite:
         if array == "uts" and "LResUT" in target:
-            resolution = target["LResUT"]\
-                    if target["LResUT"] != "TBD" else resolution
+            resolution = target["LResUT"] if target["LResUT"] != "TBD" else resolution
         elif array == "ats" and "LResAT" in target:
-            resolution = target["LResAT"]\
-                    if target["LResAT"] != "TBD" else resolution
+            resolution = target["LResAT"] if target["LResAT"] != "TBD" else resolution
 
-    integration_time = getattr(getattr(
-        getattr(OPTIONS.dit, operational_mode), array), resolution)
-    central_wl = getattr(getattr(
-        getattr(OPTIONS.w0, operational_mode), array), resolution)
+    integration_time = getattr(
+        getattr(getattr(OPTIONS.dit, operational_mode), array), resolution
+    )
+    central_wl = getattr(
+        getattr(getattr(OPTIONS.w0, operational_mode), array), resolution
+    )
 
     return resolution.upper(), integration_time, central_wl, photometry
 
@@ -167,40 +174,43 @@ def format_ra_and_dec(target: Dict) -> Tuple[str, str]:
     """Correctly formats the right ascension and declination."""
     if "local.RA" in target:
         return target["local.RA"], target["local.DEC"]
-    coordinates = SkyCoord(f"{target['RA']} {target['DEC']}",
-                           unit=(u.hourangle, u.deg))
-    ra_hms = coordinates.ra.to_string(unit=u.hourangle, sep=":",
-                                      pad=True, precision=3)
-    dec_dms = coordinates.dec.to_string(sep=":", pad=True,
-                                        precision=3)
+    coordinates = SkyCoord(f"{target['RA']} {target['DEC']}", unit=(u.hourangle, u.deg))
+    ra_hms = coordinates.ra.to_string(unit=u.hourangle, sep=":", pad=True, precision=3)
+    dec_dms = coordinates.dec.to_string(sep=":", pad=True, precision=3)
     return ra_hms, dec_dms
 
 
 def format_fluxes(target: Dict) -> Tuple[float, float]:
     """Correctly gets and formats the fluxes from the queried data."""
     flux_lband, flux_nband = None, None
-    lband_keys, nband_keys = ["Lflux", "med-Lflux", "W1mag"],\
-                             ["Nflux", "med-Nflux", "W3mag"]
+    lband_keys, nband_keys = ["Lflux", "med-Lflux", "W1mag"], [
+        "Nflux",
+        "med-Nflux",
+        "W3mag",
+    ]
 
     for lband_key, nband_key in zip(lband_keys, nband_keys):
         if lband_key in target and flux_lband is None:
             flux_lband = target[lband_key]
             if "mag" in lband_key:
-                flux_lband = 309.54 * 10.0**(-flux_lband/2.5)
+                flux_lband = 309.54 * 10.0 ** (-flux_lband / 2.5)
 
         if nband_key in target and flux_nband is None:
             flux_nband = target[nband_key]
             if "mag" in nband_key:
-                flux_nband = 31.674 * 10.0**(-flux_nband/2.5)
-    return round(flux_lband, 2) if flux_lband is not None else 0.,\
-        round(flux_nband, 2) if flux_nband is not None else 0.
+                flux_nband = 31.674 * 10.0 ** (-flux_nband / 2.5)
+    return round(flux_lband, 2) if flux_lband is not None else 0.0, (
+        round(flux_nband, 2) if flux_nband is not None else 0.0
+    )
 
 
-def fill_header(target: Dict,
-                observation_type: str,
-                array_configuration: str,
-                sci_name: Optional[str] = None,
-                tag: Optional[str] = None) -> Dict:
+def fill_header(
+    target: Dict,
+    observation_type: str,
+    array_configuration: str,
+    sci_name: Optional[str] = None,
+    tag: Optional[str] = None,
+) -> Dict:
     """Fills in the header dictionary with the information from the query.
 
     Parameters
@@ -216,14 +226,14 @@ def fill_header(target: Dict,
     header : dict
     """
     header = {}
-    header_user = load_template(
-            TEMPLATE_FILE, "header", sub_header="user")
-    header_target = load_template(
-            TEMPLATE_FILE, "header", sub_header="target")
+    header_user = load_template(TEMPLATE_FILE, "header", sub_header="user")
+    header_target = load_template(TEMPLATE_FILE, "header", sub_header="target")
     header_constraints = load_template(
-            TEMPLATE_FILE, "header", sub_header="constraints")
+        TEMPLATE_FILE, "header", sub_header="constraints"
+    )
     header_observation = load_template(
-            TEMPLATE_FILE, "header", sub_header="observation")
+        TEMPLATE_FILE, "header", sub_header="observation"
+    )
     ob_name = set_ob_name(target, observation_type, sci_name, tag)
     ra_hms, dec_dms = format_ra_and_dec(target)
     prop_ra, prop_dec = format_proper_motions(target)
@@ -236,14 +246,15 @@ def fill_header(target: Dict,
         gs_distance = float(target["GSdist"])
         user_comments.append(f"GS Distance: {gs_distance:.2f} arcsec")
     header_user["userComments"] = ". ".join(user_comments)
-    header_target["TARGET.NAME"] = target["name"].replace(' ', '_')
+    header_target["TARGET.NAME"] = target["name"].replace(" ", "_")
     header_target["ra"], header_target["dec"] = ra_hms, dec_dms
     header_target["propRA"], header_target["propDec"] = prop_ra, prop_dec
     header_observation["OBSERVATION.DESCRIPTION.NAME"] = ob_name
 
     header_constraints["atm"] = TURBULENCE[OPTIONS.constraints.turbulence]
-    header_constraints["sky_transparency"] =\
-        SKY_TRANSPARENCY[OPTIONS.constraints.transparency]
+    header_constraints["sky_transparency"] = SKY_TRANSPARENCY[
+        OPTIONS.constraints.transparency
+    ]
     header_constraints["watervapour"] = OPTIONS.constraints.pwv
     if "ut" in array_configuration:
         header_constraints["moon_angular_distance"] = 10
@@ -255,9 +266,9 @@ def fill_header(target: Dict,
     return header
 
 
-def fill_acquisition(target: Dict,
-                     operational_mode: str,
-                     array_configuration: str) -> Dict:
+def fill_acquisition(
+    target: Dict, operational_mode: str, array_configuration: str
+) -> Dict:
     """Gets the for the operational mode correct acquisition template
     and then fills it in with the information from the query.
 
@@ -271,8 +282,9 @@ def fill_acquisition(target: Dict,
     -------
     acquisition : dict
     """
-    acquisition = load_template(TEMPLATE_FILE, "acquisition",
-                                operational_mode=operational_mode)
+    acquisition = load_template(
+        TEMPLATE_FILE, "acquisition", operational_mode=operational_mode
+    )
 
     flux_lband, flux_nband = format_fluxes(target)
 
@@ -296,7 +308,7 @@ def fill_acquisition(target: Dict,
     elif "Vmag" in target:
         acquisition["COU.GS.MAG"] = target["Vmag"]
     elif "FLUX_V" in target:
-        acquisition['COU.GS.MAG'] = target["FLUX_V"]
+        acquisition["COU.GS.MAG"] = target["FLUX_V"]
 
     if "ut" in array_configuration:
         array_configuration = "UTs"
@@ -304,9 +316,9 @@ def fill_acquisition(target: Dict,
     acquisition["ISS.BASELINE"] = array_configuration
 
     if flux_lband is not None:
-        acquisition['SEQ.TARG.FLUX.L'] = flux_lband
+        acquisition["SEQ.TARG.FLUX.L"] = flux_lband
     if flux_nband is not None:
-        acquisition['SEQ.TARG.FLUX.N'] = flux_nband
+        acquisition["SEQ.TARG.FLUX.N"] = flux_nband
 
     if "Kmag" in target:
         acquisition["SEQ.TARG.MAG.K"] = round(target["Kmag"], 2)
@@ -316,11 +328,13 @@ def fill_acquisition(target: Dict,
     return acquisition
 
 
-def fill_observation(target: Dict,
-                     resolution: str,
-                     observation_type: str,
-                     operational_mode: str,
-                     array_configuration: str) -> Dict:
+def fill_observation(
+    target: Dict,
+    resolution: str,
+    observation_type: str,
+    operational_mode: str,
+    array_configuration: str,
+) -> Dict:
     """Gets the for the operational mode correct acquisition template
     and then fills it in with the information from the query.
 
@@ -336,10 +350,12 @@ def fill_observation(target: Dict,
     -------
     acquisition : dict
     """
-    observation = load_template(TEMPLATE_FILE, "observation",
-                                operational_mode=operational_mode)
+    observation = load_template(
+        TEMPLATE_FILE, "observation", operational_mode=operational_mode
+    )
     resolution, dit, w0, photometry = get_observation_settings(
-            target, resolution, operational_mode, array_configuration)
+        target, resolution, operational_mode, array_configuration
+    )
     observation_type = "SCIENCE" if observation_type == "sci" else "CALIB"
     observation["DPR.CATG"] = observation_type
     observation["INS.DIL.NAME"] = resolution
@@ -349,13 +365,15 @@ def fill_observation(target: Dict,
     return observation
 
 
-def compose_ob(target_name: str,
-               observational_type: str,
-               array_configuration: str,
-               operational_mode: Optional[str] = "st",
-               sci_name: Optional[str] = None,
-               tag: Optional[str] = None,
-               resolution: Optional[str] = "low") -> Dict:
+def compose_ob(
+    target_name: str,
+    observational_type: str,
+    array_configuration: str,
+    operational_mode: Optional[str] = "st",
+    sci_name: Optional[str] = None,
+    tag: Optional[str] = None,
+    resolution: Optional[str] = "low",
+) -> Dict:
     """Composes the dictionary
 
     Parameters
@@ -382,15 +400,19 @@ def compose_ob(target_name: str,
     """
     array_configuration = array_configuration.lower()
     if array_configuration not in ["uts", "small", "medium", "large", "extended"]:
-        raise IOError("Unknown array configuration provided!"
-                      " Choose from 'UTs', 'small', 'medium',"
-                      " 'large' or 'extended'.")
+        raise IOError(
+            "Unknown array configuration provided!"
+            " Choose from 'UTs', 'small', 'medium',"
+            " 'large' or 'extended'."
+        )
 
     observational_type = observational_type.lower()
     if observational_type not in ["sci", "cal"]:
-        raise IOError("Unknown observation type provided!"
-                      " Choose from 'SCI' or 'CAL', for "
-                      "a science target or a calibrator.")
+        raise IOError(
+            "Unknown observation type provided!"
+            " Choose from 'SCI' or 'CAL', for "
+            "a science target or a calibrator."
+        )
 
     operational_mode = operational_mode.lower()
     if operational_mode in ["st", "standalone"]:
@@ -398,23 +420,24 @@ def compose_ob(target_name: str,
     elif operational_mode in ["gr", "gra4mat"]:
         operational_mode = "gra4mat"
     else:
-        raise IOError("Unknown operational mode provided!"
-                      " Choose from 'st'/'standalone' or"
-                      " 'gr'/'gra4mat'.")
+        raise IOError(
+            "Unknown operational mode provided!"
+            " Choose from 'st'/'standalone' or"
+            " 'gr'/'gra4mat'."
+        )
 
     resolution = resolution.lower()
     if resolution not in ["low", "med", "high"]:
-        raise IOError("Unknown resolution provided!"
-                      " Choose from 'low', 'med' or 'high'.")
+        raise IOError(
+            "Unknown resolution provided!" " Choose from 'low', 'med' or 'high'."
+        )
 
     target = query(target_name)
-    header = fill_header(target, observational_type,
-                         array_configuration, sci_name, tag)
+    header = fill_header(target, observational_type, array_configuration, sci_name, tag)
 
-    acquisition = fill_acquisition(target, operational_mode,
-                                   array_configuration)
+    acquisition = fill_acquisition(target, operational_mode, array_configuration)
 
-    observation = fill_observation(target, resolution, observational_type,
-                                   operational_mode, array_configuration)
-    return {"header": header,
-            "acquisition": acquisition, "observation": observation}
+    observation = fill_observation(
+        target, resolution, observational_type, operational_mode, array_configuration
+    )
+    return {"header": header, "acquisition": acquisition, "observation": observation}

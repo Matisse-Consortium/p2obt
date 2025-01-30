@@ -1,68 +1,78 @@
 import getpass
-import keyring
 import logging
-from typing import Optional, Dict
+from typing import Dict, Optional
 
+import keyring
 import numpy as np
 import p2api
 
+TARGET_MAPPING = {
+    "TARGET.NAME": "name",
+    "ra": "ra",
+    "dec": "dec",
+    "propRA": "properMotionRa",
+    "propDec": "properMotionDec",
+    "diffRA": "differentialRa",
+    "diffDec": "differentialDec",
+    "equinox": "equinox",
+    "epoch": "epoch",
+}
 
-TARGET_MAPPING = {"TARGET.NAME": "name",
-                  "ra": "ra",
-                  "dec": "dec",
-                  "propRA": "properMotionRa",
-                  "propDec": "properMotionDec",
-                  "diffRA": "differentialRa",
-                  "diffDec": "differentialDec",
-                  "equinox": "equinox",
-                  "epoch": "epoch"}
+CONSTRAINTS_MAPPING = {
+    "CONSTRAINT.SET.NAME": "name",
+    "sky_transparency": "skyTransparency",
+    "air_mass": "airmass",
+    "fractional_lunar_illumination": "fli",
+    "moon_angular_distance": "moonDistance",
+    "watervapour": "waterVapour",
+    "atm": "atm",
+}
 
-CONSTRAINTS_MAPPING = {"CONSTRAINT.SET.NAME": "name",
-                       "sky_transparency": "skyTransparency",
-                       "air_mass": "airmass",
-                       "fractional_lunar_illumination": "fli",
-                       "moon_angular_distance": "moonDistance",
-                       "watervapour": "waterVapour",
-                       "atm": "atm"}
-
-TEMPLATE_MAPPING = {"ACQUISITION.TEMPLATE.NAME": str,
-                    "SEQ.TARG.FLUX.L": float,
-                    "SEQ.TARG.FLUX.N": float,
-                    "SEQ.TARG.MAG.H": float,
-                    "SEQ.TARG.MAG.K": float,
-                    "TEL.TARG.ADDVELALPHA": float,
-                    "TEL.TARG.ADDVELDELTA": float,
-                    "COU.AG.ALPHA": str,
-                    "COU.AG.DELTA": str,
-                    "COU.AG.EPOCH": float,
-                    "COU.AG.EQUINOX": float,
-                    "COU.AG.GSSOURCE": str,
-                    "COU.AG.PMA": float,
-                    "COU.AG.PMD": float,
-                    "COU.AG.TYPE": str,
-                    "COU.GS.MAG": float,
-                    "ISS.BASELINE": list,
-                    "ISS.VLTITYPE": list,
-                    "TEMPLATE.NAME": str,
-                    "DET1.DIT": float,
-                    "DET1.READ.CURNAME": str,
-                    "SEQ.DIL.USER.WL0": float,
-                    "SEQ.DIL.WL0": float,
-                    "SEQ.FRINGES.NCYCLES": float,
-                    "SEQ.OFFSET.ALPHA": list,
-                    "SEQ.OFFSET.DELTA": list,
-                    "SEQ.PHOTO.ST": bool,
-                    "SEQ.SKY.OFFS.ALPHA": float,
-                    "SEQ.SKY.OFFS.DELTA": float,
-                    "SEQ.TRACK.BAND": str,
-                    "INS.DIL.NAME": str,
-                    "INS.DIN.NAME": str,
-                    "DPR.CATG": str}
+TEMPLATE_MAPPING = {
+    "ACQUISITION.TEMPLATE.NAME": str,
+    "SEQ.TARG.FLUX.L": float,
+    "SEQ.TARG.FLUX.N": float,
+    "SEQ.TARG.MAG.H": float,
+    "SEQ.TARG.MAG.K": float,
+    "TEL.TARG.ADDVELALPHA": float,
+    "TEL.TARG.ADDVELDELTA": float,
+    "COU.AG.ALPHA": str,
+    "COU.AG.DELTA": str,
+    "COU.AG.EPOCH": float,
+    "COU.AG.EQUINOX": float,
+    "COU.AG.GSSOURCE": str,
+    "COU.AG.PMA": float,
+    "COU.AG.PMD": float,
+    "COU.AG.TYPE": str,
+    "COU.GS.MAG": float,
+    "ISS.BASELINE": list,
+    "ISS.VLTITYPE": list,
+    "TEMPLATE.NAME": str,
+    "DET1.DIT": float,
+    "DET1.READ.CURNAME": str,
+    "SEQ.DIL.USER.WL0": float,
+    "SEQ.DIL.WL0": float,
+    "SEQ.FRINGES.NCYCLES": float,
+    "SEQ.OFFSET.ALPHA": list,
+    "SEQ.OFFSET.DELTA": list,
+    "SEQ.PHOTO.ST": bool,
+    "SEQ.SKY.OFFS.ALPHA": float,
+    "SEQ.SKY.OFFS.DELTA": float,
+    "SEQ.TRACK.BAND": str,
+    "INS.DIL.NAME": str,
+    "INS.DIN.NAME": str,
+    "DPR.CATG": str,
+}
 
 # TODO: Hard code this and check for upload
-README_TEMPLATE = {"Date": "", "Main observer": "",
-                   "e-mail": "", "Phone number": "",
-                   "Skype": "", "Zoom": ""}
+README_TEMPLATE = {
+    "Date": "",
+    "Main observer": "",
+    "e-mail": "",
+    "Phone number": "",
+    "Skype": "",
+    "Zoom": "",
+}
 
 
 def apply_mapping(content: Dict, mapping: Dict) -> None:
@@ -86,10 +96,12 @@ def apply_mapping(content: Dict, mapping: Dict) -> None:
         content[key] = value
 
 
-def login(user_name: Optional[str] = None,
-          store_password: Optional[bool] = False,
-          remove_password: Optional[bool] = False,
-          server: Optional[str] = "demo"):
+def login(
+    user_name: Optional[str] = None,
+    store_password: Optional[bool] = False,
+    remove_password: Optional[bool] = False,
+    server: Optional[str] = "demo",
+):
     """Login to the p2 API with the given username. Return the API connection.
     Parameters
     ----------
@@ -151,7 +163,9 @@ def get_remote_run(connection: p2api.p2api.ApiConnection, run_id: str) -> Option
     return None
 
 
-def remote_container_exists(connection: p2api.p2api.ApiConnection, container_id: int) -> bool:
+def remote_container_exists(
+    connection: p2api.p2api.ApiConnection, container_id: int
+) -> bool:
     """Checks if the container with this id exists on p2.
 
     Parameters
@@ -174,9 +188,12 @@ def remote_container_exists(connection: p2api.p2api.ApiConnection, container_id:
     return False
 
 
-def create_remote_container(connection: p2api.p2api.ApiConnection,
-                            name: str, container_id: int,
-                            observational_mode: Optional[str] = "vm") -> int:
+def create_remote_container(
+    connection: p2api.p2api.ApiConnection,
+    name: str,
+    container_id: int,
+    observational_mode: Optional[str] = "vm",
+) -> int:
     """Creates a container on p2.
 
     Parameters
@@ -205,8 +222,9 @@ def create_remote_container(connection: p2api.p2api.ApiConnection,
     return container["containerId"]
 
 
-def create_ob(connection: p2api.p2api.ApiConnection,
-              container_id: int, header: Dict) -> int:
+def create_ob(
+    connection: p2api.p2api.ApiConnection, container_id: int, header: Dict
+) -> int:
     """Creates an OB on p2.
 
     Parameters
@@ -241,8 +259,9 @@ def create_ob(connection: p2api.p2api.ApiConnection,
     return ob["obId"]
 
 
-def add_template(connection: p2api.p2api.ApiConnection,
-                 ob_id: int, ob: Dict, template_kind: str) -> None:
+def add_template(
+    connection: p2api.p2api.ApiConnection, ob_id: int, ob: Dict, template_kind: str
+) -> None:
     """Adds template to an (.obx)-file on the p2.
 
     Parameters
@@ -264,8 +283,9 @@ def add_template(connection: p2api.p2api.ApiConnection,
     template, version = connection.setTemplateParams(ob_id, template, content, version)
 
 
-def upload_ob(connection: p2api.p2api.ApiConnection,
-              ob: Dict, container_id: Optional[int] = None) -> None:
+def upload_ob(
+    connection: p2api.p2api.ApiConnection, ob: Dict, container_id: Optional[int] = None
+) -> None:
     """
 
     Parameters
@@ -279,7 +299,7 @@ def upload_ob(connection: p2api.p2api.ApiConnection,
     if connection is None or container_id is None:
         return
 
-    ob_name = ob['header']['user']['name']
+    ob_name = ob["header"]["user"]["name"]
     print(f"\tCreating OB '{ob_name}'...")
     try:
         ob_id = create_ob(connection, container_id, ob["header"])

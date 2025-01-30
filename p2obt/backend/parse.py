@@ -5,10 +5,10 @@ from typing import Dict, List, Optional
 
 from .utils import prompt_user
 
-
 # TODO: Make parser accept more than one calibrator block for one night, by
 # checking if there are integers for numbers higher than last calibrator and
 # then adding these
+
 
 # TODO: Maybe substiute with match and cases?
 def parse_operational_mode(run_name: str) -> str:
@@ -70,7 +70,7 @@ def parse_array_config(run_name: Optional[str] = None) -> str:
                     return "large"
                 case "extended":
                     return "extended"
-    return prompt_user("array_configuration", ["UTs"]+at_configs[1:])
+    return prompt_user("array_configuration", ["UTs"] + at_configs[1:])
 
 
 def parse_run_resolution(run_name: str) -> str:
@@ -116,13 +116,15 @@ def parse_run_prog_id(run_name: str) -> str:
         The run's program id in the form of
         <period>.<program>.<run> (e.g., 110.2474.004).
     """
-    pattern = r'\b[\w\d]+\.[\w\d]+\.[\w\d]+\b'
+    pattern = r"\b[\w\d]+\.[\w\d]+\.[\w\d]+\b"
     run_prog_id = re.findall(pattern, run_name)[0]
 
     if not run_prog_id:
         print("Run's program id could not be automatically detected!")
-        run_prog_id = input("Please enter the run's id in the following form"
-                            " (<period>.<program>.<run> (e.g., 110.2474.004)): ")
+        run_prog_id = input(
+            "Please enter the run's id in the following form"
+            " (<period>.<program>.<run> (e.g., 110.2474.004)): "
+        )
     return run_prog_id
 
 
@@ -180,9 +182,13 @@ def parse_line(parts: str) -> str:
     """
     target_name_cutoff = len(parts)
     for index, part in enumerate(parts):
-        if index <= len(parts)-4:
-            if part.isdigit() and parts[index+1].isdigit()\
-               and "." in parts[index+2] and not index == len(parts)-4:
+        if index <= len(parts) - 4:
+            if (
+                part.isdigit()
+                and parts[index + 1].isdigit()
+                and "." in parts[index + 2]
+                and not index == len(parts) - 4
+            ):
                 target_name_cutoff = index
                 break
     return " ".join(parts[1:target_name_cutoff])
@@ -222,8 +228,9 @@ def parse_groups(section: List) -> Dict:
         if obj_name.startswith("cal_"):
             tag = obj_name.split("_")[1]
             order = "b" if current_science_target is None else "a"
-            calibrator = dict(zip(calibrator_labels,
-                                  [obj_name.split("_")[2], order, tag]))
+            calibrator = dict(
+                zip(calibrator_labels, [obj_name.split("_")[2], order, tag])
+            )
             current_group.append(calibrator)
         else:
             current_science_target = obj_name
@@ -259,15 +266,18 @@ def parse_file_section(lines: List, identifier: str) -> Dict:
     if not indices:
         indices, labels = [0], ["full_" + identifier]
 
-    sections = [lines[index:] if index == indices[~0] else
-                lines[index:indices[i+1]] for i, index in enumerate(indices)]
+    sections = [
+        lines[index:] if index == indices[~0] else lines[index : indices[i + 1]]
+        for i, index in enumerate(indices)
+    ]
     return dict(zip(labels, sections))
 
 
-def parse_night_plan(night_plan: Path,
-                     run_identifier: Optional[str] = "run",
-                     night_identifier: Optional[str] = "night"
-                     ) -> Dict[str, Dict]:
+def parse_night_plan(
+    night_plan: Path,
+    run_identifier: Optional[str] = "run",
+    night_identifier: Optional[str] = "night",
+) -> Dict[str, Dict]:
     """Parses the night plan created with `calibrator_find.pro` into the
     individual runs as key of a dictionary.
 
@@ -303,8 +313,7 @@ def parse_night_plan(night_plan: Path,
         with open(night_plan, "r+", encoding="utf-8") as night_plan:
             lines = night_plan.readlines()
     else:
-        raise FileNotFoundError(
-            f"File {night_plan.name} was not found/does not exist!")
+        raise FileNotFoundError(f"File {night_plan.name} was not found/does not exist!")
 
     runs = {}
     for run_id, run in parse_file_section(lines, run_identifier).items():
