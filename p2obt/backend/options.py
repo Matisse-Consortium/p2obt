@@ -34,17 +34,17 @@ w0 = SimpleNamespace(
             uts=SimpleNamespace(low=4.1, med=3.52, high=3.52))
         )
 
-# NOTE: Set the integration times
+# NOTE: Set the integration times (DIT)
 dit = SimpleNamespace(
         matisse=SimpleNamespace(
             ats=SimpleNamespace(low=0.111, med=0.111, high=0.111),
             uts=SimpleNamespace(low=0.111, med=0.111, high=0.111)),
         gra4mat=SimpleNamespace(
-            ats=SimpleNamespace(low=0.6, med=1.3, high=3.),
+            ats=SimpleNamespace(low=1.3, med=1.3, high=3.),
             uts=SimpleNamespace(low=0.6, med=0.6, high=0.6))
         )
 
-# NOTE: Set the weather constraints.
+# NOTE: Set the weather constraints
 constraints = SimpleNamespace(
         pwv=10,
         turbulence=30,
