@@ -14,6 +14,7 @@ docs/build/
 *.html
 
 # Specific files to ignore
+uv.lock
 
 # Package folders to ignore
 p2obp/tests/data/

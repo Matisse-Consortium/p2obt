@@ -2,7 +2,7 @@
 name = "p2obt"
 dynamic = ["version"]
 description = "The Phase 2 OB tools (p2obt) automate the MATISSE observation preparation/upload."
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 readme = "README.md"
 license = {file = "LICENSE"}
 keywords = ["astronomy", "observations", "observation-preparation", "VLT"]
@@ -24,14 +24,13 @@ classifiers = [
 	"Topic :: Scientific/Engineering :: Physics",
 ]
 dependencies = [
-    "astropy>=6.0.1",
-    "astroquery>=0.4.7",
-    "attrs>=24.2.0",
-    "numpy>=1.26.4",
+    "astropy>=6.1.7",
+    "astroquery>=0.4.9.post1",
+    "attrs>=25.1.0",
+    "numpy>=2.2.2",
     "openpyxl>=3.1.5",
     "p2api>=1.0.10",
     "pandas>=2.2.3",
-    "toml>=0.10.2",
 ]
 
 [project.urls]
