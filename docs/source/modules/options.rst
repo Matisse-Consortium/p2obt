@@ -105,35 +105,35 @@ The default central wavelengths for MATISSE-standalone for the ATs.
 
 .. code-block:: python
 
-   OPTIONS.w0.matisse.ats.low = 4.1
-   OPTIONS.w0.matisse.ats.med = 4.1
-   OPTIONS.w0.matisse.ats.high = 4.1
+   OPTIONS.wl0.matisse.ats.low = 4.1
+   OPTIONS.wl0.matisse.ats.med = 4.1
+   OPTIONS.wl0.matisse.ats.high = 4.1
 
 The default central wavelengths for MATISSE-standalone for the UTs.
 
 .. code-block:: python
 
-   OPTIONS.w0.matisse.uts.low = 4.1
-   OPTIONS.w0.matisse.uts.med = 4.1
-   OPTIONS.w0.matisse.uts.high = 4.1
+   OPTIONS.wl0.matisse.uts.low = 4.1
+   OPTIONS.wl0.matisse.uts.med = 4.1
+   OPTIONS.wl0.matisse.uts.high = 4.1
 
 
 The default central wavelengths for GRA4MAT for the ATs.
 
 .. code-block:: python
 
-   OPTIONS.w0.gra4mat.ats.low = 4.1
-   OPTIONS.w0.gra4mat.ats.med = 4.1
-   OPTIONS.w0.gra4mat.ats.high = 4.1
+   OPTIONS.wl0.gra4mat.ats.low = 4.1
+   OPTIONS.wl0.gra4mat.ats.med = 4.1
+   OPTIONS.wl0.gra4mat.ats.high = 4.1
 
 
 The default central wavelengths for GRA4MAT for the UTs.
 
 .. code-block:: python
 
-   OPTIONS.w0.gra4mat.uts.low = 4.1
-   OPTIONS.w0.gra4mat.uts.med = 3.52
-   OPTIONS.w0.gra4mat.uts.high = 3.52
+   OPTIONS.wl0.gra4mat.uts.low = 4.1
+   OPTIONS.wl0.gra4mat.uts.med = 3.52
+   OPTIONS.wl0.gra4mat.uts.high = 3.52
 
 -----
 Query

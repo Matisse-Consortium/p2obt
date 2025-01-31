@@ -144,7 +144,7 @@ def get_observation_settings(
         getattr(getattr(OPTIONS.dit, operational_mode), array), resolution
     )
     central_wl = getattr(
-        getattr(getattr(OPTIONS.w0, operational_mode), array), resolution
+        getattr(getattr(OPTIONS.wl0, operational_mode), array), resolution
     )
 
     return resolution.upper(), integration_time, central_wl, photometry
@@ -350,7 +350,7 @@ def fill_observation(
     observation = load_template(
         TEMPLATE_FILE, "observation", operational_mode=operational_mode
     )
-    resolution, dit, w0, photometry = get_observation_settings(
+    resolution, dit, wl0, photometry = get_observation_settings(
         target, resolution, operational_mode, array_configuration
     )
     observation_type = "SCIENCE" if observation_type == "sci" else "CALIB"
@@ -358,7 +358,7 @@ def fill_observation(
     observation["INS.DIL.NAME"] = resolution
     observation["DET1.DIT"] = dit
     observation["SEQ.PHOTO.ST"] = "T" if photometry else "F"
-    observation["SEQ.DIL.WL0"] = w0
+    observation["SEQ.DIL.WL0"] = wl0
     return observation
 
 

@@ -21,14 +21,14 @@ photometry = SimpleNamespace(
 )
 
 # NOTE: Set the central wavelengths
-w0 = SimpleNamespace(
+wl0 = SimpleNamespace(
     matisse=SimpleNamespace(
         ats=SimpleNamespace(low=4.1, med=4.1, high=4.1),
         uts=SimpleNamespace(low=4.1, med=4.1, high=4.1),
     ),
     gra4mat=SimpleNamespace(
         ats=SimpleNamespace(low=4.1, med=4.1, high=4.1),
-        uts=SimpleNamespace(low=4.1, med=3.52, high=3.52),
+        uts=SimpleNamespace(low=4.1, med=4.1, high=3.52),
     ),
 )
 
@@ -39,8 +39,8 @@ dit = SimpleNamespace(
         uts=SimpleNamespace(low=0.111, med=0.111, high=0.111),
     ),
     gra4mat=SimpleNamespace(
-        ats=SimpleNamespace(low=1.3, med=1.3, high=3.0),
-        uts=SimpleNamespace(low=0.6, med=0.6, high=0.6),
+        ats=SimpleNamespace(low=0.6, med=1.3, high=3.0),
+        uts=SimpleNamespace(low=0.111, med=1.3, high=1.3),
     ),
 )
 
@@ -130,7 +130,7 @@ OPTIONS = SimpleNamespace(
     log=log,
     resolution=resolution,
     photometry=photometry,
-    w0=w0,
+    wl0=wl0,
     dit=dit,
     constraints=constraints,
     catalogs=catalogs,
