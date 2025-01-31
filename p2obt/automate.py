@@ -210,9 +210,9 @@ def create_obs_from_lists(
         The mode MATISSE is operated in and for which the OBs are created.
         Either "st" for standalone, "gr" for GRA4MAT_ft_vis or "both",
         if obs for both are to be created. Default is "st".
-    observational_mode : str, optional
-        Can either be "vm" for Visitor Mode (VM) or "sm" for Service
-        Mode (SM). Default is "vm".
+    observational_mode : str
+        Can either be "vm" for visitor mode (VM), "sm" for service mode (SM),
+        time series (TS), or imageing (IM).
     array_configuration : str
     resolution: dict, optional
         The default spectral resolutions for the obs in L-band. This is
@@ -333,9 +333,9 @@ def create_obs_from_dict(
         The mode MATISSE is operated in and for which the OBs are created.
         Either "st" for standalone, "gr" for GRA4MAT_ft_vis or "both",
         if obs for both are to be created. Default is "st".
-    observational_mode : str, optional
-        Can either be "vm" for Visitor Mode (VM) or "sm" for Service
-        Mode (SM). Default is "vm".
+    observational_mode : str
+        Can either be "vm" for visitor mode (VM), "sm" for service mode (SM),
+        time series (TS), or imageing (IM). Default is "sm".
     resolution: dict, optional
         The default spectral resolutions for the obs in L-band. This is
         a dictionary containing as keys the individual science targets
@@ -388,6 +388,8 @@ def create_obs_from_dict(
         for night_key, night in run_entry.items():
             print(f"{'':-^50}")
             night_name = parse_night_name(night_key)
+
+            # TODO: Add here? the imaging and time series mode
             if observational_mode == "vm" and connection is not None:
                 night_id = create_remote_container(
                     connection, night_name, run_id, observational_mode
@@ -445,9 +447,9 @@ def create_obs(
         The mode MATISSE is operated in and for which the OBs are created.
         Either "st" for standalone, "gr" for GRA4MAT_ft_vis or "both",
         if obs for both are to be created. Default is "st".
-    observational_mode : str, optional
-        Can either be "vm" for Visitor Mode (VM) or "sm" for Service
-        Mode (SM). Default is "vm".
+    observational_mode : str
+        Can either be "vm" for visitor mode (VM), "sm" for service mode (SM),
+        time series (TS), or imageing (IM).
     resolution: dict, optional
         The default spectral resolutions for the obs in L-band. This is
         a dictionary containing as keys the individual science targets

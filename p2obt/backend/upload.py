@@ -192,7 +192,7 @@ def create_remote_container(
     connection: p2api.p2api.ApiConnection,
     name: str,
     container_id: int,
-    observational_mode: Optional[str] = "vm",
+    observational_mode: Optional[str] = "sm",
 ) -> int:
     """Creates a container on p2.
 
@@ -205,7 +205,8 @@ def create_remote_container(
     container_id : int
         The id that specifies the container on p2.
     observational_mode : str
-        Can either be "vm" for visitor mode (VM) or "sm" for service mode (SM).
+        Can either be "vm" for visitor mode (VM), "sm" for service mode (SM),
+        time series (TS), or imageing (IM).
 
     Returns
     -------
@@ -217,6 +218,10 @@ def create_remote_container(
         container, _ = connection.createFolder(container_id, name)
     elif observational_mode == "sm":
         container, _ = connection.createConcatenation(container_id, name)
+    elif observational_mode == "ts":
+        ...
+    elif observational_mode == "im":
+        ...
     else:
         raise IOError("No such operation mode exists!")
     return container["containerId"]
