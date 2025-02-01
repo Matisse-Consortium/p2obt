@@ -2,7 +2,6 @@ import logging
 from pathlib import Path
 from types import SimpleNamespace
 
-
 # NOTE: General settings for the logging
 log = SimpleNamespace(
     path=Path.home() / "Documents" / "logs",
@@ -11,9 +10,6 @@ log = SimpleNamespace(
 )
 
 # NOTE: The settings for the `create_obs` and `create_ob`-scripts.
-# NOTE: Sets the standard resolution.
-resolution = SimpleNamespace(active="low", overwrite=False)
-
 # NOTE: Set the photometry
 photometry = SimpleNamespace(
     matisse=SimpleNamespace(ats=True, uts=True),
@@ -79,17 +75,8 @@ mdfc = SimpleNamespace(
 
 simbad = SimpleNamespace(
     catalog=None,
-    fields=[
-        "mk",
-        "sp",
-        "sptype",
-        "fe_h",
-        "pm",
-        "plx",
-        "rv_value",
-        "flux"
-    ],
-    query=["SP_TYPE", "RA", "DEC", "PMRA", "PMDEC", "FLUX_V", "FLUX_H", "FLUX_K"],
+    fields=["sp_type", "pmra", "pmdec", "allfluxes"],
+    query=["sp_type", "ra", "dec", "pmra", "pmdec", "V", "H", "K"],
 )
 
 irsa = SimpleNamespace(
@@ -113,7 +100,6 @@ catalogs = SimpleNamespace(
 
 OPTIONS = SimpleNamespace(
     log=log,
-    resolution=resolution,
     photometry=photometry,
     wl0=wl0,
     dit=dit,
@@ -126,6 +112,7 @@ OPTIONS.log.path.mkdir(parents=True, exist_ok=True)
 with open(OPTIONS.log.path / "p2obt.log", "w+") as log_file:
     log_file.write("Start of log:")
 
+print(f"Log was created in {OPTIONS.log.path}.")
 logging.basicConfig(
     filename=OPTIONS.log.path / "p2obt.log",
     filemode="w",

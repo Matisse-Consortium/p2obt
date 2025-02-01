@@ -1,14 +1,13 @@
 from pathlib import Path
-from typing import Dict, Optional, Tuple, Union
+from typing import Dict, Tuple, Union
 
 import astropy.units as u
 import toml
 from astropy.coordinates import SkyCoord
 
-from .options import OPTIONS
+from ..config.options import OPTIONS
 from .query import query
 from .utils import convert_proper_motions, remove_parenthesis, remove_spaces
-
 
 TEMPLATE_FILE = Path(__file__).parent.parent / "config" / "templates.toml"
 TURBULENCE = {
@@ -27,8 +26,8 @@ SKY_TRANSPARENCY = {
 def load_template(
     file: Path,
     header: str,
-    sub_header: Optional[str] = None,
-    operational_mode: Optional[str] = None,
+    sub_header: str | None = None,
+    operational_mode: str | None = None,
 ) -> Dict:
     """Loads a template from a (.toml)-file.
 
@@ -81,8 +80,8 @@ def write_ob(ob: Dict, ob_name: str, output_dir: Path) -> None:
 def set_ob_name(
     target: Union[Dict, str],
     observation_type: str,
-    sci_name: Optional[str] = None,
-    tag: Optional[str] = None,
+    sci_name: str | None = None,
+    tag: str | None = None,
 ) -> str:
     """Sets the OB's name.
 
@@ -133,13 +132,6 @@ def get_observation_settings(
     """
     array = "uts" if "ut" in array_configuration else "ats"
     photometry = getattr(getattr(OPTIONS.photometry, operational_mode), array)
-
-    if not OPTIONS.resolution.overwrite:
-        if array == "uts" and "LResUT" in target:
-            resolution = target["LResUT"] if target["LResUT"] != "TBD" else resolution
-        elif array == "ats" and "LResAT" in target:
-            resolution = target["LResAT"] if target["LResAT"] != "TBD" else resolution
-
     integration_time = getattr(
         getattr(getattr(OPTIONS.dit, operational_mode), array), resolution
     )
@@ -171,7 +163,8 @@ def format_ra_and_dec(target: Dict) -> Tuple[str, str]:
     """Correctly formats the right ascension and declination."""
     if "local.RA" in target:
         return target["local.RA"], target["local.DEC"]
-    coordinates = SkyCoord(f"{target['RA']} {target['DEC']}", unit=(u.hourangle, u.deg))
+
+    coordinates = SkyCoord(f"{target['ra']} {target['dec']}", unit=(u.hourangle, u.deg))
     ra_hms = coordinates.ra.to_string(unit=u.hourangle, sep=":", pad=True, precision=3)
     dec_dms = coordinates.dec.to_string(sep=":", pad=True, precision=3)
     return ra_hms, dec_dms
@@ -205,8 +198,8 @@ def fill_header(
     target: Dict,
     observation_type: str,
     array_configuration: str,
-    sci_name: Optional[str] = None,
-    tag: Optional[str] = None,
+    sci_name: str | None = None,
+    tag: str | None = None,
 ) -> Dict:
     """Fills in the header dictionary with the information from the query.
 
@@ -364,12 +357,12 @@ def fill_observation(
 
 def compose_ob(
     target_name: str,
-    observational_type: str,
-    array_configuration: str,
-    operational_mode: Optional[str] = "st",
-    sci_name: Optional[str] = None,
-    tag: Optional[str] = None,
-    resolution: Optional[str] = "low",
+    ob_kind: str,
+    array: str,
+    mode: str | None = "st",
+    sci_name: str | None = None,
+    tag: str | None = None,
+    resolution: str | None = "low",
 ) -> Dict:
     """Composes the dictionary
 
@@ -377,45 +370,49 @@ def compose_ob(
     ----------
     target_name : str
         The target's name.
-    observational_type : str
-    array_configuration : str
+    ob_kind : str
+        The type of OB. If it is a science target ("sci") or a calibrator ("cal").
+    array : str
         Determines the array configuration. Possible values are "UTs",
         "small", "medium", "large", "extended".
-    operational_mode : str, optional
+    mode : str, optional
         The mode of operation for MATISSE. Can be either "st"/"standalone"
         for the MATISSE-standalone mode or "gr"/"gra4mat" for GRA4MAT.
         Default is standalone.
     sci_name : str, optional
+        The name of the science target. If the OB is a science OB, this
+        is None.
     tag : str, optional
+        The calibrator tag (L, N or LN).
     resolution : str, optional
-        The target's resolution.
+        The resolution of the OB. Can be either "low", "med" or "high".
 
     Returns
     -------
     target : dict
         A dictionary containg all the target's information.
     """
-    array_configuration = array_configuration.lower()
-    if array_configuration not in ["uts", "small", "medium", "large", "extended"]:
+    array = array.lower()
+    if array not in ["uts", "small", "medium", "large", "extended"]:
         raise IOError(
             "Unknown array configuration provided!"
             " Choose from 'UTs', 'small', 'medium',"
             " 'large' or 'extended'."
         )
 
-    observational_type = observational_type.lower()
-    if observational_type not in ["sci", "cal"]:
+    ob_kind = ob_kind.lower()
+    if ob_kind not in ["sci", "cal"]:
         raise IOError(
             "Unknown observation type provided!"
             " Choose from 'SCI' or 'CAL', for "
             "a science target or a calibrator."
         )
 
-    operational_mode = operational_mode.lower()
-    if operational_mode in ["st", "standalone"]:
-        operational_mode = "matisse"
-    elif operational_mode in ["gr", "gra4mat"]:
-        operational_mode = "gra4mat"
+    mode = mode.lower()
+    if mode in ["st", "standalone"]:
+        mode = "matisse"
+    elif mode in ["gr", "gra4mat"]:
+        mode = "gra4mat"
     else:
         raise IOError(
             "Unknown operational mode provided!"
@@ -430,11 +427,7 @@ def compose_ob(
         )
 
     target = query(target_name)
-    header = fill_header(target, observational_type, array_configuration, sci_name, tag)
-
-    acquisition = fill_acquisition(target, operational_mode, array_configuration)
-
-    observation = fill_observation(
-        target, resolution, observational_type, operational_mode, array_configuration
-    )
+    header = fill_header(target, ob_kind, array, sci_name, tag)
+    acquisition = fill_acquisition(target, mode, array)
+    observation = fill_observation(target, resolution, ob_kind, mode, array)
     return {"header": header, "acquisition": acquisition, "observation": observation}

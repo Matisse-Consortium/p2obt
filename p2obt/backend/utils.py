@@ -1,5 +1,5 @@
 import re
-from typing import List, Optional, Tuple
+from typing import List, Tuple
 
 import astropy.units as u
 
@@ -26,6 +26,7 @@ def remove_parenthesis(input_str: str) -> str:
     return re.sub(r"[\[\](){}]", "", input_str)
 
 
+# TODO: Reimplement this somehow
 def prompt_user(message: str, selections: List[str]) -> str:
     """Prompts the user for a numerical input and returns
     the associated value from the selection list.
@@ -67,7 +68,7 @@ def contains_element(list_to_search: List, element_to_search: str) -> bool:
 
 
 def convert_proper_motions(
-    *proper_motions: u.mas, rfloat: Optional[bool] = True
+    *proper_motions: u.mas, rfloat: bool | None = True
 ) -> Tuple:
     """Converts the proper motions from [mas/yr] to [arcsec/yr].
 

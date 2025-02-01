@@ -1,5 +1,6 @@
+from copy import Error
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 import astropy.units as u
 import pandas as pd
@@ -8,9 +9,8 @@ from astroquery.ipac.irsa.irsa_dust import IrsaDust
 from astroquery.simbad import Simbad
 from astroquery.vizier import Vizier
 
-from .options import OPTIONS
+from ..config.options import OPTIONS
 from .utils import add_space, remove_parenthesis
-
 
 TARGET_INFO_FILE = list((Path(__file__).parent.parent / "config").glob("*.xlsx"))[0]
 TARGET_INFO_MAPPING = {
@@ -184,10 +184,10 @@ def get_catalog(name: str, catalog: str, match_radius: u.arcsec = 5.0):
 # TODO: Make a pretty print built in functionality for the dictionary.
 def query(
     target_name: str,
-    catalogs: Optional[List] = None,
-    exclude_catalogs: Optional[List] = None,
-    match_radius: Optional[float] = 5.0,
-    query_exinction: Optional[bool] = False,
+    catalogs: List | None = None,
+    exclude_catalogs: List | None = None,
+    match_radius: float | None = 5.0,
+    query_exinction: bool | None = False,
 ) -> Dict:
     """Queries information for an astronomical target by its name from
     various catalogs.

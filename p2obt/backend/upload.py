@@ -1,6 +1,6 @@
 import getpass
 import logging
-from typing import Dict, Optional
+from typing import Dict
 
 import keyring
 import numpy as np
@@ -97,10 +97,10 @@ def apply_mapping(content: Dict, mapping: Dict) -> None:
 
 
 def login(
-    user_name: Optional[str] = None,
-    store_password: Optional[bool] = False,
-    remove_password: Optional[bool] = False,
-    server: Optional[str] = "demo",
+    user_name: str | None = None,
+    store_password: bool | None = False,
+    remove_password: bool | None = False,
+    server: str | None = "demo",
 ):
     """Login to the p2 API with the given username. Return the API connection.
     Parameters
@@ -140,7 +140,7 @@ def login(
     return p2api.ApiConnection(server, user_name, password)
 
 
-def get_remote_run(connection: p2api.p2api.ApiConnection, run_id: str) -> Optional[int]:
+def get_remote_run(connection: p2api.p2api.ApiConnection, run_id: str) -> int | None:
     """Gets the run that corresponds to the period, proposal and the number and
     returns its runId.
 
@@ -192,7 +192,7 @@ def create_remote_container(
     connection: p2api.p2api.ApiConnection,
     name: str,
     container_id: int,
-    observational_mode: Optional[str] = "sm",
+    observational_mode: str | None = "sm",
 ) -> int:
     """Creates a container on p2.
 
@@ -289,7 +289,7 @@ def add_template(
 
 
 def upload_ob(
-    connection: p2api.p2api.ApiConnection, ob: Dict, container_id: Optional[int] = None
+    connection: p2api.p2api.ApiConnection, ob: Dict, container_id: int | None = None
 ) -> None:
     """
 

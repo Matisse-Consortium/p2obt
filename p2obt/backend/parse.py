@@ -1,7 +1,7 @@
 import re
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List
 
 # TODO: Implement this in the main function
 # from .utils import prompt_user
@@ -41,7 +41,7 @@ def parse_operational_mode(line: str) -> str:
     # return prompt_user("instrument", operational_modes)
 
 
-def parse_array_config(line: Optional[str] = None) -> str:
+def parse_array_config(line: str | None = None) -> str:
     """Parses the array configuration from string containing it.
 
     If no run name is specified or no match can be found
@@ -214,7 +214,7 @@ def parse_groups(section: List) -> Dict:
         The individual science target/calibrator group within a section.
         Can be for instance, "SCI-CAL" or "CAL-SCI-CAL" or any combination.
     """
-    data, op_mode, array, res = [], "", "", ""
+    data, mode, array, res = [], "", "", ""
     calibrator_labels = ["name", "order", "tag"]
     current_group = {"cals": []}
 
@@ -222,14 +222,14 @@ def parse_groups(section: List) -> Dict:
         parts = line.strip().split()
 
         if not parts:
-            if current_group.get("name", None) is not None:
+            if current_group.get("target", None) is not None:
                 data.append(current_group)
 
             current_group = {"cals": []}
             continue
 
         if line.startswith("#") or not line[0].isdigit():
-            op_mode = parse_operational_mode(line)
+            mode = parse_operational_mode(line)
             array = parse_array_config(line)
             res = parse_run_resolution(line)
             continue
@@ -237,17 +237,17 @@ def parse_groups(section: List) -> Dict:
         obj_name = parse_line(parts)
         if obj_name.startswith("cal_"):
             tag = obj_name.split("_")[1]
-            order = "b" if current_group.get("name", None) is None else "a"
+            order = "b" if current_group.get("target", None) is None else "a"
             calibrator = dict(
                 zip(calibrator_labels, [obj_name.split("_")[2], order, tag])
             )
             current_group["cals"].append(calibrator)
         else:
-            current_group["name"] = obj_name
-            current_group["op_mode"] = op_mode
+            current_group["target"] = obj_name
+            current_group["mode"] = mode
             current_group["array"] = array
             current_group["res"] = res
-            op_mode, array, res = "", "", ""
+            mode, array, res = "", "", ""
 
     return [entry for entry in data if entry["cals"]]
 
@@ -287,8 +287,8 @@ def parse_file_section(lines: List, identifier: str) -> Dict:
 
 def parse_night_plan(
     night_plan: Path,
-    run_identifier: Optional[str] = "run",
-    night_identifier: Optional[str] = "night",
+    run_identifier: str | None = "run",
+    night_identifier: str | None = "night",
 ) -> Dict[str, Dict]:
     """Parses the night plan created with `calibrator_find.pro` into the
     individual runs as key of a dictionary.
