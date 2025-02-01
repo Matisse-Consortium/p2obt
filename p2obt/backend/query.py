@@ -12,9 +12,7 @@ from .options import OPTIONS
 from .utils import add_space, remove_parenthesis
 
 
-TARGET_INFO_FILE = (
-    Path(__file__).parent.parent / "config" / "Extensive Target\ Information.xlsx"
-)
+TARGET_INFO_FILE = list((Path(__file__).parent.parent / "config").glob("*.xlsx"))[0]
 TARGET_INFO_MAPPING = {
     "local.RA": "RA [hms]",
     "local.DEC": "DEC [dms]",
