@@ -234,6 +234,7 @@ def create_obs(
                 )
             else:
                 night_id = run_id
+            # TODO: Finish the night id here
 
             if run_dir is not None:
                 night_dir = run_dir / night_name
@@ -242,28 +243,22 @@ def create_obs(
             else:
                 night_dir = None
 
-            # TODO: Make sure that the mode here does nothing
-            if observation_type == "vm" and container_id is not None:
-                mode_id = create_remote_container(
-                    connection, mode, container_id, observation_type
-                )
-            else:
-                mode_id = None
-
             for block in night:
                 target = block["target"].replace(" ", "_")
-                target_dir = output_dir / target
-                target_dir.mkdir(parents=True, exist_ok=True)
+                if output_dir is not None:
+                    target_dir = output_dir / target
+                    target_dir.mkdir(parents=True, exist_ok=True)
+                else:
+                    target_dir = None
 
                 if container_id is not None:
-                    if mode_id is not None:
-                        target_id = create_remote_container(
-                            connection, target, mode_id, observation_type
-                        )
-                    else:
-                        target_id = create_remote_container(
-                            connection, target, container_id, observation_type
-                        )
+                    target_id = create_remote_container(
+                        connection, target, container_id, observation_type
+                    )
+                elif night_id is not None:
+                    target_id = create_remote_container(
+                        connection, target, night_id, observation_type
+                    )
                 else:
                     target_id = None
 
@@ -294,4 +289,5 @@ def create_obs(
                         output_dir=target_dir,
                     )
 
+    # TODO: Add some color here :D
     print("[INFO]: Done!")
