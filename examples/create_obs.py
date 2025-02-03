@@ -26,16 +26,10 @@ cal_lst = [["HD100920", "HD173460"], "HD102964"]
 order_lst = [["b", "a"], "a"]
 tag_lst = [["L", "LN"], "N"]
 
-# NOTE: To pass manual input to the program, make a list of lists.
-manual_lst = [sci_lst, cal_lst, tag_lst, order_lst]
-
 # NOTE: With the resolution_dict, one can manually set the resolution
 # for specific targets as keys, with the resolution as values.
+# The standard resolution is 'low'.
 res_dict = {"Beta Leo": "med"}
-
-# NOTE: The resolution for all other targets will be 'low', but can be
-# set via the options.
-OPTIONS.resolution.active = "low"
 
 # NOTE: Change constraint settings
 # Turbulence can be choosen from 10%, 30% or 70%. Default at 10%
@@ -50,6 +44,8 @@ OPTIONS.constraints.transparency = "clear"
 # This will either upload the obs to a the specified container (keyword
 # 'container_id' on p2) or make them locally, if an 'output_dir' is
 # specified.
-create_obs(manual_input=manual_lst, operational_mode="both",
+create_obs(targets=sci_lst, calibrators=cal_lst,
+           orders=order_lst, tags=tag_lst,
+           operation_mode="gr",
            resolution=res_dict, output_dir=output_dir,
            server="demo", user_name="52052")

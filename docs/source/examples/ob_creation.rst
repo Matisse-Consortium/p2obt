@@ -11,11 +11,11 @@ OB Creation
 ===========
 
 :bash:`p2obt` supports various ways of local or online (on P2) ob creation.
-In addition to a single ob creating script (:ref:`Single OB Creation`), there is a fully automated pipeline
+In addition to a single ob creating script (:ref:`OB Creation`), there is a fully automated pipeline
 that can make multiple obs at once (:ref:`OB Creation Pipeline`).
 
 ------------------
-Single OB Creation
+OB Creation
 ------------------
 
 This is meant to give some examples on how to use the
@@ -52,27 +52,6 @@ tagged as an L band calibrator can be created like this.
   create_ob("HD 100920", "cal", "uts",
             sci_name="HD 142666", tag="L",
             operational_mode="gr", output_dir=output_dir)
-
-.. note::
-
-  The resolution for all other targets will be :python:`"low"`, but can be
-  set via the options (see :ref:`options <p2obt.backend.options>` for a more comprehensive listing).
-
-  .. code-block:: python
-
-    OPTIONS.resolution.active = "med"
-
-  This also applies for the :ref:`OB Creation Pipeline` as well.
-
-  .. warning::
-
-     The global resolution will be overwritten if a local catalog 
-     is activated/queried and contains the target with a resolution specified.
-
-     To avoid this set the overwrite option :python:`OPTIONS.resolution.overwrite`
-     to :python:`True`.
-
-     This will also be automatically set for service mode.
 
 
 Direct Upload

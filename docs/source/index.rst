@@ -29,8 +29,7 @@ For more information on the specific capabilities of this software see :ref:`Fea
    .. code-block:: bash
      :caption: Quick Installation
 
-     git clone git@github.com:MBSck/p2obt.git
-     cd p2obt && pip install -e .
+     pip install git+https://github.com/Matisse-Consortium/p2obt.git
 
    For more information see :ref:`Getting Started <getting_started>`
 

@@ -48,7 +48,7 @@ These are outlined in the following:
 
 .. warning::
    :name: Important Notice
-   
+
    In order for the parser to work within individual nights /runs, i.e., the individual
    observing blocks, the SCI-CAL (or CAL-SCI-CAL, SCI-CAL-SCI, or any combination) needs
    to be separated from the next (SCI-CAL, etc.) observing block by a white line or
@@ -69,26 +69,52 @@ Additionally, if the run name has a certain shape/format, then the
 :func:`create_obs <p2obt.automate.create_obs>` function
 can automatically determine the following things about the run:
 
-* The **array configuration** (*UTs, small, medium, large, extended*)
-* The **operational mode** (*MATISSE, GRA4MAT or BOTH*)
-* The **resolution** (*LOW/LR, MED/MEDIUM/MR or HIGH/HR*)
 * The **program id** (and by this the container id on p2)
+* The **array configuration** (*UTs, small, medium, large, extended*)
+* The **operational mode** (*MATISSE, GRA4MAT*)
+* The **resolution** (*LOW/LR, MED/MEDIUM/MR or HIGH/HR*)
+* Additionally, the **type** of the run can be determined (i.e, *Imaging/Image*)
 
 .. note:: 
 
-   The parser is insensitive to the order and capitalization of the above settings.
+   The parser is insensitive to the order and capitalization of the above settings as long as they are separetd by whitespace.
 
-Here are some examples
+Here are some examples,
 
 .. admonition:: File Contents
 
    .. parsed-literal::
 
-      run 2, 111.253T.002 - UTs, both, med
-      run 3, 109.2313.003 = 0109.C-0413(C), ATs large array MR
-   
-This would upload both the MATISSE standalone as well as the
-GRA4MAT obs to the run2 (111.253T.002) on p2 in medium resolution for the UTs array configuration.
+      run 2, 111.253T.002 - UTs, MATISSE, med
+      run 2, 111.253T.002 - smallATs, gra4mat, med
+      run 3, 109.2313.003 = 0109.C-0413(C), MATISSE, ATs large array MR
+      run 3, 109.2313.003 = 0109.C-0413(C), MATISSE, ATs large array MR, Image.
+
+If there are no global arguments to be parsed in the run names, then the parser will look for them in the comments before the individual blocks
+either contained in the nights,
+
+.. admonition:: File Contents
+
+   .. parsed-literal::
+
+      run 3, 109.2313.003 = 0109.C-0413(C), ATs large array
+
+      LST   source            coordinates                      L        N      K      V         SpT    diam   airm.   time  comment
+                              RA (J2000)   dec (J2000)      [Jy]     [Jy]  [mag]  [mag]               [mas]          [min]
+
+      # MED, MATISSE
+      11:40 cal_LN_HD138538   15 36 43.222  -66 19 01.33    65.7     10.6          4.11     K1.5III    2.47    1.70     30
+      12:10 HD 104237         12 00 05.081  -78 11 34.56     8.6     13.4   4.59                               1.69     30  MR
+
+      # LOW, GRA4MAT
+      12:40 HD 100546         11 33 25.437  -70 11 41.24     6.5     59.9   5.42                               1.47     30  MR
+      13:10 cal_LN_HD102839   11 49 56.614  -70 13 32.85    43.9      7.3          4.99        G6Ib    2.02    1.49     30  Check for variability of star
+
+      ...
+
+This will properly parse that the first target `HD 104234` will be in medium resolution for MATISSE standalone and the second one
+will be for GRA4MAT for low resolution.
+
 
 Night Names
 -----------
@@ -171,5 +197,6 @@ These scripts automatically...
 * sort them into folders in the order given (either CAL-SCI or SCI-CAL or CAL-SCI-CAL) locally.
 * sort them into containers during the upload, directly to P2.
 
-For more details see the documentation or scripts in the `examples/ <https://github.com/MBSck/p2obt/tree/main/examples>`_ directory.
+For more details see the documentation or scripts in the `examples/ <https://github.com/Matisse-Consortium/p2obt/tree/main/examples>`_ directory
+or the :ref:`Getting Started <getting_started>` section.
 To add new local query targets add them to the :bash:`data/Extensive Target Information` excel sheet.

@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import Dict, List
+from typing import List
 from warnings import warn
 
 from p2api.p2api import ApiConnection
@@ -18,6 +18,8 @@ from .backend.parse import (
 from .backend.upload import create_remote_container, get_remote_run, login, upload_ob
 
 
+# TODO: The local file resolution overwrite might not work anymore.
+# Is it needed?
 # TODO: Make this shorter? Or into an option even?
 OPERATIONAL_MODES = {
     "st": ["standalone"],
@@ -107,8 +109,6 @@ def create_ob(
         logging.error(f"Failed creating OB '{target}'!", exc_info=True)
 
 
-# TODO: Make it so that global thing doesn't overwrite local setting of block
-# TODO: Finish this
 def create_obs(
     night_plan: Path | None = None,
     manual_input: List[List] | None = None,
