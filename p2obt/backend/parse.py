@@ -16,9 +16,6 @@ def parse_operational_mode(line: str) -> str:
     """Parses the run's used instrument from string containing it,
     either MATISSE or GRA4MAT.
 
-    If no match can be found it prompts the user for
-    manual operational mode input.
-
     Parameters
     ----------
     run_name : str
@@ -43,9 +40,6 @@ def parse_operational_mode(line: str) -> str:
 
 def parse_array_config(line: str | None = None) -> str:
     """Parses the array configuration from string containing it.
-
-    If no run name is specified or no match can be found
-    it prompts the user for manual configuration input.
 
     Parameters
     ----------
@@ -76,11 +70,8 @@ def parse_array_config(line: str | None = None) -> str:
     # return prompt_user("array_configuration", ["UTs"] + at_configs[1:])
 
 
-def parse_run_resolution(line: str) -> str:
+def parse_resolution(line: str) -> str:
     """Parses the run's resolution from string containing it.
-
-    If no match can be found it prompts the user for
-    manual resolution input.
 
     Parameters
     ----------
@@ -99,6 +90,30 @@ def parse_run_resolution(line: str) -> str:
         return "MED"
     if any(res in line for res in ["hr", "high"]):
         return "HIGH"
+    return ""
+    # return prompt_user("resolution", ["LOW", "MED", "HIGH"])
+
+
+def parse_observation_type(line: str) -> str:
+    """Parses the run's observation type from string containing it.
+
+    Parameters
+    ----------
+    run_name : str
+        The name of the run.
+
+    Returns
+    -------
+    resolution : str
+        Either "LOW", "MED" or "HIGH".
+    """
+    line = line.lower()
+    if any(res in line for res in ["sm", "servicemode", "service-mode", "service mode"]):
+        return "sm"
+    if any(res in line for res in ["im", "imaging", "image"]):
+        return "ts"
+    if any(res in line for res in ["vm", "visitormode", "visitor-mode", "visitor mode"]):
+        return "vm"
     return ""
     # return prompt_user("resolution", ["LOW", "MED", "HIGH"])
 
@@ -214,7 +229,7 @@ def parse_groups(section: List) -> Dict:
         The individual science target/calibrator group within a section.
         Can be for instance, "SCI-CAL" or "CAL-SCI-CAL" or any combination.
     """
-    data, mode, array, res = [], "", "", ""
+    data, mode, array, res, ob_type = [], "", "", "", ""
     calibrator_labels = ["name", "order", "tag"]
     current_group = {"cals": []}
 
@@ -231,7 +246,7 @@ def parse_groups(section: List) -> Dict:
         if line.startswith("#") or not line[0].isdigit():
             mode = parse_operational_mode(line)
             array = parse_array_config(line)
-            res = parse_run_resolution(line)
+            res = parse_resolution(line)
             continue
 
         obj_name = parse_line(parts)
@@ -247,7 +262,8 @@ def parse_groups(section: List) -> Dict:
             current_group["mode"] = mode
             current_group["array"] = array
             current_group["res"] = res
-            mode, array, res = "", "", ""
+            current_group["type"] = ob_type
+            mode, array, res, ob_type = "", "", "", ""
 
     return [entry for entry in data if entry["cals"]]
 
