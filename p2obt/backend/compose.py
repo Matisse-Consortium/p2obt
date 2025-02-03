@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Dict, Tuple, Union
 
 import astropy.units as u
+import numpy as np
 import toml
 from astropy.coordinates import SkyCoord
 
@@ -311,10 +312,10 @@ def fill_acquisition(
         acquisition["SEQ.TARG.FLUX.N"] = flux_nband
 
     if "Kmag" in target:
-        acquisition["SEQ.TARG.MAG.K"] = round(target["Kmag"], 2)
+        acquisition["SEQ.TARG.MAG.K"] = np.round(np.ma.filled(target["Kmag"], 0), 2)
 
     if operational_mode == "gra4mat" and "Hmag" in target:
-        acquisition["SEQ.TARG.MAG.H"] = round(target["Hmag"], 2)
+        acquisition["SEQ.TARG.MAG.H"] = np.round(np.ma.filled(target["Hmag"], 0), 2)
     return acquisition
 
 
