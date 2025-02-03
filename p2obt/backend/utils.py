@@ -1,7 +1,77 @@
 import re
-from typing import List, Tuple
+from typing import Any, Dict, List, Tuple
 
 import astropy.units as u
+
+
+def replace_elements(
+    nested_list: List[List], fill: Any | None = None, default: Any | None = None
+) -> List[List]:
+    """Replaces all elements in a nested list with a fill value."""
+    value = fill if fill is not None and not isinstance(fill, (list, dict)) else default
+    for i, item in enumerate(nested_list):
+        if isinstance(item, list):
+            replace_elements(item, value, default)
+        else:
+            nested_list[i] = value
+    return nested_list
+
+
+# TODO: Finish this
+def create_night_plan_dict(
+    targets: List[str] | None = None,
+    calibrators: List[List[str] | str] | None = None,
+    orders: Dict[str, str] | List[str] | str | None = None,
+    tags: Dict[str, str] | List[str] | str | None = None,
+    resolution: Dict[str, str] | List[str] | str | None = None,
+    configuration: Dict[str, str] | List[str] | str | None = None,
+    modes: Dict[str, str] | List[str] | str | None = None,
+):
+    """Creates a night plan dictionary for the observations.
+
+    targets : list, optional
+        A list of targets. If no night plan is given, this list
+        and the calibrators must be given.
+    calibrators : list, optional
+        A list of calibrators that must be given with the targets.
+    orders : list, optional
+        A list of the orders of the calibrators. If not given,
+        it will be assumed that the calibrators are before the targets.
+    tags : list, optional
+        A list of the tags of the calibrators. If not given, it will
+        be "LN" for all calibrators.
+    resolution : dict or list of str or str, optional
+        A dictionary containing the resolution for each target or a list
+        of resolutions for all targets or a single resolution for all targets.
+        Will only be used if no night plan is given.
+    configurations : dict or list of str or str, optional
+        A dictionary containing the array configuration for each target or a list
+        of array configurations for all targets or a single array configuration for all targets.
+        Will only be used if no night plan is given.
+    modes : dict or list of str or str, optional
+        A dictionary containing the operational mode for each target or a list
+        of operational modes for all targets or a single operational mode for all targets.
+        Will only be used if no night plan is given.
+    """
+    # night_plan = {"run1": }
+    if calibrators is None:
+        raise IOError("Please input the calibrators.")
+
+    ords = replace_elements(calibrators.copy(), orders, "a")
+    tgs = replace_elements(calibrators.copy(), tags, "LN")
+    res = replace_elements(targets.copy(), resolution, "low")
+    mode = replace_elements(targets.copy(), modes, "gr")
+
+    if isinstance(configuration, str):
+        confgs = replace_elements(targets.copy(), configuration)
+    else:
+        raise IOError("Please input the array configuration.")
+
+    for index, target in enumerate(targets):
+        cals = 
+        block = {"name": target.replace(" ", "_"), "mode": mode[index],}
+        breakpoint()
+    return
 
 
 def add_space(input_str: str) -> str:
@@ -67,9 +137,7 @@ def contains_element(list_to_search: List, element_to_search: str) -> bool:
     return any(element_to_search in element for element in list_to_search)
 
 
-def convert_proper_motions(
-    *proper_motions: u.mas, rfloat: bool | None = True
-) -> Tuple:
+def convert_proper_motions(*proper_motions: u.mas, rfloat: bool | None = True) -> Tuple:
     """Converts the proper motions from [mas/yr] to [arcsec/yr].
 
     Input is assumed to be in [mas], if given as float.

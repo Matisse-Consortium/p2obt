@@ -25,7 +25,7 @@ output_dir.mkdir(parents=True, exist_ok=True)
 # Create a science target (.ob)
 # Create an (.obx)-file for a science target for 'GRA4MAT'. If the
 # 'ouput_dir' keyword is passed, an (.obx)-file gets created.
-create_ob("HD 142666", "sci", "uts", operational_mode="gr", output_dir=output_dir)
+create_ob("HD 142666", "sci", "uts", mode="gr", output_dir=output_dir)
 
 # %%
 # Create an (.obx)-file for a calibrator for the UT-array configuration
@@ -37,7 +37,7 @@ create_ob(
     "uts",
     sci_name="HD 142666",
     tag="L",
-    operational_mode="gr",
+    mode="gr",
     output_dir=output_dir,
 )
 
@@ -66,7 +66,7 @@ create_ob(
     "cal",
     "uts",
     sci_name="HD 142666",
-    operational_mode="gr",
+    mode="gr",
     container_id=3001786,
     server="demo",
     user_name="52052",

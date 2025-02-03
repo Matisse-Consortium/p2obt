@@ -46,6 +46,6 @@ OPTIONS.constraints.transparency = "clear"
 # specified.
 create_obs(targets=sci_lst, calibrators=cal_lst,
            orders=order_lst, tags=tag_lst,
-           operation_mode="gr",
+           configuration="small", modes="gr",
            resolution=res_dict, output_dir=output_dir,
            server="demo", user_name="52052")

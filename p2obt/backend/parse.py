@@ -3,15 +3,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List
 
-# TODO: Implement this in the main function
-# from .utils import prompt_user
 
-# TODO: Make parser accept more than one calibrator block for one night, by
-# checking if there are integers for numbers higher than last calibrator and
-# then adding these
-
-
-# TODO: Maybe substiute with match and cases?
 def parse_operational_mode(line: str) -> str:
     """Parses the run's used instrument from string containing it,
     either MATISSE or GRA4MAT.
@@ -34,8 +26,6 @@ def parse_operational_mode(line: str) -> str:
     if "both" in line:
         return "both"
     return ""
-    # operational_modes = ["MATISSE", "GRA4MAT", "Both"]
-    # return prompt_user("instrument", operational_modes)
 
 
 def parse_array_config(line: str | None = None) -> str:
@@ -65,9 +55,7 @@ def parse_array_config(line: str | None = None) -> str:
                 return "large"
             if "extended" in line:
                 return "extended"
-
     return ""
-    # return prompt_user("array_configuration", ["UTs"] + at_configs[1:])
 
 
 def parse_resolution(line: str) -> str:
@@ -91,7 +79,6 @@ def parse_resolution(line: str) -> str:
     if any(res in line for res in ["hr", "high"]):
         return "HIGH"
     return ""
-    # return prompt_user("resolution", ["LOW", "MED", "HIGH"])
 
 
 def parse_observation_type(line: str) -> str:
@@ -115,7 +102,6 @@ def parse_observation_type(line: str) -> str:
     if any(res in line for res in ["vm", "visitormode", "visitor-mode", "visitor mode"]):
         return "vm"
     return ""
-    # return prompt_user("resolution", ["LOW", "MED", "HIGH"])
 
 
 def parse_run_prog_id(run_name: str) -> str:
@@ -213,7 +199,6 @@ def parse_line(parts: str) -> str:
     return " ".join(parts[1:target_name_cutoff])
 
 
-# TODO: Make this more robust, it sometimes parses the calibrators not correctly (too long of the name)
 def parse_groups(section: List) -> Dict:
     """Parses any combination of a calibrator-science target block
     into a dictionary containing the individual blocks' information.
@@ -301,7 +286,7 @@ def parse_file_section(lines: List, identifier: str) -> Dict:
     return dict(zip(labels, sections))
 
 
-def parse_night_plan(
+def parse_night_plan_to_dict(
     night_plan: Path,
     run_identifier: str | None = "run",
     night_identifier: str | None = "night",

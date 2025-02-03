@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import List
+from typing import Dict, List
 from warnings import warn
 
 from p2api.p2api import ApiConnection
@@ -9,14 +9,14 @@ from .backend.compose import compose_ob, set_ob_name, write_ob
 from .backend.parse import (
     parse_array_config,
     parse_night_name,
-    parse_night_plan,
-    parse_operational_mode,
-    parse_run_prog_id,
-    parse_resolution,
+    parse_night_plan_to_dict,
     parse_observation_type,
+    parse_operational_mode,
+    parse_resolution,
+    parse_run_prog_id,
 )
 from .backend.upload import create_remote_container, get_remote_run, login, upload_ob
-
+from .backend.utils import create_night_plan_dict
 
 # TODO: The local file resolution overwrite might not work anymore.
 # Is it needed?
@@ -33,7 +33,7 @@ def create_ob(
     target: str,
     ob_kind: str,
     array: str,
-    operational_mode: str = "st",
+    mode: str = "st",
     sci_name: str | None = None,
     tag: str | None = None,
     resolution: str = "low",
@@ -94,7 +94,7 @@ def create_ob(
             target,
             ob_kind,
             array,
-            operational_mode,
+            mode,
             sci_name,
             tag,
             resolution,
@@ -111,8 +111,14 @@ def create_ob(
 
 def create_obs(
     night_plan: Path | None = None,
-    manual_input: List[List] | None = None,
     container_id: int | None = None,
+    targets: List[str] | None = None,
+    calibrators: List[List[str] | str] | None = None,
+    orders: List[List[str] | str] | None = None,
+    tags: List[List[str] | str] | None = None,
+    resolution: Dict[str, str] | List[str] | str | None = "low",
+    configuration: Dict[str, str] | List[str] | str | None = None,
+    modes: Dict[str, str] | List[str] | str | None = "gr",
     user_name: str | None = None,
     store_password: bool | None = True,
     remove_password: bool | None = False,
@@ -127,27 +133,35 @@ def create_obs(
     night_plan : path, optional
         A dictionary containing a parsed night plan. If given
         it will automatically upload the obs to p2.
-    manual_input : list of lists, optional
-        The manual input of the four needed lists
-        [targets, calibrators, tags, order]. Only the "targets" and
-        "calibrators" list need to be provided, "tags" and "order" can
-        be autofilled.
-    mode : str, optional
-        The mode MATISSE is operated in and for which the OBs are created.
-        Either "st" for standalone, "gr" for GRA4MAT_ft_vis or "both",
-        if obs for both are to be created. Default is "st".
-    resolution: dict, optional
-        The default spectral resolutions for the obs in L-band. This is
-        a dictionary containing as keys the individual science targets
-        (the calibrators will be matched) and as values the resolution
-        of the specific target. The values have to be either "low", "med"
-        or "high". Default resolution is "low" and can be set via
-        options["resolution"].
     container_id : int, optional
-        The id that specifies the ob on p2.
+        The id that specifies the container on p2.
+    targets : list, optional
+        A list of targets. If no night plan is given, this list
+        and the calibrators must be given.
+    calibrators : list, optional
+        A list of calibrators that must be given with the targets.
+    orders : list, optional
+        A list of the orders of the calibrators. If not given,
+        it will be assumed that the calibrators are before the targets.
+    tags : list, optional
+        A list of the tags of the calibrators. If not given, it will
+        be "LN" for all calibrators.
+    resolution : dict or list of str or str, optional
+        A dictionary containing the resolution for each target or a list
+        of resolutions for all targets or a single resolution for all targets.
+        Will only be used if no night plan is given.
+    configurations : dict or list of str or str, optional
+        A dictionary containing the array configuration for each target or a list
+        of array configurations for all targets or a single array configuration for all targets.
+        Will only be used if no night plan is given.
+    modes : dict or list of str or str, optional
+        A dictionary containing the operational mode for each target or a list
+        of operational modes for all targets or a single operational mode for all targets.
+        Will only be used if no night plan is given.
     user_name : str, optional
         The p2 user name.
     server: str, optional
+        The server to connect to. Can be either "production" or "test".
     output_dir: path, optional
         The output directory, where the (.obx)-files will be created in.
         If left at "None" no files will be created.
@@ -160,18 +174,17 @@ def create_obs(
     if output_dir is not None:
         output_dir = (
             Path(output_dir, "manualOBs")
-            if manual_input
+            if targets
             else Path(output_dir, "automaticOBs")
         )
         # TODO: Apply here a removal of the old files
 
     if night_plan is None:
-        # TODO: Make a night plan here from the manual input and then only use the dicts
-        # for the OB creation.
-        array = parse_array_config()
-        ...
+        night_plan = create_night_plan_dict(
+            targets, calibrators, orders, tags, resolution, configuration, modes
+        )
     else:
-        night_plan = parse_night_plan(night_plan)
+        night_plan = parse_night_plan_to_dict(night_plan)
 
     if night_plan is None:
         raise IOError(
@@ -184,19 +197,17 @@ def create_obs(
     else:
         connection, run_id = None, None
 
-    # TODO: Add in documentation that global setting overwrites local setting
-    # also add that now comments are counted as settings for individual blocks
     for run_key, nights in night_plan.items():
         array = parse_array_config(run_key)
         mode = parse_operational_mode(run_key)
-        resolution = parse_resolution(run_key)
+        res = parse_resolution(run_key)
         ob_type = parse_observation_type(run_key)
         for night in list(nights.values())[0]:
             night.update(
                 {
                     "array": array or night["array"],
                     "mode": mode or night["mode"],
-                    "res": resolution or night["res"],
+                    "res": res or night["res"],
                     "type": ob_type or night["type"],
                 }
             )
