@@ -111,7 +111,7 @@ def parse_observation_type(line: str) -> str:
     if any(res in line for res in ["sm", "servicemode", "service-mode", "service mode"]):
         return "sm"
     if any(res in line for res in ["im", "imaging", "image"]):
-        return "ts"
+        return "im"
     if any(res in line for res in ["vm", "visitormode", "visitor-mode", "visitor mode"]):
         return "vm"
     return ""

@@ -12,7 +12,8 @@ from .backend.parse import (
     parse_night_plan,
     parse_operational_mode,
     parse_run_prog_id,
-    parse_run_resolution,
+    parse_resolution,
+    parse_observation_type,
 )
 from .backend.upload import create_remote_container, get_remote_run, login, upload_ob
 
@@ -106,11 +107,11 @@ def create_ob(
         logging.error(f"Failed creating OB '{target}'!", exc_info=True)
 
 
+# TODO: Make it so that global thing doesn't overwrite local setting of block
 # TODO: Finish this
 def create_obs(
     night_plan: Path | None = None,
     manual_input: List[List] | None = None,
-    observation_type: str | None = "sm",
     container_id: int | None = None,
     user_name: str | None = None,
     store_password: bool | None = True,
@@ -135,9 +136,6 @@ def create_obs(
         The mode MATISSE is operated in and for which the OBs are created.
         Either "st" for standalone, "gr" for GRA4MAT_ft_vis or "both",
         if obs for both are to be created. Default is "st".
-    observational_mode : str
-        Can either be "vm" for visitor mode (VM), "sm" for service mode (SM),
-        time series (TS), or imageing (IM).
     resolution: dict, optional
         The default spectral resolutions for the obs in L-band. This is
         a dictionary containing as keys the individual science targets
@@ -156,7 +154,7 @@ def create_obs(
     """
     if night_plan is None and output_dir is None and container_id is None:
         raise IOError(
-            "Either output directory, container id or" " night plan must be set!"
+            "Either output directory, container id or night plan must be provided!"
         )
 
     if output_dir is not None:
@@ -171,12 +169,6 @@ def create_obs(
         # TODO: Make a night plan here from the manual input and then only use the dicts
         # for the OB creation.
         array = parse_array_config()
-
-        if container_id is not None:
-            connection = login(user_name, store_password, remove_password, server)
-        else:
-            connection = None
-
         ...
     else:
         night_plan = parse_night_plan(night_plan)
@@ -197,17 +189,19 @@ def create_obs(
     for run_key, nights in night_plan.items():
         array = parse_array_config(run_key)
         mode = parse_operational_mode(run_key)
-        resolution = parse_run_resolution(run_key)
+        resolution = parse_resolution(run_key)
+        ob_type = parse_observation_type(run_key)
         for night in list(nights.values())[0]:
             night.update(
                 {
                     "array": array or night["array"],
                     "mode": mode or night["mode"],
                     "res": resolution or night["res"],
+                    "type": ob_type or night["type"],
                 }
             )
 
-        if output_dir is None:
+        if connection is not None:
             run_dir = None
             if container_id is None:
                 run_prog_id = parse_run_prog_id(run_key)
@@ -227,14 +221,12 @@ def create_obs(
                 print(f"Creating OBs for {night_name}")
                 print(f"{'':-^50}")
 
-            # TODO: Add here? the imaging and time series mode
-            if observation_type == "vm" and connection is not None:
+            if ob_type == "vm" and run_id is not None:
                 night_id = create_remote_container(
-                    connection, night_name, run_id, observation_type
+                    connection, night_name, run_id, "folder"
                 )
             else:
                 night_id = run_id
-            # TODO: Finish the night id here
 
             if run_dir is not None:
                 night_dir = run_dir / night_name
@@ -243,21 +235,31 @@ def create_obs(
             else:
                 night_dir = None
 
+            image_ids = {}
             for block in night:
                 target = block["target"].replace(" ", "_")
-                if output_dir is not None:
-                    target_dir = output_dir / target
+                if night_dir is not None:
+                    target_dir = night_dir / target
                     target_dir.mkdir(parents=True, exist_ok=True)
                 else:
                     target_dir = None
 
-                if container_id is not None:
+                if night_id is not None:
+                    if block["type"] == "im" and target not in image_ids:
+
+                        image_ids[target] = create_remote_container(
+                            connection, target, night_id, "group"
+                        )
+
+                    image_entry = image_ids.get(target, None)
+
+                    # TODO: Does this need to be a folder here for visitor mode or not?
+                    # TODO: Fix this so that OBs are always created in the right group
                     target_id = create_remote_container(
-                        connection, target, container_id, observation_type
-                    )
-                elif night_id is not None:
-                    target_id = create_remote_container(
-                        connection, target, night_id, observation_type
+                        connection,
+                        block["array"] if image_entry is not None else target,
+                        image_entry if image_entry is not None else night_id,
+                        "concatenation",
                     )
                 else:
                     target_id = None
@@ -274,7 +276,12 @@ def create_obs(
                         cal, sci_name = block["cals"][ind], block["target"]
                         target, tag, ob_kind = cal["name"], cal["tag"], "cal"
                     else:
-                        target, sci_name, ob_kind, tag = block["target"], None, "sci", None
+                        target, sci_name, ob_kind, tag = (
+                            block["target"],
+                            None,
+                            "sci",
+                            None,
+                        )
 
                     create_ob(
                         target,
@@ -290,4 +297,4 @@ def create_obs(
                     )
 
     # TODO: Add some color here :D
-    print("[INFO]: Done!")
+    print("Done!")

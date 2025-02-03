@@ -115,11 +115,7 @@ def login(
     remove_password: bool, optional
         If 'True' the password will be removed from the keyring.
     """
-    if server == "demo":
-        api_url = "https://www.eso.org/p2demo"
-    else:
-        api_url = "https://www.eso.org/p2"
-
+    api_url = f"https://www.eso.org/p2{'demo' if server == 'demo' else ''}"
     if user_name is None:
         user_name = input("Input your ESO-username: ")
 
@@ -128,14 +124,14 @@ def login(
 
     password = keyring.get_password(api_url, user_name)
     if password is None:
-        print("[INFO]: Password not found in keyring.")
+        print("Password not found in keyring.")
         password_prompt = "Input your ESO-password: "
         password = getpass.getpass(password_prompt)
         if store_password:
             keyring.set_password(api_url, user_name, password)
-            print("[INFO]: Password stored in keyring.")
+            print("Password stored in keyring.")
     else:
-        print("[INFO]: Password retrieved from keyring.")
+        print("Password retrieved from keyring.")
 
     return p2api.ApiConnection(server, user_name, password)
 
@@ -192,7 +188,7 @@ def create_remote_container(
     connection: p2api.p2api.ApiConnection,
     name: str,
     container_id: int,
-    observational_mode: str | None = "sm",
+    container_type: str = "concatenation"
 ) -> int:
     """Creates a container on p2.
 
@@ -204,9 +200,10 @@ def create_remote_container(
         The container's name.
     container_id : int
         The id that specifies the container on p2.
-    observational_mode : str
-        Can either be "vm" for visitor mode (VM), "sm" for service mode (SM),
-        time series (TS), or imageing (IM).
+    type : str
+        Container type. Either "folder", "concatenation" or "group".
+        Default is "concatenation".
+        service mode (SM) or "im" for imaging mode (IM).
 
     Returns
     -------
@@ -214,17 +211,13 @@ def create_remote_container(
         The created container's id.
     """
     print(f"Creating container '{name}' on p2...")
-    if observational_mode == "vm":
-        container, _ = connection.createFolder(container_id, name)
-    elif observational_mode == "sm":
-        container, _ = connection.createConcatenation(container_id, name)
-    elif observational_mode == "ts":
-        ...
-    elif observational_mode == "im":
-        ...
-    else:
-        raise IOError("No such operation mode exists!")
-    return container["containerId"]
+    match container_type:
+        case "folder":
+            return connection.createFolder(container_id, name)[0]["containerId"]
+        case "group":
+            return connection.createGroup(container_id, name)[0]["containerId"]
+        case _:
+            return connection.createConcatenation(container_id, name)[0]["containerId"]
 
 
 def create_ob(
