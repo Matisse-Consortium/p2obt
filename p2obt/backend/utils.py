@@ -68,7 +68,7 @@ def create_night_plan_dict(
         raise IOError("Please input the array configuration.")
 
     for index, target in enumerate(targets):
-        cals = 
+        # cals = 
         block = {"name": target.replace(" ", "_"), "mode": mode[index],}
         breakpoint()
     return
