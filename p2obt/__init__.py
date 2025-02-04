@@ -5,4 +5,4 @@ from .backend import *
 from .config.options import OPTIONS
 
 
-__version__ = "4.1.0"
+__version__ = "4.1.1"
