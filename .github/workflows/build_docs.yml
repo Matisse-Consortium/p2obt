@@ -18,13 +18,13 @@ jobs:
       with:
         python-version: "3.10"
 
-    - name: Install package
+    - name: Install package and development dependencies
       run: |
-        pip install -e .
+        pip install --upgrade pip
+        pip install .[dev]
 
     - name: Build documentation
       run: |
-        pip install -e .[dev]
         sphinx-build -b html docs/source docs/build/
 
     - name: Commit and Stash Documentation
