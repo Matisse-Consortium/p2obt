@@ -24,6 +24,7 @@ jobs:
 
     - name: Build documentation
       run: |
+        pip install sphinx
         sphinx-build -b html docs/source docs/build/
 
     - name: Commit and Stash Documentation
