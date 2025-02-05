@@ -263,6 +263,10 @@ def create_obs(
                         )
 
                     image_entry = image_ids.get(target, None)
+
+                    # TODO: Make sure that the convention is correct (imaging runs)
+                    # TODO: Make different names for OB and SCI target
+                    # TODO: Do the same for the OB name if im run (or time series?)
                     if image_entry is not None:
                         container_name = f"{target}_{block['array']}"
                     else:
