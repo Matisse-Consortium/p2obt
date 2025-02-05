@@ -263,12 +263,16 @@ def create_obs(
                         )
 
                     image_entry = image_ids.get(target, None)
+                    if image_entry is not None:
+                        container_name = f"{target}_{block['array']}"
+                    else:
+                        container_name = target
 
                     # TODO: Does this need to be a folder here for visitor mode or not?
                     # TODO: Fix this so that OBs are always created in the right group
                     target_id = create_remote_container(
                         connection,
-                        block["array"] if image_entry is not None else target,
+                        container_name,
                         image_entry if image_entry is not None else night_id,
                         "concatenation",
                     )
