@@ -257,6 +257,7 @@ def create_obs(
                 else:
                     target_dir = None
 
+                # TODO: For the imaging also change the OB mode to imaging instead of snapshot
                 if night_id is not None:
                     if block["type"] in ["ts", "im"]:
                         container_type = (
