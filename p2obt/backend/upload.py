@@ -216,6 +216,8 @@ def create_remote_container(
             return connection.createFolder(container_id, name)[0]["containerId"]
         case "group":
             return connection.createGroup(container_id, name)[0]["containerId"]
+        case "timelink":
+            return connection.createTimeLink(container_id, name)[0]["containerId"]
         case _:
             return connection.createConcatenation(container_id, name)[0]["containerId"]
 

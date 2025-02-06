@@ -18,6 +18,8 @@ from .backend.parse import (
 from .backend.upload import create_remote_container, get_remote_run, login, upload_ob
 from .backend.utils import create_night_plan_dict
 
+# FIXME: The RA and DEC (and probs pmra and pmdec) are wrong -> Simbad err, fix!
+# Check the conversion of the queried values.
 # TODO: The local file resolution overwrite might not work anymore.
 # Is it needed?
 # TODO: Make this shorter? Or into an option even?
@@ -246,7 +248,7 @@ def create_obs(
             else:
                 night_dir = None
 
-            image_ids = {}
+            ids = {}
             for block in night:
                 target = block["target"].replace(" ", "_")
                 if night_dir is not None:
@@ -256,21 +258,25 @@ def create_obs(
                     target_dir = None
 
                 if night_id is not None:
-                    if block["type"] == "im" and target not in image_ids:
-
-                        image_ids[target] = create_remote_container(
-                            connection, target, night_id, "group"
+                    if block["type"] in ["ts", "im"]:
+                        container_type = (
+                            "group" if block["type"] == "im" else "timelink"
                         )
+                        if target not in ids:
+                            ids[target] = create_remote_container(
+                                connection, f"Image-{target}", night_id, container_type
+                            )
 
-                    image_entry = image_ids.get(target, None)
+                    image_entry = ids.get(target, None)
 
                     # TODO: Make sure that the convention is correct (imaging runs)
                     # TODO: Make different names for OB and SCI target
                     # TODO: Do the same for the OB name if im run (or time series?)
                     if image_entry is not None:
-                        container_name = f"{target}_{block['array']}"
+                        container_name = f"{target}-{block['array']}"
                     else:
                         container_name = target
+                    # TODO: Also add time link for time series here
 
                     # TODO: Does this need to be a folder here for visitor mode or not?
                     # TODO: Fix this so that OBs are always created in the right group
