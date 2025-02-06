@@ -79,7 +79,7 @@ def write_ob(ob: Dict, ob_name: str, output_dir: Path) -> None:
 
 # TODO: 'add_space' makes to many spaces. Fix at some point.
 def set_ob_name(
-    target: Union[Dict, str],
+    target: Dict | str,
     observation_type: str,
     sci_name: str | None = None,
     tag: str | None = None,
@@ -105,7 +105,7 @@ def set_ob_name(
         target_name = target["name"]
     else:
         target_name = remove_parenthesis(target)
-    # HACK: Removes multiple spaces.
+
     ob_name += f"_{remove_spaces(target_name).replace(' ', '_')}"
     if sci_name is not None:
         ob_name += f"_{remove_spaces(sci_name).replace(' ', '_')}"
@@ -113,14 +113,13 @@ def set_ob_name(
 
 
 def get_observation_settings(
-    target: Dict, resolution: str, operational_mode: str, array_configuration: str
+    resolution: str, operational_mode: str, array_configuration: str
 ) -> Tuple[str, float]:
     """Gets the observation settings from the `options` corresponding
     to the resolution, operational mode and array configuration.
 
     Parameters
     ----------
-    target : dict
     resolution : str
     operational_mode : str
     array_configuration : str
@@ -139,25 +138,18 @@ def get_observation_settings(
     central_wl = getattr(
         getattr(getattr(OPTIONS.wl0, operational_mode), array), resolution
     )
-
     return resolution.upper(), integration_time, central_wl, photometry
 
 
 def format_proper_motions(target: Dict) -> Tuple[float, float]:
     """Correctly formats the right ascension's and declination's
     proper motions."""
-    propRa, propDec = 0, 0
-    if "local.propRA" in target:
-        propRa = target["local.propRa"]
-    if "local.propDec" in target:
-        propDec = target["local.propDec"]
-    if "PMRA" in target and "PMDEC" in target:
-        propRa, propDec = convert_proper_motions(target["PMRA"], target["PMDEC"])
-    elif "PMRA" in target:
-        propRa = convert_proper_motions(target["PMRA"])
-    elif "PMDEC" in target:
-        propDec = convert_proper_motions(target["PMDEC"])
-    return propRa, propDec
+    pmra, pmdec = convert_proper_motions(target.get("pmra", 0), target.get("pmdec", 0))
+    if "local.propRa" in target:
+        pmra = (target.get("local.propRa", 0),)
+    if "local.propDEC" in target:
+        pmdec = target.get("local.propDec", 0)
+    return pmra, pmdec
 
 
 def format_ra_and_dec(target: Dict) -> Tuple[str, str]:
@@ -165,7 +157,7 @@ def format_ra_and_dec(target: Dict) -> Tuple[str, str]:
     if "local.RA" in target:
         return target["local.RA"], target["local.DEC"]
 
-    coordinates = SkyCoord(f"{target['ra']} {target['dec']}", unit=(u.hourangle, u.deg))
+    coordinates = SkyCoord(f"{target['ra']} {target['dec']}", unit=(u.deg, u.deg))
     ra_hms = coordinates.ra.to_string(unit=u.hourangle, sep=":", pad=True, precision=3)
     dec_dms = coordinates.dec.to_string(sep=":", pad=True, precision=3)
     return ra_hms, dec_dms
@@ -202,7 +194,7 @@ def fill_header(
     sci_name: str | None = None,
     tag: str | None = None,
 ) -> Dict:
-    """Fills in the header dictionary with the information from the query.
+    """Fill header dictionary with the information from the query.
 
     Parameters
     ----------
@@ -345,7 +337,7 @@ def fill_observation(
         TEMPLATE_FILE, "observation", operational_mode=operational_mode
     )
     resolution, dit, wl0, photometry = get_observation_settings(
-        target, resolution, operational_mode, array_configuration
+        resolution, operational_mode, array_configuration
     )
     observation_type = "SCIENCE" if observation_type == "sci" else "CALIB"
     observation["DPR.CATG"] = observation_type
