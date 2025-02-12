@@ -18,8 +18,10 @@ from .backend.parse import (
 from .backend.upload import create_remote_container, get_remote_run, login, upload_ob
 from .backend.utils import create_night_plan_dict
 
-# FIXME: The RA and DEC (and probs pmra and pmdec) are wrong -> Simbad err, fix!
-# Check the conversion of the queried values.
+# FIXME: Raise more errors (especially for the quyering).
+# Should avoid problems.
+# TODO: Include tests for the OBs that test if the values of a new OB are correct
+# and that run automatically.
 # TODO: The local file resolution overwrite might not work anymore.
 # Is it needed?
 # TODO: Make this shorter? Or into an option even?
