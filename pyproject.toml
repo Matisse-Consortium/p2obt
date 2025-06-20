@@ -7,7 +7,7 @@ readme = "README.md"
 license = {file = "LICENSE"}
 keywords = ["astronomy", "observations", "observation-preparation", "VLT"]
 authors = [
-	{name = "Marten Scheuck", email = "martenscheuck@gmail.com"}
+	{name = "M. B. Scheuck", email = "code@mbscheuck.com"}
 ]
 classifiers = [
   "Development Status :: 5 - Production/Stable",
